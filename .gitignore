@@ -1,0 +1,7 @@
+build/
+assets/atlas.dat
+assets/atlas.png
+repl.nim
+nimdustry
+.idea/
+gifs/
