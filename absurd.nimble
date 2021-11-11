@@ -35,7 +35,7 @@ task release, "Release build":
 
 #TODO -d:danger etc
 task lib, "Create library":
-  shell &"nim c --app:lib --noMain:on -d:JavaBackend -o:build/libabsurd.so src/{app}"
+  shell &"nim c --app:lib --noMain:on -d:javaBackend -o:build/libabsurd.so src/{app}"
 
 task web, "Deploy web build":
   mkDir "build/web"

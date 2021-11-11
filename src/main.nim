@@ -23,10 +23,15 @@ initFau((proc() =
   screenMat()
   fillPoly(fau.size/2f + pos, 5, 50f, rotation = fau.time * 2f, color = colorGreen)
 
+  when not defined(noAudio):
+    if keyT.tapped: soundBreak.play()
+
   if keyEscape.tapped:
     quitApp()
 
 ), (proc() =
+  musicGood.play(loop = true)
+
   mesh = makeCube()
   cam = newCam3()
   bl = newBloom(depth = true)

@@ -2,7 +2,9 @@
 --passC:"-DSTBI_ONLY_PNG"
 --hints:off
 --gc:arc
---d:"noAudio"
+
+#when defined(javaBackend):
+#  --d:"noAudio"
 
 # reason: https://github.com/nim-lang/Nim/issues/18146
 --tlsEmulation:off
