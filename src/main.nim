@@ -1,4 +1,4 @@
-import core, fau/g3/[mesh3, fmath3, meshbuild], fau/g2/bloom, math
+import core, fau/g3/[mesh3, fmath3, meshbuild], fau/g2/[bloom, imui], math
 
 var
   mesh: Mesh3
@@ -6,6 +6,9 @@ var
   shader: Shader
   bl: Bloom
   pos: Vec2
+
+type Character* = ref object
+  name*: string
 
 initFau((proc() =
   cam.pos = vec3(0, 5, 0)
@@ -30,7 +33,8 @@ initFau((proc() =
     quitApp()
 
 ), (proc() =
-  musicGood.play(loop = true)
+  when not defined(noAudio):
+    musicGood.play(loop = true)
 
   mesh = makeCube()
   cam = newCam3()

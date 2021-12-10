@@ -35,7 +35,8 @@ task release, "Release build":
 
 #TODO -d:danger etc
 task lib, "Create library":
-  shell &"nim c --app:lib --noMain:on -d:javaBackend -o:build/libabsurd.so src/{app}"
+  #signal handler needs to be disabled, https://github.com/yglukhov/jnim/issues/23#issuecomment-274284251
+  shell &"nim c --app:lib --noMain:on -d:noSignalHandler -d:javaBackend -o:build/libabsurd.so src/{app}"
 
 task web, "Deploy web build":
   mkDir "build/web"

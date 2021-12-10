@@ -2,9 +2,11 @@
 --passC:"-DSTBI_ONLY_PNG"
 --hints:off
 --gc:arc
+--d:nimPreviewHashRef
 
-#when defined(javaBackend):
-#  --d:"noAudio"
+#TODO?
+when defined(javaBackend):
+  --debugger:native
 
 # reason: https://github.com/nim-lang/Nim/issues/18146
 --tlsEmulation:off
@@ -15,7 +17,7 @@ when defined(release) or defined(danger):
   --d:strip
 
 if defined(emscripten):
-
+  --d:nimNoGetRandom
   --os:linux
   --cpu:i386
   --cc:clang
