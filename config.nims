@@ -4,10 +4,6 @@
 --gc:arc
 --d:nimPreviewHashRef
 
-#TODO?
-when defined(javaBackend):
-  --debugger:native
-
 # reason: https://github.com/nim-lang/Nim/issues/18146
 --tlsEmulation:off
 
