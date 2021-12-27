@@ -12,6 +12,10 @@ when defined(release) or defined(danger):
   --passL:"-flto"
   --d:strip
 
+#why isn't this the default??
+when defined(Android):
+  --d:androidNDK
+
 if defined(emscripten):
   --d:nimNoGetRandom
   --os:linux

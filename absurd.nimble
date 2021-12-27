@@ -18,14 +18,12 @@ template shell(args: string) =
 const
   app = "main"
   #signal handler needs to be disabled, https://github.com/yglukhov/jnim/issues/23#issuecomment-274284251
-  libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets -o:build/libabsurd.so"
+  libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets"
 
   builds = [
     #(name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
   ]
-
-  wraps = "--passL:-Wl,-wrap,memcpy,-wrap,pow,-wrap,powf,-wrap,log,-wrap,logf,-wrap,exp,-wrap,expf,-wrap,clock_gettime,-wrap,stat,-wrap,fstat,-wrap,lstat"
 
 task pack, "Pack textures":
   shell &"faupack -p:{getCurrentDir()}/assets-raw/sprites -o:{getCurrentDir()}/assets/atlas"
@@ -37,7 +35,7 @@ task release, "Release build":
   shell &"nim r -d:release -d:danger -d:noFont -o:build/{app} src/{app}"
 
 task lib, "Create library for testing":
-  shell &"nim c {libArgs} -o:build/libabsurd.so src/{app}"
+  shell &"nim c -f -d:danger {libArgs} -o:build/libabsurd.so src/{app}"
 
 task web, "Deploy web build":
   mkDir "build/web"
