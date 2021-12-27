@@ -17,9 +17,11 @@ template shell(args: string) =
 
 const
   app = "main"
+  #signal handler needs to be disabled, https://github.com/yglukhov/jnim/issues/23#issuecomment-274284251
+  libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets -o:build/libabsurd.so"
 
-  jnis = [
-    #TODO linux would be nice.
+  builds = [
+    #(name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
   ]
 
@@ -28,47 +30,41 @@ const
 task pack, "Pack textures":
   shell &"faupack -p:{getCurrentDir()}/assets-raw/sprites -o:{getCurrentDir()}/assets/atlas"
 
-task debug, "Debug jni":
+task debug, "Debug build":
   shell &"nim r -d:debug src/{app}"
 
-task release, "Release jni":
-  shell &"nim r -d:release -d:danger -d:noFont -o:jni/{app} src/{app}"
+task release, "Release build":
+  shell &"nim r -d:release -d:danger -d:noFont -o:build/{app} src/{app}"
 
-#TODO -d:danger etc
-task lib, "Create library":
-  #signal handler needs to be disabled, https://github.com/yglukhov/jnim/issues/23#issuecomment-274284251
-  shell &"nim c -f --app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets -o:jni/libabsurd.so src/{app}"
+task lib, "Create library for testing":
+  shell &"nim c {libArgs} -o:build/libabsurd.so src/{app}"
 
-task web, "Deploy web jni":
-  mkDir "jni/web"
+task web, "Deploy web build":
+  mkDir "build/web"
   shell &"nim c -f -d:emscripten -d:danger src/{app}.nim"
-  writeFile("jni/web/index.html", readFile("jni/web/index.html").replace("$title$", capitalizeAscii(app)))
+  writeFile("build/web/index.html", readFile("build/web/index.html").replace("$title$", capitalizeAscii(app)))
 
 task deploy, "Build for all platforms":
   webTask()
 
-  for name, os, cpu, args in jnis.items:
+  for name, os, cpu, args in builds.items:
     let
       exeName = &"{app}-{name}"
-      dir = "jni"
+      dir = "build"
       exeExt = if os == "windows": ".exe" else: ""
       bin = dir / exeName & exeExt
-      #win32 crashes when the release/danger/optSize flag is specified
-      dangerous = if name == "win32": "" else: "-d:danger"
 
     mkDir dir
-    shell &"nim --cpu:{cpu} --os:{os} --app:gui -f {args} {dangerous} -o:{bin} c src/{app}"
+    shell &"nim --cpu:{cpu} --os:{os} --app:gui -f {args} -d:danger -o:{bin} c src/{app}"
     shell &"strip -s {bin}"
     shell &"upx-ucl --best {bin}"
 
-  cd "jni"
+  cd "build"
   shell &"zip -9r {app}-web.zip web/*"
 
-task android, "Android Build Nim":
+task android, "Build android version of lib":
   let cmakeText = "android/Android_template".readFile()
   let appText = "android/Application_template".readFile()
-
-  #armeabi armeabi-v7a x86 x86_64 arm64-v8a
 
   for arch in ["32", "64"]:
     rmDir "android/build/jni"
@@ -79,8 +75,7 @@ task android, "Android Build Nim":
 
     let cpu = if arch == "32": "" else: "64"
 
-    #TODO -d:danger
-    shell &"nim c -f --compileOnly --cpu:arm{cpu} --os:android -c --noMain:on -d:javaBackend -d:localAssets --nimcache:android/build/jni/{arch} src/{app}.nim"
+    shell &"nim c -d:danger --compileOnly --cpu:arm{cpu} --os:android -c --noMain:on -d:javaBackend -d:localAssets --nimcache:android/build/jni/{arch} src/{app}.nim"
 
     let includes = @[
       "/home/anuke/.choosenim/toolchains/nim-1.6.2/lib",
@@ -100,3 +95,21 @@ task android, "Android Build Nim":
     cd "android/build/jni"
     shell "/home/anuke/Android/Ndk/ndk-build"
     cd "../../../"
+  
+  shell "cp -r android/build/libs/* build/lib"
+
+task libs, "Create libraries for all platforms":
+  rmDir "build/libs"
+  mkDir "build"
+
+  for name, os, cpu, args in builds.items:
+    let
+      prefix = if os == "windows": "" else: "lib"
+      exeName = prefix & "absurd64"
+      libExt = if os == "windows": ".dll" else: ".so"
+      bin = "build/lib/" / exeName & libExt
+
+    shell &"nim --cpu:{cpu} --os:{os} {libArgs} -f {args} -d:danger -o:{bin} c src/{app}"
+    shell &"strip -s {bin}"
+  
+  androidTask()
