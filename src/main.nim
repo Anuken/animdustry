@@ -1,4 +1,4 @@
-import core, fau/g3/[mesh3, fmath3, meshbuild], fau/g2/[bloom, imui], math
+import core, fau/g3/[mesh3, fmath3, meshbuild], fau/g2/[bloom, imui], math, characters
 
 var
   mesh: Mesh3
@@ -6,9 +6,6 @@ var
   shader: Shader
   bl: Bloom
   pos: Vec2
-
-type Character* = ref object
-  name*: string
 
 initFau((proc() =
   cam.pos = vec3(0, 5, 0)
