@@ -4,4 +4,6 @@ type Unit* = ref object
 
 let
   unitMono* = Unit(name: "mono")
+  unitOct* = Unit(name: "oct")
+  unitZenith* = Unit(name: "zenith")
   unitQuad* = Unit(name: "quad")

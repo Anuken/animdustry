@@ -17,7 +17,6 @@ when defined(Android):
   --d:androidNDK
 
 if defined(emscripten):
-  --d:nimNoGetRandom
   --os:linux
   --cpu:i386
   --cc:clang
