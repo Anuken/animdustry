@@ -19,7 +19,7 @@ type MusicState = ref object
 const scl = 3f
 
 var 
-  trackDefault, trackEva, trackLis: MusicTrack
+  trackDefault, trackEva, trackLis, trackRiser: MusicTrack
 
 var
   musicState = MusicState()
@@ -58,9 +58,10 @@ sys("init", [Main]):
   init:
     enableSoundVisualization()
     trackDefault = MusicTrack(sound: musicMerry, bpm: 125f, beatOffset: -40.0 / 1000.0)
-    trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -150.0 / 1000.0)
+    trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    musicState.track = trackLis
+    trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
+    musicState.track = trackRiser
 
     reset()
 
@@ -150,5 +151,20 @@ sys("drawUnit", [Pos, UnitDraw]):
 sys("endDraw", [Main]):
   drawBufferScreen()
   #sysDraw.buffer.blit()
+
+sys("drawUI", [Main]):
+  start:
+    #looks bad.
+    sys.paused = true
+
+  screenMat()
+  let 
+    fft = getFft()
+    bars = 64
+    w = fau.size.x / bars.float32
+  
+  for i in 0..<bars:
+    fillRect(w * i.float32, 0f, w, fft[i] * 10f, color = colorBlue.mix(colorWhite, i / bars.float32))
+  
 
 launchFau("Yes")
