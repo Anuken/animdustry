@@ -16,15 +16,14 @@ type MusicState = ref object
   beatCount: int
 
 #TODO better system
-const scl = 3f
+const scl = 4f
 
 var 
   trackDefault, trackEva, trackLis, trackRiser: MusicTrack
 
-var
   musicState = MusicState()
 
-registerComponents(defaultComponentOptions):
+register(defaultComponentOptions):
   type 
     Input = object
   
@@ -54,7 +53,7 @@ template reset() =
 
 proc beat(): float32 = musicState.beat
 
-sys("init", [Main]):
+makeSystem("init", []):
   init:
     enableSoundVisualization()
     trackDefault = MusicTrack(sound: musicMerry, bpm: 125f, beatOffset: -40.0 / 1000.0)
@@ -65,9 +64,9 @@ sys("init", [Main]):
 
     reset()
 
-sys("all", [Pos]): discard
+makeSystem("all", [Pos]): discard
 
-sys("updateMusic", [Main]):
+makeSystem("updateMusic", []):
   fields:
     lastPos: float
   
@@ -84,12 +83,13 @@ sys("updateMusic", [Main]):
     musicState.beatCount = nextBeat
     musicState.beat = (1.0 - ((musicState.secs mod beatSpacing) / beatSpacing)).float32
   elif not musicState.voice.valid:
-    musicState.voice = musicState.track.sound.play()
+    #TODO don't want to hear this
+    musicState.voice = musicState.track.sound.play(volume = 1f)
     musicState.voice.seek(18.0)
 
 makeTimedSystem()
 
-sys("input", [GridPos, Input, UnitDraw, Pos]):
+makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   start:
     #TODO only one direction at a time?
     let vec = axis2(keyA, keyD, keyS, keyW) * 20f * musicState.beatChanged.float32
@@ -115,12 +115,12 @@ sys("input", [GridPos, Input, UnitDraw, Pos]):
     if vec.x.abs > 0:
       item.unitDraw.side = vec.x < 0
     
-sys("posLerp", [Pos, GridPos]):
+makeSystem("posLerp", [Pos, GridPos]):
   all:
     let a = 12f * fau.delta
     item.pos.vec.lerp(item.gridPos.vec.vec2, a)
 
-sys("draw", [Main]):
+makeSystem("draw", []):
   fields:
     buffer: Framebuffer
   init:
@@ -134,12 +134,19 @@ sys("draw", [Main]):
   fau.cam.update(fau.size / scl, vec2())
   fau.cam.use()
 
-sys("drawBackground", [Main]):
+makeSystem("drawBackground", []):
   poly(vec2(), 4, 45f + 15f * (musicState.beatCount mod 4).float32, 0f.rad, stroke = 10f, color = (%"9bceff").withA(beat()))
+
+makeSystem("drawTiles", []):
+  let rad = 5
+  let space = 20f
+  for x in -rad..rad:
+    for y in -rad..rad:
+      draw("tile".patchConst, vec2(x, y) * space, color = (%"ffffff").withA(0.15f), scl = vec2(1f - 0.11f * beat()))
 
 makeEffectsSystem()
 
-sys("drawUnit", [Pos, UnitDraw]):
+makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
     draw(
       (&"unit-{item.unitDraw.unit.name}").patch, 
@@ -148,11 +155,11 @@ sys("drawUnit", [Pos, UnitDraw]):
       align = daBot
     )
 
-sys("endDraw", [Main]):
+makeSystem("endDraw", []):
   drawBufferScreen()
   #sysDraw.buffer.blit()
 
-sys("drawUI", [Main]):
+makeSystem("drawUI", []):
   start:
     #looks bad.
     sys.paused = true
