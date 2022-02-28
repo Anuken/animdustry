@@ -11,6 +11,9 @@ when defined(release) or defined(danger):
   --passC:"-flto"
   --passL:"-flto"
   --d:strip
+else:
+  #better compiler performance with local assets
+  --d:localAssets
 
 #why isn't this the default??
 when defined(Android):

@@ -60,7 +60,7 @@ makeSystem("init", []):
     trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackRiser
+    musicState.track = trackDefault
 
     reset()
 
@@ -84,7 +84,7 @@ makeSystem("updateMusic", []):
     musicState.beat = (1.0 - ((musicState.secs mod beatSpacing) / beatSpacing)).float32
   elif not musicState.voice.valid:
     #TODO don't want to hear this
-    musicState.voice = musicState.track.sound.play(volume = 1f)
+    musicState.voice = musicState.track.sound.play(volume = 0f)
     musicState.voice.seek(18.0)
 
 makeTimedSystem()
