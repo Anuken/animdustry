@@ -95,7 +95,7 @@ makeSystem("init", []):
     trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackLis
+    musicState.track = trackRiser
 
     reset()
 
@@ -180,10 +180,9 @@ makeSystem("spawnBullets", []):
     let
       x = 5
       y = rand(-5..5)
-    #TODO kill the bullets
     discard newEntityWith(DrawBullet(), Pos(vec: vec2(x.float32, y.float32)), GridPos(vec: vec2i(x, y)), Velocity(vec: vec2i(-1, 0)), Damage())
 
-#TODO O(N)
+#TODO O(N^2)
 makeSystem("collide", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
