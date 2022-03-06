@@ -95,11 +95,11 @@ makeSystem("init", []):
     enableSoundVisualization()
     trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
     #enemy like me
-    trackRiser = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -150.0 / 1000.0)
+    #trackRiser = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -150.0 / 1000.0)
     #trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     #trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackRiser
+    musicState.track = trackDefault
 
     reset()
 
