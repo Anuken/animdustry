@@ -32,7 +32,7 @@ task debug, "Debug build":
   shell &"nim r -d:debug src/{app}"
 
 task release, "Release build":
-  shell &"nim r -d:release -d:danger -d:noFont -o:build/{app} src/{app}"
+  shell &"nim r -d:release -d:danger -o:build/{app} src/{app}"
 
 task lib, "Create library for testing":
   shell &"nim c -f -d:danger {libArgs} -o:build/libabsurd.so src/{app}"
