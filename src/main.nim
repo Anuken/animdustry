@@ -14,6 +14,7 @@ type MusicState = ref object
   beat: float
   beatChanged: bool
   beatCount: int
+  loops: int
 
 #TODO better viewport
 const
@@ -25,7 +26,7 @@ const
   noMusic = false
 
 var 
-  trackDefault, trackEva, trackLis, trackRiser: MusicTrack
+  trackDefault, trackEva, trackLis, trackRiser, trackBeat: MusicTrack
   musicState = MusicState()
   nextMoveBeat = -1
   turn = 0
@@ -94,12 +95,13 @@ makeSystem("init", []):
       setGlobalVolume(0f)
     enableSoundVisualization()
     trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
+    trackBeat = MusicTrack(sound: musicBeat, bpm: 130f, beatOffset: 0f / 1000.0)
     #enemy like me
     #trackRiser = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -150.0 / 1000.0)
     #trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     #trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackDefault
+    musicState.track = trackBeat
 
     reset()
 
@@ -119,6 +121,17 @@ makeSystem("updateMusic", []):
   if musicState.voice.valid and musicState.voice.playing:
     let beatSpace = beatSpacing()
 
+    #check for loop
+    if musicState.loops != musicState.voice.loopCount:
+      musicState.loops = musicState.voice.loopCount
+
+      #reset state
+      musicState.secs = 0f
+      musicState.beatCount = 0
+      musicState.beat = 0f
+      #TODO allows skipped beat at loop end
+      nextMoveBeat = 0
+
     musicState.secs = musicState.voice.streamPos + musicState.track.beatOffset
 
     let 
@@ -129,8 +142,8 @@ makeSystem("updateMusic", []):
     musicState.beatCount = nextBeat
     musicState.beat = (1.0 - ((musicState.secs mod beatSpace) / beatSpace)).float32
   elif not musicState.voice.valid:
-    musicState.voice = musicState.track.sound.play
-    musicState.voice.seek(18.0)
+    musicState.voice = musicState.track.sound.play(loop = true)
+    #musicState.voice.seek(18.0)
 
   if musicState.beatCount > nextMoveBeat:# or (musicState.beatChanged and nextMoveBeat == musicState.beatCount):
     #TODO does not handle ONE skipped beat
@@ -236,18 +249,9 @@ makeSystem("drawBackground", []):
 
 makeSystem("drawTiles", []):
   let rad = 5
-  let space = 1f
   for x in -rad..rad:
     for y in -rad..rad:
-      draw("tile".patchConst, vec2(x, y) * space, color = (%"ffffff").withA(0.15f), scl = vec2(1f - 0.11f * beat()))
-
-  when false:
-    for (i, text) in [(2f, "Abc"), (1f, "Def"), (0f, "ABC")]:
-      let a = daCenter
-      dfont.draw(text, vec2(0, -5f + i), scale = 1.px, align = a)
-      dfont.draw(text, vec2(2, -5f + i), scale = 1.5.px, align = a)
-      dfont.draw(text, vec2(4, -5f + i), scale = 2.px, align = a)
-  #draw("tile".patchConst, vec2(0f, -6f), color = if canMove(): colorGreen else: colorRed)
+      draw("tile".patchConst, vec2(x, y), color = (%"ffffff").withA(0.15f), scl = vec2(1f - 0.11f * beat()))
 
 makeEffectsSystem()
 
