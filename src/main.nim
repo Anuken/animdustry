@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/bloom
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048")
 
@@ -26,10 +26,11 @@ const
   noMusic = false
 
 var 
-  trackDefault, trackEva, trackLis, trackRiser, trackBeat: MusicTrack
+  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych: MusicTrack
   musicState = MusicState()
   nextMoveBeat = -1
   turn = 0
+  moveBeat = 0f
   skippedBeat: bool
   newTurn: bool
   dfont: Font
@@ -71,6 +72,7 @@ template makeUnit(pos: Vec2i, aunit: Unit) =
 template runTurn() =
   newTurn = true
   turn.inc
+  moveBeat = 1f
 
 template reset() =
   sysAll.clear()
@@ -95,13 +97,19 @@ makeSystem("init", []):
       setGlobalVolume(0f)
     enableSoundVisualization()
     trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
-    trackBeat = MusicTrack(sound: musicBeat, bpm: 130f, beatOffset: 0f / 1000.0)
-    #enemy like me
-    #trackRiser = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -150.0 / 1000.0)
+    trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
+
+    #I can actually use these:
+    trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
+    trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
+    trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -50f / 1000f)
+    trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
+    #what does "fevereiro" even mean
+    trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: 0f / 1000f)
     #trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     #trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackBeat
+    musicState.track = trackForYou
 
     reset()
 
@@ -120,6 +128,9 @@ makeSystem("updateMusic", []):
 
   if musicState.voice.valid and musicState.voice.playing:
     let beatSpace = beatSpacing()
+
+    moveBeat -= fau.delta / beatSpace
+    moveBeat = max(moveBeat, 0f)
 
     #check for loop
     if musicState.loops != musicState.voice.loopCount:
@@ -143,7 +154,8 @@ makeSystem("updateMusic", []):
     musicState.beat = (1.0 - ((musicState.secs mod beatSpace) / beatSpace)).float32
   elif not musicState.voice.valid:
     musicState.voice = musicState.track.sound.play(loop = true)
-    #musicState.voice.seek(18.0)
+    #musicState.voice.seek(32.0)
+    musicState.voice.seek(223.0)
 
   if musicState.beatCount > nextMoveBeat:# or (musicState.beatChanged and nextMoveBeat == musicState.beatCount):
     #TODO does not handle ONE skipped beat
@@ -184,7 +196,6 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       runTurn()
 
       item.unitDraw.beatScl = 1f
-      #"left" edge, only need to wait until next edge
       nextMoveBeat = musicState.beatCount + 1
 
       item.gridPos.vec += vec.vec2i
@@ -200,8 +211,9 @@ makeSystem("spawnBullets", []):
   if newTurn:
     let
       x = 5
-      y = rand(-5..5)
-    discard newEntityWith(DrawBullet(), Pos(vec: vec2(x.float32, y.float32)), GridPos(vec: vec2i(x, y)), Velocity(vec: vec2i(-1, 0)), Damage())
+      y = turn mod 11 - 5
+    #TODO
+    #discard newEntityWith(DrawBullet(), Pos(vec: vec2(x.float32, y.float32)), GridPos(vec: vec2i(x, y)), Velocity(vec: vec2i(-1, 0)), Damage())
 
 #TODO O(N^2)
 makeSystem("collide", [GridPos, Damage]):
@@ -232,7 +244,9 @@ makeSystem("posLerp", [Pos, GridPos]):
 makeSystem("draw", []):
   fields:
     buffer: Framebuffer
+    bloom: Bloom
   init:
+    sys.bloom = newBloom()
     sys.buffer = newFramebuffer()
   
   sys.buffer.clear(colorBlack)
@@ -245,13 +259,76 @@ makeSystem("draw", []):
   fau.cam.use()
 
 makeSystem("drawBackground", []):
-  poly(vec2(), 4, (45f + 15f * (musicState.beatCount mod 4).float32).px, 0f.rad, stroke = 10f.px, color = (%"9bceff").withA(beat()))
+  #moving stripes
+  let 
+    amount = 20
+    swidth = 70f.px
+    ang = 135f.rad
+  for i in 0..<amount:
+    let 
+      frac = (i + turn + ((1f - moveBeat).powout(8f))).mod(amount) / amount - 0.5f
+      pos = vec2l(ang, swidth) * (frac * amount)
+    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = colorPink.mix(colorWhite, (i.float32 mod 2f) * 0.2f))
+
+  #basic fade squares
+  poly(vec2(), 4, (45f + 15f * (musicState.beatCount mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(beat()))
+
+  #drawBuffer(sysDraw.bloom.buffer)
+
+  #fading particles?
+  let 
+    parts = 70
+    partRange = 13f
+    move = vec2(-0.5f, -0.5f)
+    col = colorPink.mix(colorWhite, 0.4f)
+    size = (5f + beat().pow(2f) * 4f).px
+  
+  var r = initRand(1)
+  
+  for i in 0..<parts:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+
+    pos += move * (turn + (1f - moveBeat).powout(30f))
+    pos = (pos + partRange).emod(vec2(partRange * 2)) - partRange
+
+    fillPoly(pos, 4, size, color = col)
+    fillPoly(pos - move*0.5f, 4, size/2f, color = col)
+    fillPoly(pos - move*0.9f, 4, size/4f, color = col)
+  
+  #when pixelate:
+  #  drawBuffer(sys.buffer)
+  #else:
+  #  drawBufferScreen()
+  
+  #sysDraw.bloom.blit(meshParams(blend = blendNormal))
+
+const bars = 50
+
+makeSystem("drawBars", []):
+ 
+  fields:
+    values: array[bars, float32]
+  
+  let 
+    fft = getFft()
+    w = 20.px
+    radius = 90f.px
+    length = 8f
+  
+  for i in 0..<bars:
+    sys.values[i] = lerp(sys.values[i], fft[i].pow(0.6f), 35f * fau.delta)
+
+    let rot = i / bars.float32 * pi2
+    draw(fau.white, vec2l(rot, radius), size = vec2(sys.values[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
 
 makeSystem("drawTiles", []):
   let rad = 5
   for x in -rad..rad:
     for y in -rad..rad:
-      draw("tile".patchConst, vec2(x, y), color = (%"ffffff").withA(0.15f), scl = vec2(1f - 0.11f * beat()))
+      let 
+        absed = ((x + rad) + (y + rad) + turn).mod 5
+        strength = (absed == 0).float32 * moveBeat
+      draw("tile".patchConst, vec2(x, y), color = (%"ffffff").mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
 
 makeEffectsSystem()
 
@@ -275,20 +352,6 @@ makeSystem("endDraw", []):
   drawBufferScreen()
   when pixelate:
     sysDraw.buffer.blit()
-
-makeSystem("drawUI", []):
-  start:
-    #looks bad.
-    sys.paused = true
-
-  screenMat()
-  let 
-    fft = getFft()
-    bars = 64
-    w = fau.size.x / bars.float32
-  
-  for i in 0..<bars:
-    fillRect(w * i.float32, 0f, w, fft[i] * 10f, color = colorBlue.mix(colorWhite, i / bars.float32))
   
 
 launchFau("absurd")
