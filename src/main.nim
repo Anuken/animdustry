@@ -23,7 +23,7 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = false
+  noMusic = true
 
 var 
   trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych: MusicTrack
@@ -56,6 +56,8 @@ register(defaultComponentOptions):
     DrawBullet = object
       rot: float32
     
+    DrawRouter = object
+    
     Damage = object
     
 defineEffects:
@@ -80,6 +82,9 @@ template reset() =
   #makeUnit(vec2i(), unitQuad)
   #makeUnit(vec2i(-1, 0), unitOct)
   makeUnit(vec2i(), unitZenith)
+
+  let p = vec2i(4, 4)
+  discard newEntityWith(Pos(vec: p.vec2), GridPos(vec: p), DrawRouter())
 
 proc beat(): float32 = musicState.beat
 proc ibeat(): float32 = 1f - musicState.beat
@@ -154,8 +159,8 @@ makeSystem("updateMusic", []):
     musicState.beat = (1.0 - ((musicState.secs mod beatSpace) / beatSpace)).float32
   elif not musicState.voice.valid:
     musicState.voice = musicState.track.sound.play(loop = true)
-    #musicState.voice.seek(32.0)
-    musicState.voice.seek(223.0)
+    musicState.voice.seek(32.0)
+    #musicState.voice.seek(223.0)
 
   if musicState.beatCount > nextMoveBeat:# or (musicState.beatChanged and nextMoveBeat == musicState.beatCount):
     #TODO does not handle ONE skipped beat
@@ -332,7 +337,28 @@ makeSystem("drawTiles", []):
 
 makeEffectsSystem()
 
-makeSystem("drawUnits", [Pos, UnitDraw]):
+#[
+      /** Draws a sprite that should be light-wise correct, when rotated. Provided sprite must be symmetrical in shape. */
+    public static void spinSprite(TextureRegion region, float x, float y, float r){
+        float a = Draw.getColor().a;
+        r = Mathf.mod(r, 90f);
+        Draw.rect(region, x, y, r);
+        Draw.alpha(r / 90f*a);
+        Draw.rect(region, x, y, r - 90f);
+        Draw.alpha(a);
+    }
+]#
+
+makeSystem("drawRouter", [Pos, DrawRouter]):
+  all:
+    proc spinSprite(patch: Patch, pos: Vec2, scl: Vec2, rot: float32) =
+      let r = rot.mod 90f
+      draw(patch, pos, rotation = r, scl = scl)
+      draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
+
+    spinSprite("router".patchConst, item.pos.vec, vec2(1f + beat().pow(3f) * 0.2f), 90f.rad * beat().pow(6f))
+
+makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
 
     draw(
@@ -344,7 +370,7 @@ makeSystem("drawUnits", [Pos, UnitDraw]):
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f))
     )
 
-makeSystem("drawBullets", [Pos, DrawBullet]):
+makeSystem("drawBullet", [Pos, DrawBullet]):
   all:
     draw("bullet".patchConst, item.pos.vec)
 
