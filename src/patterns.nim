@@ -1,4 +1,19 @@
+const fftSize = 50
 
+var fftValues: array[fftSize, float32]
+
+proc patFft() =
+  let 
+    fft = getFft()
+    w = 20.px
+    radius = 90f.px
+    length = 8f
+  
+  for i in 0..<fftSize:
+    fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 35f * fau.delta)
+
+    let rot = i / fftSize.float32 * pi2
+    draw(fau.white, vec2l(rot, radius), size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
 
 #moving stripes
 proc patStripes() =
@@ -32,18 +47,6 @@ proc patFadeShapes() =
 
   for i in 0..<fadeCount:
     drawFade((i - (turn + (1f - moveBeat).powout(6f)) * fscl).emod(fadeCount))
-
-    #[
-    prevRad += (10 + i * 5f).px
-
-    let
-      stroke = i * 9f.px
-    
-    poly(vec2(), fadeSides, prevRad, stroke = stroke, rotation = fau.time * 0.5f + i * 10f.rad)
-
-    prevRad += stroke*2f
-    ]#
-
 
 proc patRain() =
   let 

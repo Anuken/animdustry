@@ -1,5 +1,7 @@
 type Unit* = ref object
   name*: string
+  title*: string
+  subtitle*: string
   layers*: seq[proc(c: Unit)]
 
 let

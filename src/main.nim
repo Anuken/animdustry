@@ -27,7 +27,7 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = false
+  noMusic = true
 
 var 
   trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych: MusicTrack
@@ -72,8 +72,13 @@ defineEffects:
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos, 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3f)
 
+GridPos.onAdd:
+  let pos = entity.fetch(Pos)
+  if pos.valid:
+    pos.vec = curComponent.vec.vec2
+
 template makeUnit(pos: Vec2i, aunit: Unit) =
-  discard newEntityWith(Input(), Pos(vec: pos.vec2), GridPos(vec: pos), UnitDraw(unit: aunit))
+  discard newEntityWith(Input(), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
 template runTurn() =
   newTurn = true
@@ -87,8 +92,8 @@ template reset() =
   #makeUnit(vec2i(-1, 0), unitOct)
   makeUnit(vec2i(), unitZenith)
 
-  let p = vec2i(4, 4)
-  discard newEntityWith(Pos(vec: p.vec2), GridPos(vec: p), DrawRouter())
+  for pos in d4edge():
+    discard newEntityWith(Pos(), GridPos(vec: pos * 5), DrawRouter())
 
 proc beat(): float32 = musicState.beat
 proc ibeat(): float32 = 1f - musicState.beat
@@ -105,6 +110,7 @@ makeSystem("init", []):
     when noMusic:
       setGlobalVolume(0f)
     enableSoundVisualization()
+
     trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
     trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
 
@@ -220,12 +226,14 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       runTurn()
       nextMoveBeat = musicState.beatCount + 1
 
+include bullets
 
 makeSystem("spawnBullets", []):
   if newTurn:
-    let
-      x = 5
-      y = turn mod 11 - 5
+    bulletsCorners()
+    #let
+    #  x = 5
+    #  y = turn mod 11 - 5
     #TODO
     #discard newEntityWith(DrawBullet(), Pos(vec: vec2(x.float32, y.float32)), GridPos(vec: vec2i(x, y)), Velocity(vec: vec2i(-1, 0)), Damage())
 
@@ -279,24 +287,7 @@ makeSystem("drawBackground", []):
   #patFadeShapes()
   patBeatSquare()
 
-const bars = 50
-
-makeSystem("drawBars", []):
- 
-  fields:
-    values: array[bars, float32]
-  
-  let 
-    fft = getFft()
-    w = 20.px
-    radius = 90f.px
-    length = 8f
-  
-  for i in 0..<bars:
-    sys.values[i] = lerp(sys.values[i], fft[i].pow(0.6f), 35f * fau.delta)
-
-    let rot = i / bars.float32 * pi2
-    draw(fau.white, vec2l(rot, radius), size = vec2(sys.values[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
+  #patFft()
 
 makeSystem("drawTiles", []):
   let rad = 5
@@ -335,7 +326,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
 
 makeSystem("drawBullet", [Pos, DrawBullet, Velocity]):
   all:
-    draw("bullet".patchConst, item.pos.vec, rotation = item.velocity.vec.vec2.angle)
+    draw("bullet".patchConst, item.pos.vec, rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
 makeSystem("endDraw", []):
   drawBufferScreen()
