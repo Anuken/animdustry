@@ -1,6 +1,6 @@
 import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/bloom
 
-static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048")
+static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
 type MusicTrack = object
   sound: Sound
