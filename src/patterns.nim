@@ -29,7 +29,7 @@ proc patStripes() =
     draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = colorPink.mix(colorWhite, (i.float32 mod 2f) * 0.2f))
 
 proc patBeatSquare() =
-  poly(vec2(), 4, (45f + 15f * (musicState.beatCount mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(beat()))
+  poly(vec2(), 4, (45f + 15f * (turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(moveBeat))
 
 proc patFadeShapes() =
   const 

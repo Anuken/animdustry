@@ -19,7 +19,6 @@ type MusicState = ref object
 #TODO
 type Beatmap = object
 
-
 #TODO better viewport
 const
   #pixels
@@ -28,6 +27,7 @@ const
   hitDuration = 0.5f
   pixelate = false
   noMusic = false
+  beatMargin = 0.025f
 
 var 
   trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79: MusicTrack
@@ -35,6 +35,7 @@ var
   nextMoveBeat = -1
   suppressInput = false
   lastMoveTime = 0f
+  lastInputTime = 0f
   turn = 0
   moveBeat = 0f
   skippedBeat: bool
@@ -65,14 +66,14 @@ register(defaultComponentOptions):
     DrawRouter = object
     
     Damage = object
-    
+
 defineEffects:
   walk(lifetime = 0.8f):
     particlesLife(e.id, 10, e.pos, e.fin, 12f.px):
       fillCircle(pos, (4f * fout.powout(3f)).px, color = %"6e7080")
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
-      fillPoly(pos, 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3f)
+      fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
 
 GridPos.onAdd:
   let pos = entity.fetch(Pos)
@@ -94,7 +95,7 @@ template reset() =
 
   #makeUnit(vec2i(1, 0), unitQuad)
   #makeUnit(vec2i(-1, 0), unitOct)
-  makeUnit(vec2i(), unitZenith)
+  makeUnit(vec2i(), unitOct)
 
   for pos in d4edge():
     discard newEntityWith(Pos(), GridPos(vec: pos * 5), DrawRouter())
@@ -102,6 +103,8 @@ template reset() =
 proc beat(): float32 = musicState.beat
 proc ibeat(): float32 = 1f - musicState.beat
 proc beatSpacing(): float = 1.0 / (musicState.track.bpm / 60.0)
+#TODO bad granulatity?
+proc musicTime(): float = musicState.voice.streamPos
 
 #TODO
 proc canMove(): bool =
@@ -125,18 +128,15 @@ makeSystem("init", []):
     trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
     trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
     #what does "fevereiro" even mean
-    trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: 0f / 1000f)
+    trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    musicState.track = trackStoplight
+    musicState.track = trackBright79
 
     reset()
 
 makeSystem("all", [Pos]): discard
 
 makeSystem("updateMusic", []):
-  fields:
-    lastPos: float
-  
   newTurn = false
   skippedBeat = false
 
@@ -172,11 +172,11 @@ makeSystem("updateMusic", []):
     musicState.beat = (1.0 - ((musicState.secs mod beatSpace) / beatSpace)).float32
   elif not musicState.voice.valid:
     musicState.voice = musicState.track.sound.play(loop = true)
-    musicState.voice.seek(32.0)
+    musicState.voice.seek(60.0)
 
   #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
-  if musicState.beatCount > nextMoveBeat or (fau.time - lastMoveTime) / beatSpacing() >= 1.025f:
-    lastMoveTime = fau.time
+  if musicState.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
+    lastMoveTime = musicTime()
     nextMoveBeat = musicState.beatCount
     skippedBeat = true
     suppressInput = true
@@ -186,11 +186,20 @@ makeTimedSystem()
 
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   start:
-    #TODO only one direction at a time?
-    var vec = if canMove(): axisTap2(keyA, keyD, keyS, keyW) else: vec2()
-    if vec.angle.deg.int.mod(90) != 0:
-      vec.angle = vec.angle.deg.round(90f).rad
     var moved = false
+
+    #TODO only one direction at a time?
+    var vec = if musicTime() >= lastInputTime: axisTap2(keyA, keyD, keyS, keyW) else: vec2()
+
+    #make direction orthogonal
+    if vec.angle.deg.int.mod(90) != 0: vec.angle = vec.angle.deg.round(90f).rad
+    
+    if not canMove():
+      #tried to move incorrectly, e.g. spam
+      if vec.zero.not:
+        lastInputTime = musicTime() + beatSpacing() * 0.9f
+
+      vec = vec2()
   all:
     if keyEscape.tapped:
       quitApp()
@@ -232,7 +241,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
         runTurn()
       suppressInput = false
       nextMoveBeat = musicState.beatCount + 1
-      lastMoveTime = fau.time
+      lastMoveTime = musicTime()
 
 include bullets
 
