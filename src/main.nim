@@ -27,12 +27,14 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = true
+  noMusic = false
 
 var 
-  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych: MusicTrack
+  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79: MusicTrack
   musicState = MusicState()
   nextMoveBeat = -1
+  suppressInput = false
+  lastMoveTime = 0f
   turn = 0
   moveBeat = 0f
   skippedBeat: bool
@@ -77,6 +79,8 @@ GridPos.onAdd:
   if pos.valid:
     pos.vec = curComponent.vec.vec2
 
+template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
+
 template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
@@ -119,11 +123,10 @@ makeSystem("init", []):
     trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
     trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -50f / 1000f)
     trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
+    trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
     #what does "fevereiro" even mean
     trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: 0f / 1000f)
-    #trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    #trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
     musicState.track = trackStoplight
 
     reset()
@@ -160,7 +163,7 @@ makeSystem("updateMusic", []):
 
     musicState.secs = musicState.voice.streamPos + musicState.track.beatOffset
 
-    let 
+    let
       prevBeat = musicState.beatCount
       nextBeat = int(musicState.secs / beatSpace)
 
@@ -170,13 +173,13 @@ makeSystem("updateMusic", []):
   elif not musicState.voice.valid:
     musicState.voice = musicState.track.sound.play(loop = true)
     musicState.voice.seek(32.0)
-    #musicState.voice.seek(223.0)
 
-  if musicState.beatCount > nextMoveBeat:# or (musicState.beatChanged and nextMoveBeat == musicState.beatCount):
-    #TODO does not handle ONE skipped beat
-    #echo "beat skip: " & $nextMoveBeat
+  #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
+  if musicState.beatCount > nextMoveBeat or (fau.time - lastMoveTime) / beatSpacing() >= 1.025f:
+    lastMoveTime = fau.time
     nextMoveBeat = musicState.beatCount
     skippedBeat = true
+    suppressInput = true
     runTurn()
 
 makeTimedSystem()
@@ -184,7 +187,9 @@ makeTimedSystem()
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   start:
     #TODO only one direction at a time?
-    let vec = if canMove(): axisTap2(keyA, keyD, keyS, keyW) else: vec2()
+    var vec = if canMove(): axisTap2(keyA, keyD, keyS, keyW) else: vec2()
+    if vec.angle.deg.int.mod(90) != 0:
+      vec.angle = vec.angle.deg.round(90f).rad
     var moved = false
   all:
     if keyEscape.tapped:
@@ -222,27 +227,27 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
         item.unitDraw.side = vec.x < 0
   finish:
     if moved:
-      #next turn!
-      runTurn()
+      #next turn, if it has not been skipped yet
+      if not suppressInput:
+        runTurn()
+      suppressInput = false
       nextMoveBeat = musicState.beatCount + 1
+      lastMoveTime = fau.time
 
 include bullets
 
+#TODO
 makeSystem("spawnBullets", []):
   if newTurn:
     bulletsCorners()
-    #let
-    #  x = 5
-    #  y = turn mod 11 - 5
-    #TODO
-    #discard newEntityWith(DrawBullet(), Pos(vec: vec2(x.float32, y.float32)), GridPos(vec: vec2i(x, y)), Velocity(vec: vec2i(-1, 0)), Damage())
 
 #TODO O(N^2)
 makeSystem("collide", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
       let pos = other.gridPos
-      if pos.vec == item.gridPos.vec or pos.vec == item.gridPos.vec + vec2i(0, -1):
+      #TODO should the head collide with bullets? it's a bit confusing if it doesn't
+      if pos.vec == item.gridPos.vec:# or pos.vec == item.gridPos.vec + vec2i(0, -1):
         other.unitDraw.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
@@ -255,7 +260,10 @@ makeSystem("updateVelocity", [GridPos, Velocity]):
 makeSystem("killBullets", [GridPos, Velocity]):
   if newTurn:
     all:
-      if item.gridPos.vec.x < -5:
+      let 
+        p = item.gridPos.vec
+        bounds = 5
+      if p.x.abs > bounds or p.y.abs > bounds:
         delete item.entity
 
 makeSystem("posLerp", [Pos, GridPos]):
@@ -321,17 +329,20 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px), 
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.13f), 
       align = daBot,
-      mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f))
+      mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)),
+      z = zlayer(item)
     )
 
 makeSystem("drawBullet", [Pos, DrawBullet, Velocity]):
   all:
-    draw("bullet".patchConst, item.pos.vec, rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
+    draw("bullet".patchConst, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
 makeSystem("endDraw", []):
   drawBufferScreen()
   when pixelate:
     sysDraw.buffer.blit()
-  
+
+makeSystem("drawUI", []):
+  dfont.draw(&"beatCount: {musicState.beatCount} / next {nextMoveBeat}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
 launchFau("absurd")
