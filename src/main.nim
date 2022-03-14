@@ -16,6 +16,10 @@ type MusicState = ref object
   beatCount: int
   loops: int
 
+#TODO
+type Beatmap = object
+
+
 #TODO better viewport
 const
   #pixels
@@ -23,7 +27,7 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = true
+  noMusic = false
 
 var 
   trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych: MusicTrack
@@ -79,7 +83,7 @@ template runTurn() =
 template reset() =
   sysAll.clear()
 
-  #makeUnit(vec2i(), unitQuad)
+  #makeUnit(vec2i(1, 0), unitQuad)
   #makeUnit(vec2i(-1, 0), unitOct)
   makeUnit(vec2i(), unitZenith)
 
@@ -114,7 +118,7 @@ makeSystem("init", []):
     #trackEva = MusicTrack(sound: musicEva, bpm: 50f, beatOffset: -160.0 / 1000.0)
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     #trackRiser = MusicTrack(sound: musicRiser, bpm: 140f, beatOffset: 0f / 1000f)
-    musicState.track = trackForYou
+    musicState.track = trackStoplight
 
     reset()
 
@@ -175,6 +179,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   start:
     #TODO only one direction at a time?
     let vec = if canMove(): axisTap2(keyA, keyD, keyS, keyW) else: vec2()
+    var moved = false
   all:
     if keyEscape.tapped:
       quitApp()
@@ -197,11 +202,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       item.unitDraw.beatScl = 1f
 
     if vec.zero.not:
-      #next turn!
-      runTurn()
+      moved = true
 
       item.unitDraw.beatScl = 1f
-      nextMoveBeat = musicState.beatCount + 1
 
       item.gridPos.vec += vec.vec2i
 
@@ -211,6 +214,12 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       if vec.x.abs > 0:
         item.unitDraw.side = vec.x < 0
+  finish:
+    if moved:
+      #next turn!
+      runTurn()
+      nextMoveBeat = musicState.beatCount + 1
+
 
 makeSystem("spawnBullets", []):
   if newTurn:
@@ -263,49 +272,12 @@ makeSystem("draw", []):
   fau.cam.update(fau.size / scl, vec2())
   fau.cam.use()
 
+include patterns
+
 makeSystem("drawBackground", []):
-  #moving stripes
-  let 
-    amount = 20
-    swidth = 70f.px
-    ang = 135f.rad
-  for i in 0..<amount:
-    let 
-      frac = (i + turn + ((1f - moveBeat).powout(8f))).mod(amount) / amount - 0.5f
-      pos = vec2l(ang, swidth) * (frac * amount)
-    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = colorPink.mix(colorWhite, (i.float32 mod 2f) * 0.2f))
-
-  #basic fade squares
-  poly(vec2(), 4, (45f + 15f * (musicState.beatCount mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(beat()))
-
-  #drawBuffer(sysDraw.bloom.buffer)
-
-  #fading particles?
-  let 
-    parts = 70
-    partRange = 13f
-    move = vec2(-0.5f, -0.5f)
-    col = colorPink.mix(colorWhite, 0.4f)
-    size = (5f + beat().pow(2f) * 4f).px
-  
-  var r = initRand(1)
-  
-  for i in 0..<parts:
-    var pos = vec2(r.range(partRange), r.range(partRange))
-
-    pos += move * (turn + (1f - moveBeat).powout(30f))
-    pos = (pos + partRange).emod(vec2(partRange * 2)) - partRange
-
-    fillPoly(pos, 4, size, color = col)
-    fillPoly(pos - move*0.5f, 4, size/2f, color = col)
-    fillPoly(pos - move*0.9f, 4, size/4f, color = col)
-  
-  #when pixelate:
-  #  drawBuffer(sys.buffer)
-  #else:
-  #  drawBufferScreen()
-  
-  #sysDraw.bloom.blit(meshParams(blend = blendNormal))
+  patStripes()
+  #patFadeShapes()
+  patBeatSquare()
 
 const bars = 50
 
@@ -337,18 +309,6 @@ makeSystem("drawTiles", []):
 
 makeEffectsSystem()
 
-#[
-      /** Draws a sprite that should be light-wise correct, when rotated. Provided sprite must be symmetrical in shape. */
-    public static void spinSprite(TextureRegion region, float x, float y, float r){
-        float a = Draw.getColor().a;
-        r = Mathf.mod(r, 90f);
-        Draw.rect(region, x, y, r);
-        Draw.alpha(r / 90f*a);
-        Draw.rect(region, x, y, r - 90f);
-        Draw.alpha(a);
-    }
-]#
-
 makeSystem("drawRouter", [Pos, DrawRouter]):
   all:
     proc spinSprite(patch: Patch, pos: Vec2, scl: Vec2, rot: float32) =
@@ -361,6 +321,9 @@ makeSystem("drawRouter", [Pos, DrawRouter]):
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
 
+    #looks bad
+    #draw("shadow".patchConst, item.pos.vec, color = rgba(0f, 0f, 0f, 0.3f))
+
     draw(
       #TODO bad
       if item.unitDraw.hitTime > 0: (&"unit-{item.unitDraw.unit.name}-hit").patch else: (&"unit-{item.unitDraw.unit.name}").patch, 
@@ -370,9 +333,9 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f))
     )
 
-makeSystem("drawBullet", [Pos, DrawBullet]):
+makeSystem("drawBullet", [Pos, DrawBullet, Velocity]):
   all:
-    draw("bullet".patchConst, item.pos.vec)
+    draw("bullet".patchConst, item.pos.vec, rotation = item.velocity.vec.vec2.angle)
 
 makeSystem("endDraw", []):
   drawBufferScreen()
