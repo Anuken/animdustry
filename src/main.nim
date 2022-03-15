@@ -16,8 +16,10 @@ type MusicState = ref object
   beatCount: int
   loops: int
 
-#TODO
 type Beatmap = object
+  track: MusicTrack
+  draw: proc()
+  update: proc()
 
 #TODO better viewport
 const
@@ -26,12 +28,15 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = false
+  noMusic = true
   beatMargin = 0.025f
+  mapSize = 5
 
-var 
+var
+  #track definitions
   trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79: MusicTrack
-  musicState = MusicState()
+
+  #basic beat/game state
   nextMoveBeat = -1
   suppressInput = false
   lastMoveTime = 0f
@@ -40,6 +45,12 @@ var
   moveBeat = 0f
   skippedBeat: bool
   newTurn: bool
+
+  #should this be separate...?
+  curMap: Beatmap
+  musicState = MusicState()
+
+  #misc rendering
   dfont: Font
 
 register(defaultComponentOptions):
@@ -91,7 +102,15 @@ template runTurn() =
   moveBeat = 1f
 
 template reset() =
+  #TODO clear state
   sysAll.clear()
+
+  #stop old music
+  if musicState.voice.int != 0:
+    musicState.voice.stop()
+
+  curMap = mapFirst
+  musicState.track = curMap.track
 
   #makeUnit(vec2i(1, 0), unitQuad)
   #makeUnit(vec2i(-1, 0), unitOct)
@@ -110,6 +129,8 @@ proc musicTime(): float = musicState.voice.streamPos
 proc canMove(): bool =
   return (beat() > 0.5f) and musicState.beatCount >= nextMoveBeat
 
+include bullets, patterns, maps
+
 makeSystem("init", []):
   init:
     dfont = loadFont("font.ttf", size = 16)
@@ -118,6 +139,7 @@ makeSystem("init", []):
       setGlobalVolume(0f)
     enableSoundVisualization()
 
+    #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
     trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
 
@@ -129,8 +151,8 @@ makeSystem("init", []):
     trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
     #what does "fevereiro" even mean
     trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
-    #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    musicState.track = trackBright79
+
+    createMaps()
 
     reset()
 
@@ -243,12 +265,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       nextMoveBeat = musicState.beatCount + 1
       lastMoveTime = musicTime()
 
-include bullets
-
 #TODO
 makeSystem("spawnBullets", []):
-  if newTurn:
-    bulletsCorners()
+  curMap.update()
 
 #TODO O(N^2)
 makeSystem("collide", [GridPos, Damage]):
@@ -269,10 +288,8 @@ makeSystem("updateVelocity", [GridPos, Velocity]):
 makeSystem("killBullets", [GridPos, Velocity]):
   if newTurn:
     all:
-      let 
-        p = item.gridPos.vec
-        bounds = 5
-      if p.x.abs > bounds or p.y.abs > bounds:
+      let p = item.gridPos.vec
+      if p.x.abs > mapSize or p.y.abs > mapSize:
         delete item.entity
 
 makeSystem("posLerp", [Pos, GridPos]):
@@ -297,21 +314,19 @@ makeSystem("draw", []):
   fau.cam.update(fau.size / scl, vec2())
   fau.cam.use()
 
-include patterns
-
 makeSystem("drawBackground", []):
-  patStripes()
-  #patFadeShapes()
-  patBeatSquare()
+  curMap.draw()
 
+  #patStripes()
+  #patFadeShapes()
+  #patBeatSquare()
   #patFft()
 
 makeSystem("drawTiles", []):
-  let rad = 5
-  for x in -rad..rad:
-    for y in -rad..rad:
+  for x in -mapSize..mapSize:
+    for y in -mapSize..mapSize:
       let 
-        absed = ((x + rad) + (y + rad) + turn).mod 5
+        absed = ((x + mapSize) + (y + mapSize) + turn).mod 5
         strength = (absed == 0).float32 * moveBeat
       draw("tile".patchConst, vec2(x, y), color = (%"ffffff").mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
 
@@ -352,6 +367,9 @@ makeSystem("endDraw", []):
     sysDraw.buffer.blit()
 
 makeSystem("drawUI", []):
-  dfont.draw(&"beatCount: {musicState.beatCount} / next {nextMoveBeat}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  let
+    minutes = musicState.secs.int div 60
+    secs = musicState.secs.int mod 60
+  dfont.draw(&"turn {turn} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
 launchFau("absurd")
