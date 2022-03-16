@@ -28,7 +28,7 @@ const
   scl = 80f
   hitDuration = 0.5f
   pixelate = false
-  noMusic = true
+  noMusic = false
   beatMargin = 0.025f
   mapSize = 6
 
@@ -81,6 +81,8 @@ defineEffects:
   walk(lifetime = 0.8f):
     particlesLife(e.id, 10, e.pos, e.fin, 12f.px):
       fillCircle(pos, (4f * fout.powout(3f)).px, color = %"6e7080")
+  walkWave:
+    poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
@@ -114,7 +116,7 @@ template reset() =
   )
 
   #TODO maybe make object?
-  nextMoveBeat = -1
+  nextMoveBeat = 0
   suppressInput = false
   lastMoveTime = 0f
   lastInputTime = 0f
@@ -130,7 +132,8 @@ template beginMap(next: Beatmap) =
 
   state.map = next
   state.voice = state.map.track.sound.play()
-  #state.voice.seek(60.0)
+  lastMoveTime = beatSpacing()
+  #state.voice.seek(90.0)
 
 proc beat(): float32 = state.beat
 proc ibeat(): float32 = 1f - state.beat
@@ -203,9 +206,6 @@ makeSystem("updateMusic", []):
     state.beatChanged = nextBeat != state.beatCount
     state.beatCount = nextBeat
     state.beat = (1.0 - ((state.secs mod beatSpace) / beatSpace)).float32
-  elif not state.voice.valid:
-    state.voice = state.map.track.sound.play(loop = true)
-    state.voice.seek(60.0)
 
   #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
   if state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
@@ -264,6 +264,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       item.unitDraw.scl = 0.7f
       item.unitDraw.walkTime = 1f
       effectWalk(item.pos.vec + vec2(0f, 2f.px))
+      effectWalkWave(item.gridPos.vec.vec2, life = beatSpacing())
 
       if vec.x.abs > 0:
         item.unitDraw.side = vec.x < 0
@@ -377,6 +378,6 @@ makeSystem("drawUI", []):
     time = musicTime()
     minutes = time.int div 60
     secs = time.int mod 60
-  dfont.draw(&"turn {turn} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  dfont.draw(&"turn {turn} | beat {state.beatCount} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
 launchFau("absurd")
