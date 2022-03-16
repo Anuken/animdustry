@@ -7,19 +7,19 @@ type MusicTrack = object
   bpm: float
   beatOffset: float
 
-type MusicState = ref object
+type Beatmap = object
   track: MusicTrack
+  draw: proc()
+  update: proc()
+
+type GameState = object
+  map: Beatmap
   voice: Voice
   secs: float
   beat: float
   beatChanged: bool
   beatCount: int
   loops: int
-
-type Beatmap = object
-  track: MusicTrack
-  draw: proc()
-  update: proc()
 
 #TODO better viewport
 const
@@ -30,7 +30,7 @@ const
   pixelate = false
   noMusic = true
   beatMargin = 0.025f
-  mapSize = 5
+  mapSize = 6
 
 var
   #track definitions
@@ -43,12 +43,11 @@ var
   lastInputTime = 0f
   turn = 0
   moveBeat = 0f
-  skippedBeat: bool
-  newTurn: bool
+  skippedBeat = false
+  newTurn = false
 
   #should this be separate...?
-  curMap: Beatmap
-  musicState = MusicState()
+  state = GameState()
 
   #misc rendering
   dfont: Font
@@ -86,6 +85,7 @@ defineEffects:
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
 
+#snap position to grid position
 GridPos.onAdd:
   let pos = entity.fetch(Pos)
   if pos.valid:
@@ -102,34 +102,45 @@ template runTurn() =
   moveBeat = 1f
 
 template reset() =
-  #TODO clear state
+  #TODO clear variable state
   sysAll.clear()
 
   #stop old music
-  if musicState.voice.int != 0:
-    musicState.voice.stop()
+  if state.voice.int != 0:
+    state.voice.stop()
 
-  curMap = mapFirst
-  musicState.track = curMap.track
+  state = GameState(
+    map: mapFirst #default map
+  )
 
-  #makeUnit(vec2i(1, 0), unitQuad)
-  #makeUnit(vec2i(-1, 0), unitOct)
-  makeUnit(vec2i(), unitOct)
+  #TODO maybe make object?
+  nextMoveBeat = -1
+  suppressInput = false
+  lastMoveTime = 0f
+  lastInputTime = 0f
+  turn = 0
+  moveBeat = 0f
+  skippedBeat = false
+  newTurn = false
 
-  for pos in d4edge():
-    discard newEntityWith(Pos(), GridPos(vec: pos * 5), DrawRouter())
+  makeUnit(vec2i(), unitZenith)
 
-proc beat(): float32 = musicState.beat
-proc ibeat(): float32 = 1f - musicState.beat
-proc beatSpacing(): float = 1.0 / (musicState.track.bpm / 60.0)
-#TODO bad granulatity?
-proc musicTime(): float = musicState.voice.streamPos
+template beginMap(next: Beatmap) =
+  reset()
 
-#TODO
+  state.map = next
+  state.voice = state.map.track.sound.play()
+  #state.voice.seek(60.0)
+
+proc beat(): float32 = state.beat
+proc ibeat(): float32 = 1f - state.beat
+proc beatSpacing(): float = 1.0 / (state.map.track.bpm / 60.0)
+proc musicTime(): float = state.voice.streamPos
+
 proc canMove(): bool =
-  return (beat() > 0.5f) and musicState.beatCount >= nextMoveBeat
+  return (beat() > 0.5f) and state.beatCount >= nextMoveBeat
 
-include bullets, patterns, maps
+include patterns, maps
 
 makeSystem("init", []):
   init:
@@ -154,7 +165,7 @@ makeSystem("init", []):
 
     createMaps()
 
-    reset()
+    beginMap(mapFirst)
 
 makeSystem("all", [Pos]): discard
 
@@ -164,42 +175,42 @@ makeSystem("updateMusic", []):
 
   when defined(debug):
     if keySpace.tapped:
-      musicState.voice.paused = musicstate.voice.paused.not
+      state.voice.paused = state.voice.paused.not
 
-  if musicState.voice.valid and musicState.voice.playing:
+  if state.voice.valid and state.voice.playing:
     let beatSpace = beatSpacing()
 
     moveBeat -= fau.delta / beatSpace
     moveBeat = max(moveBeat, 0f)
 
-    #check for loop
-    if musicState.loops != musicState.voice.loopCount:
-      musicState.loops = musicState.voice.loopCount
+    #check for loop???
+    if state.loops != state.voice.loopCount:
+      state.loops = state.voice.loopCount
 
       #reset state
-      musicState.secs = 0f
-      musicState.beatCount = 0
-      musicState.beat = 0f
+      state.secs = 0f
+      state.beatCount = 0
+      state.beat = 0f
       #TODO allows skipped beat at loop end
       nextMoveBeat = 0
 
-    musicState.secs = musicState.voice.streamPos + musicState.track.beatOffset
+    state.secs = state.voice.streamPos + state.map.track.beatOffset
 
     let
-      prevBeat = musicState.beatCount
-      nextBeat = int(musicState.secs / beatSpace)
+      prevBeat = state.beatCount
+      nextBeat = int(state.secs / beatSpace)
 
-    musicState.beatChanged = nextBeat != musicState.beatCount
-    musicState.beatCount = nextBeat
-    musicState.beat = (1.0 - ((musicState.secs mod beatSpace) / beatSpace)).float32
-  elif not musicState.voice.valid:
-    musicState.voice = musicState.track.sound.play(loop = true)
-    musicState.voice.seek(60.0)
+    state.beatChanged = nextBeat != state.beatCount
+    state.beatCount = nextBeat
+    state.beat = (1.0 - ((state.secs mod beatSpace) / beatSpace)).float32
+  elif not state.voice.valid:
+    state.voice = state.map.track.sound.play(loop = true)
+    state.voice.seek(60.0)
 
   #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
-  if musicState.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
+  if state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
     lastMoveTime = musicTime()
-    nextMoveBeat = musicState.beatCount
+    nextMoveBeat = state.beatCount
     skippedBeat = true
     suppressInput = true
     runTurn()
@@ -262,12 +273,12 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       if not suppressInput:
         runTurn()
       suppressInput = false
-      nextMoveBeat = musicState.beatCount + 1
+      nextMoveBeat = state.beatCount + 1
       lastMoveTime = musicTime()
 
 #TODO
 makeSystem("spawnBullets", []):
-  curMap.update()
+  state.map.update()
 
 #TODO O(N^2)
 makeSystem("collide", [GridPos, Damage]):
@@ -315,12 +326,7 @@ makeSystem("draw", []):
   fau.cam.use()
 
 makeSystem("drawBackground", []):
-  curMap.draw()
-
-  #patStripes()
-  #patFadeShapes()
-  #patBeatSquare()
-  #patFft()
+  state.map.draw()
 
 makeSystem("drawTiles", []):
   for x in -mapSize..mapSize:
@@ -350,7 +356,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
     draw(
       #TODO bad
       if item.unitDraw.hitTime > 0: (&"unit-{item.unitDraw.unit.name}-hit").patch else: (&"unit-{item.unitDraw.unit.name}").patch, 
-      item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px), 
+      item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.13f), 
       align = daBot,
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)),
@@ -368,8 +374,9 @@ makeSystem("endDraw", []):
 
 makeSystem("drawUI", []):
   let
-    minutes = musicState.secs.int div 60
-    secs = musicState.secs.int mod 60
+    time = musicTime()
+    minutes = time.int div 60
+    secs = time.int mod 60
   dfont.draw(&"turn {turn} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
 launchFau("absurd")
