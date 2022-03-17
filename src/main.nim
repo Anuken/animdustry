@@ -70,12 +70,38 @@ register(defaultComponentOptions):
     Velocity = object
       vec: Vec2i
     
+    Scaled = object
+      scl: float32
+    
     DrawBullet = object
       rot: float32
     
     DrawRouter = object
+
+    DrawConveyor = object
+
+    Lifetime = object
+      turns: int
+    
+    Deleting = object
+      time: float32
+
+    Snek = object
+      turns: int
+      produced: bool
+      gen: int
+      fade: float32
+      len: int
+    
+    SpawnConveyors = object
+      len: int
+      diagonal: bool
     
     Damage = object
+
+    RunDelay = object
+      delay: int
+      callback: proc()
 
 defineEffects:
   walk(lifetime = 0.8f):
@@ -86,12 +112,28 @@ defineEffects:
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
+  warn:
+    poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
+
+    draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
 
 #snap position to grid position
 GridPos.onAdd:
   let pos = entity.fetch(Pos)
   if pos.valid:
     pos.vec = curComponent.vec.vec2
+
+DrawRouter.onAdd:
+  if not entity.has(Scaled):
+    entity.add Scaled(scl: 1f)
+
+DrawConveyor.onAdd:
+  if not entity.has(Scaled):
+    entity.add Scaled(scl: 1f)
+
+#TODO broken
+template runDelay(del: int, call: proc()) =
+  discard newEntityWith(RunDelay(delay: del, callback: call))
 
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
@@ -106,6 +148,7 @@ template runTurn() =
 template reset() =
   #TODO clear variable state
   sysAll.clear()
+  sysRunDelay.clear()
 
   #stop old music
   if state.voice.int != 0:
@@ -127,13 +170,15 @@ template reset() =
 
   makeUnit(vec2i(), unitZenith)
 
-template beginMap(next: Beatmap) =
+template beginMap(next: Beatmap, offset = 0.0) =
   reset()
 
   state.map = next
   state.voice = state.map.track.sound.play()
   lastMoveTime = beatSpacing()
-  #state.voice.seek(90.0)
+  if offset > 0.0:
+    state.voice.seek(offset)
+    turn = int(offset / beatSpacing()) - 1
 
 proc beat(): float32 = state.beat
 proc ibeat(): float32 = 1f - state.beat
@@ -168,7 +213,7 @@ makeSystem("init", []):
 
     createMaps()
 
-    beginMap(mapFirst)
+    beginMap(mapFirst, offset = 20.0)
 
 makeSystem("all", [Pos]): discard
 
@@ -214,6 +259,15 @@ makeSystem("updateMusic", []):
     skippedBeat = true
     suppressInput = true
     runTurn()
+
+makeSystem("runDelay", [RunDelay]):
+  if newTurn:
+    all:
+      item.runDelay.delay.dec
+      if item.runDelay.delay < 0:
+        let p = item.runDelay.callback
+        p()
+        item.entity.delete()
 
 makeTimedSystem()
 
@@ -277,17 +331,67 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       nextMoveBeat = state.beatCount + 1
       lastMoveTime = musicTime()
 
-#TODO
-makeSystem("spawnBullets", []):
+#fade out and delete
+makeSystem("deleting", [Deleting, Scaled]):
+  all:
+    item.deleting.time -= fau.delta / 0.2f
+    item.scaled.scl = item.deleting.time
+    if item.deleting.time < 0:
+      item.entity.delete()
+
+makeSystem("lifetime", [Lifetime]):
+  if newTurn:
+    all:
+      item.lifetime.turns.dec
+
+      #fade out, no damage
+      if item.lifetime.turns < 0:
+        item.entity.add(Deleting(time: 1f))
+        item.entity.remove(Damage)
+        item.entity.remove(Lifetime)
+
+makeSystem("snek", [Snek, GridPos, Velocity]):
+  if newTurn:
+    all:
+      if item.snek.produced.not and item.snek.gen < item.snek.len - 1:
+        let copy = item.entity.clone()
+        #behind this one
+        copy.fetch(GridPos).vec -= item.velocity.vec
+        copy.fetch(Pos).vec = copy.fetch(GridPos).vec.vec2
+        copy.fetch(Snek).gen = item.snek.gen + 1
+        copy.fetch(Snek).fade = 0f
+
+        item.snek.produced = true
+
+      item.snek.turns.inc
+
+      #if item.snek.turns > 5:
+      #  sys.deleteList.add item.entity
+
+makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
+  template spawn(d: Vec2i, length: int) =
+    discard newEntityWith(DrawConveyor(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: d), Damage(), Snek(len: length))
+
+  if newTurn:
+    all:
+      if item.spawnConveyors.diagonal.not:
+        for dir in d4():
+          spawn(dir, item.spawnConveyors.len)
+      else:
+        for dir in d4edge():
+          spawn(dir, item.spawnConveyors.len)
+
+      item.entity.remove(SpawnConveyors)
+
+makeSystem("updateMap", []):
   state.map.update()
 
-#TODO O(N^2)
-makeSystem("collide", [GridPos, Damage]):
+#TODO only run during turn?
+makeSystem("damagePlayer", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
       let pos = other.gridPos
-      #TODO should the head collide with bullets? it's a bit confusing if it doesn't
-      if pos.vec == item.gridPos.vec:# or pos.vec == item.gridPos.vec + vec2i(0, -1):
+      if pos.vec == item.gridPos.vec:
         other.unitDraw.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
@@ -296,6 +400,18 @@ makeSystem("updateVelocity", [GridPos, Velocity]):
   if newTurn:
     all:
       item.gridPos.vec += item.velocity.vec
+
+#TODO should not require snek...
+makeSystem("collideSnek", [GridPos, Damage, Velocity, Snek]):
+  if newTurn:
+    all:
+      if item.snek.turns > 0:
+        for other in sys.groups:
+          let pos = other.gridPos
+          if other.entity != item.entity and other.velocity.vec == -item.velocity.vec and pos.vec == item.gridPos.vec:
+            sys.deleteList.add item.entity
+            sys.deleteList.add other.entity
+            effectHit(item.gridPos.vec.vec2)
 
 makeSystem("killBullets", [GridPos, Velocity]):
   if newTurn:
@@ -339,14 +455,26 @@ makeSystem("drawTiles", []):
 
 makeEffectsSystem()
 
-makeSystem("drawRouter", [Pos, DrawRouter]):
+makeSystem("drawConveyor", [Pos, DrawConveyor, Velocity, Snek, Scaled]):
+  all:
+    item.snek.fade += fau.delta / 0.5f
+    let f = item.snek.fade.clamp
+
+    draw("conveyor".patchConst,
+      item.pos.vec, 
+      rotation = item.velocity.vec.vec2.angle,
+      scl = vec2(1f, 1f - moveBeat * 0.3f) * item.scaled.scl,
+      mixcolor = colorPink.mix(colorWhite, 0.5f).withA(1f - f)
+    )
+
+makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):
   all:
     proc spinSprite(patch: Patch, pos: Vec2, scl: Vec2, rot: float32) =
       let r = rot.mod 90f
       draw(patch, pos, rotation = r, scl = scl)
       draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
 
-    spinSprite("router".patchConst, item.pos.vec, vec2(1f + beat().pow(3f) * 0.2f), 90f.rad * beat().pow(6f))
+    spinSprite("router".patchConst, item.pos.vec, vec2(1f + beat().pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * beat().pow(6f))
 
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
@@ -358,7 +486,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       #TODO bad
       if item.unitDraw.hitTime > 0: (&"unit-{item.unitDraw.unit.name}-hit").patch else: (&"unit-{item.unitDraw.unit.name}").patch, 
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
-      scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.13f), 
+      scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.14f), 
       align = daBot,
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)),
       z = zlayer(item)
