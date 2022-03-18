@@ -58,15 +58,17 @@ template createMaps() =
             for i in signsi():
               conveyor(vec2i(-mapSize * dir, ((turn div space).mod(mapSize + 1)) * i), vec2i(dir, 0))
         else:
+          let off = turn + 1
+
           #warning for router spawn?
-          if (turn + 1) mod space == 0:
+          if (off + 1) mod space == 0:
             effectWarn(vec2(), life = beatSpacing())
 
-          if turn mod space == 0:
+          if off mod space == 0:
             discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: vec2i()), Damage(), SpawnConveyors(len: 2, diagonal: (turn.mod(space * 2) == 0)), Lifetime(turns: 2))
             
-          if turn mod (space*2) == 0:
-            let cor = (turn / (space * 2)).mod(mapSize * 2 + 1)
+          if off mod (space*2) == 0:
+            let cor = (off / (space * 2)).mod(mapSize * 2 + 1)
             var i = 0
             for corner in d4edge():
               discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: corner * mapSize + vec2l(i * 90f.rad + 180f.rad, cor).vec2i), Damage(), SpawnConveyors(len: 3), Lifetime(turns: 2))

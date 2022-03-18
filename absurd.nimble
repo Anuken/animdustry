@@ -21,7 +21,7 @@ const
   libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets"
 
   builds = [
-    #(name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
+    (name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
   ]
 
@@ -43,7 +43,7 @@ task web, "Deploy web build":
   writeFile("build/web/index.html", readFile("build/web/index.html").replace("$title$", capitalizeAscii(app)))
 
 task deploy, "Build for all platforms":
-  webTask()
+  #webTask()
 
   for name, os, cpu, args in builds.items:
     let
@@ -55,7 +55,7 @@ task deploy, "Build for all platforms":
     mkDir dir
     shell &"nim --cpu:{cpu} --os:{os} --app:gui -f {args} -d:danger -o:{bin} c src/{app}"
     shell &"strip -s {bin}"
-    shell &"upx-ucl --best {bin}"
+    #shell &"upx-ucl --best {bin}"
 
   cd "build"
   shell &"zip -9r {app}-web.zip web/*"

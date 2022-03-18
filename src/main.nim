@@ -41,6 +41,7 @@ var
   suppressInput = false
   lastMoveTime = 0f
   lastInputTime = 0f
+  failCount = 0
   turn = 0
   moveBeat = 0f
   skippedBeat = false
@@ -144,6 +145,7 @@ template runTurn() =
   newTurn = true
   turn.inc
   moveBeat = 1f
+  failCount = 0
 
 template reset() =
   #TODO clear variable state
@@ -160,6 +162,7 @@ template reset() =
 
   #TODO maybe make object?
   nextMoveBeat = 0
+  failCount = 0
   suppressInput = false
   lastMoveTime = 0f
   lastInputTime = 0f
@@ -178,7 +181,7 @@ template beginMap(next: Beatmap, offset = 0.0) =
   lastMoveTime = beatSpacing()
   if offset > 0.0:
     state.voice.seek(offset)
-    turn = int(offset / beatSpacing()) - 1
+    turn = int(offset / beatSpacing()) - 2
 
 proc beat(): float32 = state.beat
 proc ibeat(): float32 = 1f - state.beat
@@ -284,7 +287,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     if not canMove():
       #tried to move incorrectly, e.g. spam
       if vec.zero.not:
-        lastInputTime = musicTime() + beatSpacing() * 0.9f
+        failCount.inc
+        if failCount > 2:
+          lastInputTime = musicTime() + beatSpacing()
 
       vec = vec2()
   all:
