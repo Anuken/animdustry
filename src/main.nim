@@ -45,7 +45,8 @@ var
   turn = 0
   moveBeat = 0f
   skippedBeat = false
-  newTurn = false
+  newTurn = true
+  playerPos: Vec2i
 
   #should this be separate...?
   state = GameState()
@@ -76,10 +77,19 @@ register(defaultComponentOptions):
     
     DrawBullet = object
       rot: float32
+      sprite: string
     
     DrawRouter = object
 
     DrawConveyor = object
+
+    DrawTurret = object
+      sprite: string
+
+    Turret = object
+      dir: Vec2i
+      reload: int
+      reloadCounter: int
 
     Lifetime = object
       turns: int
@@ -132,9 +142,15 @@ DrawConveyor.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
+DrawTurret.onAdd:
+  if not entity.has(Scaled):
+    entity.add Scaled(scl: 1f)
+
 #TODO broken
-template runDelay(del: int, call: proc()) =
-  discard newEntityWith(RunDelay(delay: del, callback: call))
+template runDelay(body: untyped) =
+  discard newEntityWith(RunDelay(delay: 0, callback: (proc() =
+    body
+  )))
 
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
@@ -216,7 +232,7 @@ makeSystem("init", []):
 
     createMaps()
 
-    beginMap(mapFirst, offset = 20.0)
+    beginMap(mapFirst, 40.0)
 
 makeSystem("all", [Pos]): discard
 
@@ -295,6 +311,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   all:
     if keyEscape.tapped:
       quitApp()
+    
+    #yes, this is broken with many characters
+    playerPos = item.gridPos.vec
 
     item.unitDraw.scl = item.unitDraw.scl.lerp(1f, 12f * fau.delta)
 
@@ -388,6 +407,20 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
 
       item.entity.remove(SpawnConveyors)
 
+makeSystem("turretFollow", [Turret, GridPos]):
+  if newTurn and turn mod 2 == 0:
+    all:
+      if item.gridPos.vec.y != playerPos.y:
+        item.gridPos.vec.y += sign(playerPos.y - item.gridPos.vec.y)
+
+makeSystem("turretShoot", [Turret, GridPos]):
+  if newTurn:
+    all:
+      item.turret.reloadCounter.inc
+      if item.turret.reloadCounter >= item.turret.reload:
+        discard newEntityWith(DrawBullet(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: item.turret.dir), Damage())
+        item.turret.reloadCounter = 0
+      
 makeSystem("updateMap", []):
   state.map.update()
 
@@ -481,15 +514,25 @@ makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):
 
     spinSprite("router".patchConst, item.pos.vec, vec2(1f + beat().pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * beat().pow(6f))
 
+makeSystem("drawTurret", [Pos, DrawTurret, Turret, Scaled]):
+  all:
+    draw(item.drawTurret.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
 
     #looks bad
     #draw("shadow".patchConst, item.pos.vec, color = rgba(0f, 0f, 0f, 0.3f))
 
+    let suffix = 
+      if item.unitDraw.hitTime > 0: "-hit"
+      #TODO looks bad?
+      #elif item.unitDraw.beatScl > 0.75: "-bounce"
+      else: ""
+
     draw(
       #TODO bad
-      if item.unitDraw.hitTime > 0: (&"unit-{item.unitDraw.unit.name}-hit").patch else: (&"unit-{item.unitDraw.unit.name}").patch, 
+      (&"unit-{item.unitDraw.unit.name}" & suffix).patch,
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.14f), 
       align = daBot,
@@ -499,7 +542,11 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
 
 makeSystem("drawBullet", [Pos, DrawBullet, Velocity]):
   all:
-    draw("bullet".patchConst, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
+    #TODO glow!
+    let sprite = 
+      if item.drawBullet.sprite.len == 0: "bullet"
+      else: item.drawBullet.sprite
+    draw(sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
 makeSystem("endDraw", []):
   drawBufferScreen()
