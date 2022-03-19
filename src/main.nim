@@ -9,6 +9,7 @@ type MusicTrack = object
 
 type Beatmap = object
   track: MusicTrack
+  drawPixel: proc()
   draw: proc()
   update: proc()
 
@@ -31,6 +32,7 @@ const
   noMusic = false
   beatMargin = 0.025f
   mapSize = 6
+  fftSize = 50
 
 var
   #track definitions
@@ -54,6 +56,7 @@ var
 
   #misc rendering
   dfont: Font
+  fftValues: array[fftSize, float32]
 
 register(defaultComponentOptions):
   type 
@@ -278,6 +281,11 @@ makeSystem("updateMusic", []):
     state.beatCount = nextBeat
     state.beat = (1.0 - ((state.secs mod beatSpace) / beatSpace)).float32
 
+    let fft = getFft()
+
+    for i in 0..<fftSize:
+      fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
+
   #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
   if state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
     lastMoveTime = musicTime()
@@ -451,12 +459,15 @@ makeSystem("damagePlayer", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
       let pos = other.gridPos
-      if pos.vec == item.gridPos.vec and other.input.hitTurn < turn:
+      if pos.vec == item.gridPos.vec:
         other.unitDraw.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
-        hits.inc
-        other.input.hitTurn = turn
+
+        #do not actually deal damage (iframes)
+        if other.input.hitTurn < turn:
+          hits.inc
+          other.input.hitTurn = turn
 
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if newTurn:
@@ -505,15 +516,14 @@ makeSystem("draw", []):
   fau.cam.use()
 
 makeSystem("drawBackground", []):
-  state.map.draw()
+  if state.map.drawPixel != nil:
+    drawBuffer(sysDraw.buffer)
+    state.map.drawPixel()
+    drawBufferScreen()
+    sysDraw.buffer.blit()
 
-makeSystem("drawTiles", []):
-  for x in -mapSize..mapSize:
-    for y in -mapSize..mapSize:
-      let 
-        absed = ((x + mapSize) + (y + mapSize) + turn).mod 5
-        strength = (absed == 0).float32 * moveBeat
-      draw("tile".patchConst, vec2(x, y), color = (%"ffffff").mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
+  if state.map.draw != nil:
+    state.map.draw()
 
 makeEffectsSystem()
 

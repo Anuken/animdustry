@@ -37,11 +37,13 @@ proc modSize(num: int): int =
 template createMaps() =
   mapFirst = BeatMap(
     track: trackForYou, 
-    draw: (proc() =
-      
+    drawPixel: (proc() =
       patStripes()
       patBeatSquare()
-      #patFft()
+      patPetals()
+    ),
+    draw: (proc() =
+      patTiles()
     ),
     update: (proc() =
       if newTurn:
@@ -211,7 +213,8 @@ template createMaps() =
 
       patBeatSquare()
 
-      patFft()
+      #patFft()
+      patTilesFft()
     ),
     update: (proc() =
         discard

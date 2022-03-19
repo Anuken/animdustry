@@ -1,19 +1,29 @@
-const fftSize = 50
-
-var fftValues: array[fftSize, float32]
-
 proc patFft() =
   let 
-    fft = getFft()
     w = 20.px
     radius = 90f.px
     length = 8f
   
   for i in 0..<fftSize:
-    fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
-
     let rot = i / fftSize.float32 * pi2
     draw(fau.white, vec2l(rot, radius), size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
+
+proc patTiles() =
+  for x in -mapSize..mapSize:
+    for y in -mapSize..mapSize:
+      let 
+        absed = ((x + mapSize) + (y + mapSize) + turn).mod 5
+        strength = (absed == 0).float32 * moveBeat
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
+
+proc patTilesFft() =
+  for x in -mapSize..mapSize:
+    for y in -mapSize..mapSize:
+      let 
+        scaled = (y + mapSize) / (mapSize * 2 + 1)
+        val = x + mapSize
+        strength = (scaled < fftValues[val] / 13f).float32
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
 
 proc patBackground(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
@@ -70,3 +80,27 @@ proc patRain() =
     fillPoly(pos, 4, size, color = col)
     fillPoly(pos - move*0.5f, 4, size/2f, color = col)
     fillPoly(pos - move*0.9f, 4, size/4f, color = col)
+
+proc patPetals() =
+  let 
+    parts = 50
+    partRange = 18f
+    move = vec2(-0.5f, -0.5f)
+    col = colorPink.mix(colorWhite, 0.4f)
+    size = (5f + beat().pow(2f) * 4f).px
+  
+  var r = initRand(1)
+  
+  for i in 0..<parts:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(1f..2f)
+      rot = r.range(180f.rad)
+      rotSpeed = r.range(0.6f)
+      scale = r.rand(0.4f..1f)
+
+    pos += move * fau.time * speed * 0.8f
+    pos = fau.cam.viewport.wrap(pos, 2f)
+
+    draw("petal".patchConst, pos, color = colorPink.mix(colorWhite, 0.3f), rotation = rot + fau.time * rotSpeed, scl = scale.vec2)
+  
