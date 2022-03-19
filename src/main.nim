@@ -346,6 +346,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       item.unitDraw.beatScl = 1f
 
       item.gridPos.vec += vec.vec2i
+      item.gridpos.vec.clamp(vec2i(-mapSize), vec2i(mapSize))
 
       item.unitDraw.scl = 0.7f
       item.unitDraw.walkTime = 1f
