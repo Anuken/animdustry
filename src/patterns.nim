@@ -10,10 +10,13 @@ proc patFft() =
     length = 8f
   
   for i in 0..<fftSize:
-    fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 35f * fau.delta)
+    fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
 
     let rot = i / fftSize.float32 * pi2
     draw(fau.white, vec2l(rot, radius), size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
+
+proc patBackground(col: Color) =
+  draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
 
 #moving stripes
 proc patStripes() =
@@ -31,7 +34,7 @@ proc patStripes() =
 proc patBeatSquare() =
   poly(vec2(), 4, (45f + 15f * (turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(moveBeat))
 
-proc patFadeShapes() =
+proc patFadeShapes(col: Color) =
   const 
     fadeSides = 4
     fadeCount = 10
@@ -41,7 +44,7 @@ proc patFadeShapes() =
   
   proc drawFade(index: float32) =
     let rad = index * 100f.px
-    poly(vec2(), fadeSides, rad, stroke = min(30f.px, rad * 1.5f), rotation = index * 10f.rad, color = colorPink.mix(colorWhite, 0.2f))
+    poly(vec2(), fadeSides, rad, stroke = min(30f.px, rad * 1.5f), rotation = index * 10f.rad, color = col)
 
   var prevRad = 0f
 

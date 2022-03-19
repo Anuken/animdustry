@@ -141,7 +141,7 @@ template createMaps() =
         
         #"you"
         let next = turn + 1
-        if next in [68, 84, 148, 165, 228, 236, 260, 268, 292, 300, 324, 332, 356, 372, 388, 397, 420, 430]:
+        if next in [68, 84, 148, 164, 228, 236, 260, 268, 292, 300, 324, 332, 356, 372, 388, 397, 420, 430]:
           for pos in d4():
             effectWarn((pos * mapSize).vec2, life = beatSpacing())
           runDelay:
@@ -197,6 +197,24 @@ template createMaps() =
         
         #if turn in 4..20:
         #  bulletsCorners()
+    )
+  )
+
+  mapSecond = Beatmap(
+    track: trackStoplight, 
+    draw: (proc() =
+      patBackground(%"2b174d")
+      #patStripes()
+
+      #patRain()
+      patFadeShapes(%"4b2362")
+
+      patBeatSquare()
+
+      patFft()
+    ),
+    update: (proc() =
+        discard
     )
   )
 
