@@ -44,6 +44,7 @@ var
   failCount = 0
   turn = 0
   moveBeat = 0f
+  hits = 0
   skippedBeat = false
   newTurn = true
   playerPos: Vec2i
@@ -186,6 +187,7 @@ template reset() =
   moveBeat = 0f
   skippedBeat = false
   newTurn = false
+  hits = 0
 
   makeUnit(vec2i(), unitZenith)
 
@@ -232,7 +234,7 @@ makeSystem("init", []):
 
     createMaps()
 
-    beginMap(mapFirst, 40.0)
+    beginMap(mapFirst, 0.0)
 
 makeSystem("all", [Pos]): discard
 
@@ -278,15 +280,6 @@ makeSystem("updateMusic", []):
     skippedBeat = true
     suppressInput = true
     runTurn()
-
-makeSystem("runDelay", [RunDelay]):
-  if newTurn:
-    all:
-      item.runDelay.delay.dec
-      if item.runDelay.delay < 0:
-        let p = item.runDelay.callback
-        p()
-        item.entity.delete()
 
 makeTimedSystem()
 
@@ -355,6 +348,15 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       nextMoveBeat = state.beatCount + 1
       lastMoveTime = musicTime()
 
+makeSystem("runDelay", [RunDelay]):
+  if newTurn:
+    all:
+      item.runDelay.delay.dec
+      if item.runDelay.delay < 0:
+        let p = item.runDelay.callback
+        p()
+        item.entity.delete()
+
 #fade out and delete
 makeSystem("deleting", [Deleting, Scaled]):
   all:
@@ -410,8 +412,12 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
 makeSystem("turretFollow", [Turret, GridPos]):
   if newTurn and turn mod 2 == 0:
     all:
-      if item.gridPos.vec.y != playerPos.y:
-        item.gridPos.vec.y += sign(playerPos.y - item.gridPos.vec.y)
+      if item.gridPos.vec.x.abs == mapSize:
+        if item.gridPos.vec.y != playerPos.y:
+          item.gridPos.vec.y += sign(playerPos.y - item.gridPos.vec.y)
+      else:
+        if item.gridPos.vec.x != playerPos.x:
+          item.gridPos.vec.x += sign(playerPos.x - item.gridPos.vec.x)
 
 makeSystem("turretShoot", [Turret, GridPos]):
   if newTurn:
@@ -433,6 +439,7 @@ makeSystem("damagePlayer", [GridPos, Damage]):
         other.unitDraw.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
+        hits.inc
 
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if newTurn:
@@ -559,5 +566,7 @@ makeSystem("drawUI", []):
     minutes = time.int div 60
     secs = time.int mod 60
   dfont.draw(&"turn {turn} | beat {state.beatCount} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+
+  dfont.draw(&"hits: {hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
 launchFau("absurd")
