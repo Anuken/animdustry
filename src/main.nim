@@ -220,10 +220,12 @@ include patterns, maps
 
 makeSystem("init", []):
   init:
+    fau.maxDelta = 100f
     #songs are designed on my system, which has a base 10ms latency
-    audioLatency = getAudioBufferSize() / getAudioSampleRate() - 10.0 / 1000.0
+    #TODO apparently can be a disaster on windows? does the apparent play position actually depend on latency???
+    #audioLatency = getAudioBufferSize() / getAudioSampleRate() - 10.0 / 1000.0
 
-    echo &"Audio stats: {getAudioBufferSize()} buffer / {getAudioSampleRate()}hz; calculated delay: {getAudioBufferSize() / getAudioSampleRate() * 1000} ms"
+    echo &"Audio stats: {getAudioBufferSize()} buffer / {getAudioSampleRate()}hz; calculated latency: {getAudioBufferSize() / getAudioSampleRate() * 1000} ms"
 
     dfont = loadFont("font.ttf", size = 16)
     fau.pixelScl = 1f / tileSize
@@ -261,7 +263,7 @@ makeSystem("updateMusic", []):
   if state.voice.valid and state.voice.playing:
     let beatSpace = beatSpacing()
 
-    moveBeat -= fau.delta / beatSpace
+    moveBeat -= fau.rawDelta / beatSpace
     moveBeat = max(moveBeat, 0f)
 
     #check for loop???
@@ -272,7 +274,6 @@ makeSystem("updateMusic", []):
       state.secs = 0f
       state.beatCount = 0
       state.beat = 0f
-      #TODO allows skipped beat at loop end
       nextMoveBeat = 0
     
     let nextSecs = state.voice.streamPos - audioLatency + state.map.track.beatOffset
@@ -607,7 +608,7 @@ makeSystem("drawUI", []):
     time = musicTime()
     minutes = time.int div 60
     secs = time.int mod 60
-  dfont.draw(&"{turn} | beat {state.beatCount} | {minutes}:{secs:02} | {(audioLatency * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  dfont.draw(&"{turn} | beat {state.beatCount} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
   dfont.draw(&"hits: {hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
