@@ -14,7 +14,7 @@ proc patTiles() =
       let 
         absed = ((x + mapSize) + (y + mapSize) + turn).mod 5
         strength = (absed == 0).float32 * moveBeat
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * moveBeat))
 
 proc patTilesFft() =
   for x in -mapSize..mapSize:
@@ -23,7 +23,7 @@ proc patTilesFft() =
         scaled = (y + mapSize) / (mapSize * 2 + 1)
         val = x + mapSize
         strength = (scaled < fftValues[val] / 13f).float32
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * beat()))
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * moveBeat))
 
 proc patBackground(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
@@ -67,7 +67,7 @@ proc patRain() =
     partRange = 13f
     move = vec2(-0.5f, -0.5f)
     col = colorPink.mix(colorWhite, 0.4f)
-    size = (5f + beat().pow(2f) * 4f).px
+    size = (5f + moveBeat.pow(2f) * 4f).px
   
   var r = initRand(1)
   
@@ -87,7 +87,6 @@ proc patPetals() =
     partRange = 18f
     move = vec2(-0.5f, -0.5f)
     col = colorPink.mix(colorWhite, 0.4f)
-    size = (5f + beat().pow(2f) * 4f).px
   
   var r = initRand(1)
   

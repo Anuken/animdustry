@@ -17,6 +17,7 @@ type GameState = object
   map: Beatmap
   voice: Voice
   secs: float
+  lastSecs: float
   beat: float
   beatChanged: bool
   beatCount: int
@@ -26,7 +27,7 @@ type GameState = object
 const
   #pixels
   tileSize = 20f
-  hitDuration = 0.5f
+  hitDuration = 0.6f
   pixelate = false
   noMusic = false
   beatMargin = 0.025f
@@ -49,6 +50,7 @@ var
   skippedBeat = false
   newTurn = true
   playerPos: Vec2i
+  audioLatency = 0.0
 
   #should this be separate...?
   state = GameState()
@@ -208,18 +210,21 @@ template beginMap(next: Beatmap, offset = 0.0) =
     state.voice.seek(offset)
     turn = int(offset / beatSpacing()) - 2
 
-proc beat(): float32 = state.beat
-proc ibeat(): float32 = 1f - state.beat
 proc beatSpacing(): float = 1.0 / (state.map.track.bpm / 60.0)
-proc musicTime(): float = state.voice.streamPos
+proc musicTime(): float = state.secs
 
 proc canMove(): bool =
-  return (beat() > 0.5f) and state.beatCount >= nextMoveBeat
+  return (state.beat > 0.5f) and state.beatCount >= nextMoveBeat
 
 include patterns, maps
 
 makeSystem("init", []):
   init:
+    #songs are designed on my system, which has a base 10ms latency
+    audioLatency = getAudioBufferSize() / getAudioSampleRate() - 10.0 / 1000.0
+
+    echo &"Audio stats: {getAudioBufferSize()} buffer / {getAudioSampleRate()}hz; calculated delay: {getAudioBufferSize() / getAudioSampleRate() * 1000} ms"
+
     dfont = loadFont("font.ttf", size = 16)
     fau.pixelScl = 1f / tileSize
     when noMusic:
@@ -269,8 +274,15 @@ makeSystem("updateMusic", []):
       state.beat = 0f
       #TODO allows skipped beat at loop end
       nextMoveBeat = 0
+    
+    let nextSecs = state.voice.streamPos - audioLatency + state.map.track.beatOffset
 
-    state.secs = state.voice.streamPos + state.map.track.beatOffset
+    if nextSecs == state.lastSecs:
+      #beat did not change, move it forward manually to compensate for low "frame rate"
+      state.secs += fau.rawDelta
+    else:
+      state.secs = nextSecs
+    state.lastSecs = nextSecs
 
     let
       prevBeat = state.beatCount
@@ -464,7 +476,7 @@ makeSystem("damagePlayer", [GridPos, Damage]):
         effectHit(item.gridPos.vec.vec2)
 
         #do not actually deal damage (iframes)
-        if other.input.hitTurn < turn:
+        if other.input.hitTurn < turn - 1:
           hits.inc
           other.input.hitTurn = turn
 
@@ -505,6 +517,7 @@ makeSystem("draw", []):
     sys.bloom = newBloom()
     sys.buffer = newFramebuffer()
   
+  #margin is currently 4, adjust as needed
   let camScl = min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))
 
   sys.buffer.clear(colorBlack)
@@ -547,7 +560,7 @@ makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):
       draw(patch, pos, rotation = r, scl = scl)
       draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
 
-    spinSprite("router".patchConst, item.pos.vec, vec2(1f + beat().pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * beat().pow(6f))
+    spinSprite("router".patchConst, item.pos.vec, vec2(1f + moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * moveBeat.pow(6f))
 
 makeSystem("drawTurret", [Pos, DrawTurret, Turret, Scaled]):
   all:
@@ -594,7 +607,7 @@ makeSystem("drawUI", []):
     time = musicTime()
     minutes = time.int div 60
     secs = time.int mod 60
-  dfont.draw(&"turn {turn} | beat {state.beatCount} | {minutes}:{secs:02}", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  dfont.draw(&"{turn} | beat {state.beatCount} | {minutes}:{secs:02} | {(audioLatency * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
   dfont.draw(&"hits: {hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
