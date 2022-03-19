@@ -26,7 +26,6 @@ type GameState = object
 const
   #pixels
   tileSize = 20f
-  scl = 80f
   hitDuration = 0.5f
   pixelate = false
   noMusic = false
@@ -506,13 +505,15 @@ makeSystem("draw", []):
     sys.bloom = newBloom()
     sys.buffer = newFramebuffer()
   
+  let camScl = min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))
+
   sys.buffer.clear(colorBlack)
-  sys.buffer.resize(fau.size * tileSize / scl)
+  sys.buffer.resize(fau.size * tileSize / camScl)
 
   when pixelate:
     drawBuffer(sys.buffer)
 
-  fau.cam.update(fau.size / scl, vec2())
+  fau.cam.update(fau.size / camScl, vec2())
   fau.cam.use()
 
 makeSystem("drawBackground", []):
