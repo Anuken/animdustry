@@ -58,6 +58,7 @@ var
 register(defaultComponentOptions):
   type 
     Input = object
+      hitTurn: int
   
     GridPos = object
       vec: Vec2i
@@ -69,6 +70,7 @@ register(defaultComponentOptions):
       scl: float32
       hitTime: float32
       walkTime: float32
+      failTime: float32
     
     Velocity = object
       vec: Vec2i
@@ -128,6 +130,9 @@ defineEffects:
     poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
 
     draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
+  
+  fail:
+    draw("fail".patchConst, e.pos, color = colorWhite.withA(e.fout), scl = vec2(1f) + e.fout.pow(4f) * 0.6f)
 
 #snap position to grid position
 GridPos.onAdd:
@@ -220,17 +225,17 @@ makeSystem("init", []):
     enableSoundVisualization()
 
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
-    trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
+    #trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
+    #trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
 
     #I can actually use these:
-    trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
-    trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
+    #trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
+    #trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
     trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -50f / 1000f)
-    trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
-    trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
+    #trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
+    #trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
     #what does "fevereiro" even mean
-    trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
+    #trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
 
     createMaps()
 
@@ -286,9 +291,13 @@ makeTimedSystem()
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   start:
     var moved = false
+    var failed = false
 
     #TODO only one direction at a time?
-    var vec = if musicTime() >= lastInputTime: axisTap2(keyA, keyD, keyS, keyW) else: vec2()
+    var vec = if musicTime() >= lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+
+    if vec.zero.not:
+      vec = vec.lim(1)
 
     #make direction orthogonal
     if vec.angle.deg.int.mod(90) != 0: vec.angle = vec.angle.deg.round(90f).rad
@@ -296,6 +305,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     if not canMove():
       #tried to move incorrectly, e.g. spam
       if vec.zero.not:
+        failed = true
         failCount.inc
         if failCount > 2:
           lastInputTime = musicTime() + beatSpacing()
@@ -305,10 +315,14 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     if keyEscape.tapped:
       quitApp()
     
-    #yes, this is broken with many characters
+    #yes, this is broken with many characters, but good enough
     playerPos = item.gridPos.vec
 
     item.unitDraw.scl = item.unitDraw.scl.lerp(1f, 12f * fau.delta)
+
+    if failed:
+      effectFail(item.pos.vec, life = beatSpacing())
+      item.unitDraw.failTime = 1f
 
     if item.unitDraw.walkTime > 0:
       item.unitDraw.walkTime -= fau.delta * 9f
@@ -320,6 +334,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     item.unitDraw.beatScl = max(0f, item.unitDraw.beatScl)
 
     item.unitDraw.hitTime -= fau.delta / hitDuration
+    item.unitDraw.failTime -= fau.delta / (beatSpacing() / 2f)
 
     #TODO looks kinda bad when moving, less "bounce"
     if skippedBeat:
@@ -435,11 +450,12 @@ makeSystem("damagePlayer", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
       let pos = other.gridPos
-      if pos.vec == item.gridPos.vec:
+      if pos.vec == item.gridPos.vec and other.input.hitTurn < turn:
         other.unitDraw.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
         hits.inc
+        other.input.hitTurn = turn
 
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if newTurn:
@@ -533,6 +549,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
 
     let suffix = 
       if item.unitDraw.hitTime > 0: "-hit"
+      elif item.unitDraw.failTime > 0: "-angery"
       #TODO looks bad?
       #elif item.unitDraw.beatScl > 0.75: "-bounce"
       else: ""

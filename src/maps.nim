@@ -130,9 +130,11 @@ template createMaps() =
         if turn in 0..35:
           horizontalConveyors()
         
+        if turn in 35..55:
+          midRouter()
+
         if turn in 35..85:
           sideDuos()
-          midRouter()
         
         if turn in 60..80:
           vertConveyors()
