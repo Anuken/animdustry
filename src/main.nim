@@ -12,6 +12,8 @@ type Beatmap = object
   drawPixel: proc()
   draw: proc()
   update: proc()
+  #used for conveyors and other objects fading in
+  fadeColor: Color
 
 type GameState = object
   map: Beatmap
@@ -36,10 +38,10 @@ const
 
 var
   #track definitions
-  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79: MusicTrack
+  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79, trackUltra: MusicTrack
 
   #basic beat/game state
-  nextMoveBeat = -1
+  nextMoveBeat = -1f
   suppressInput = false
   lastMoveTime = 0f
   lastInputTime = 0f
@@ -171,7 +173,7 @@ template runTurn() =
   newTurn = true
   turn.inc
   moveBeat = 1f
-  failCount = 0
+  #failCount = 0
 
 template reset() =
   #TODO clear variable state
@@ -187,7 +189,7 @@ template reset() =
   )
 
   #TODO maybe make object?
-  nextMoveBeat = 0
+  nextMoveBeat = 0f
   failCount = 0
   suppressInput = false
   lastMoveTime = 0f
@@ -214,14 +216,13 @@ proc beatSpacing(): float = 1.0 / (state.map.track.bpm / 60.0)
 proc musicTime(): float = state.secs
 
 proc canMove(): bool =
-  return (state.beat > 0.5f) and state.beatCount >= nextMoveBeat
+  return (state.beat > 0.5 or state.beat < 0.2) and state.beatCount + (1f - state.beat) >= nextMoveBeat
 
 include patterns, maps
 
 makeSystem("init", []):
   init:
     fau.maxDelta = 100f
-    #songs are designed on my system, which has a base 10ms latency
     #TODO apparently can be a disaster on windows? does the apparent play position actually depend on latency???
     #audioLatency = getAudioBufferSize() / getAudioSampleRate() - 10.0 / 1000.0
 
@@ -240,7 +241,8 @@ makeSystem("init", []):
     #I can actually use these:
     #trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
     trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
-    trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -50f / 1000f)
+    trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -80f / 1000f)
+    #trackUltra = MusicTrack(sound: musicUltra, bpm: 240f, beatOffset: 0f)
     #trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
     #trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
     #what does "fevereiro" even mean
@@ -248,7 +250,7 @@ makeSystem("init", []):
 
     createMaps()
 
-    beginMap(mapFirst, 0.0)
+    beginMap(mapSecond, 0.0)
 
 makeSystem("all", [Pos]): discard
 
@@ -299,11 +301,12 @@ makeSystem("updateMusic", []):
       fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
 
   #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
-  if state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
-    lastMoveTime = musicTime()
-    nextMoveBeat = state.beatCount
+  if state.beatChanged:#state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
+    #lastMoveTime = musicTime()
+    #nextMoveBeat = state.beatCount
+    #if nextMoveBeat < state.beatCount - 0.5f:
     skippedBeat = true
-    suppressInput = true
+    #suppressInput = true
     runTurn()
 
 makeTimedSystem()
@@ -318,6 +321,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
     if vec.zero.not:
       vec = vec.lim(1)
+      
+      if canMove():
+        failCount = 0
 
     #make direction orthogonal
     if vec.angle.deg.int.mod(90) != 0: vec.angle = vec.angle.deg.round(90f).rad
@@ -327,10 +333,11 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       if vec.zero.not:
         failed = true
         failCount.inc
-        if failCount > 2:
+        if failCount > 1:
           lastInputTime = musicTime() + beatSpacing()
 
       vec = vec2()
+    
   all:
     if keyEscape.tapped:
       quitApp()
@@ -378,10 +385,10 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   finish:
     if moved:
       #next turn, if it has not been skipped yet
-      if not suppressInput:
-        runTurn()
+      #if not suppressInput:
+      #  runTurn()
       suppressInput = false
-      nextMoveBeat = state.beatCount + 1
+      nextMoveBeat = state.beatCount + (if state.beat <= 0.5: 1f else: 1f)
       lastMoveTime = musicTime()
 
 makeSystem("runDelay", [RunDelay]):
@@ -466,7 +473,6 @@ makeSystem("turretShoot", [Turret, GridPos]):
 makeSystem("updateMap", []):
   state.map.update()
 
-#TODO only run during turn?
 makeSystem("damagePlayer", [GridPos, Damage]):
   all:
     for other in sysInput.groups:
@@ -519,7 +525,7 @@ makeSystem("draw", []):
     sys.buffer = newFramebuffer()
   
   #margin is currently 4, adjust as needed
-  let camScl = min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))
+  let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))).round
 
   sys.buffer.clear(colorBlack)
   sys.buffer.resize(fau.size * tileSize / camScl)
@@ -551,7 +557,7 @@ makeSystem("drawConveyor", [Pos, DrawConveyor, Velocity, Snek, Scaled]):
       item.pos.vec, 
       rotation = item.velocity.vec.vec2.angle,
       scl = vec2(1f, 1f - moveBeat * 0.3f) * item.scaled.scl,
-      mixcolor = colorPink.mix(colorWhite, 0.5f).withA(1f - f)
+      mixcolor = state.map.fadeColor.withA(1f - f)
     )
 
 makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):

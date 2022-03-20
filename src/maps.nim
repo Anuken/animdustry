@@ -36,7 +36,8 @@ proc modSize(num: int): int =
 
 template createMaps() =
   mapFirst = BeatMap(
-    track: trackForYou, 
+    track: trackForYou,
+    fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
       patBeatSquare()
@@ -204,17 +205,21 @@ template createMaps() =
 
   mapSecond = Beatmap(
     track: trackStoplight, 
-    draw: (proc() =
+    fadeColor: %"4b2362",
+    drawPixel: (proc() =
       patBackground(%"2b174d")
-      #patStripes()
-
-      #patRain()
       patFadeShapes(%"4b2362")
 
-      patBeatSquare()
+      patStars(%"b3739a", %"e8c8b2")
 
+      #patTris(%"8b4195")
+
+      patClouds(%"653075")
+      patBeatAlt(%"bf96eb")
       #patFft()
-      patTilesFft()
+    ),
+    draw: (proc() =
+      patTilesSquare(%"cbb2ff", %"ff2eca")
     ),
     update: (proc() =
         discard
