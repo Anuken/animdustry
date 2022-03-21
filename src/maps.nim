@@ -76,8 +76,6 @@ template createMaps() =
           let 
             off = turn + 1 - offset
             routSpace = space * 2
-          
-          let 
             x = (off div routSpace).mod(mapSize * 2 + 1) - mapSize
             pos = vec2i(x, 0)
 

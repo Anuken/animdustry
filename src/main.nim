@@ -47,6 +47,15 @@ type GameState = object
   hits: int
   beatStats: string
 
+#Persistent user data.
+type SaveState = object
+  #all units that the player has collected (unique) - stored as strings
+  units: seq[Unit]
+  #"gambling tokens"
+  points: int
+  #how many times the player has gambled
+  rolls: int
+
 #TODO better viewport
 const
   #pixels
@@ -55,11 +64,15 @@ const
   noMusic = false
   mapSize = 6
   fftSize = 50
+  pointsForRoll = 10
 
 var
   audioLatency = 0.0
   maps: seq[Beatmap]
+  #Per-map state. Resets between games.
   state = GameState()
+  #Persistent save state.
+  save = SaveState()
   mode = gmMenu
   fftValues: array[fftSize, float32]
   
@@ -169,6 +182,8 @@ DrawBullet.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
+include saveio
+
 #All passed systems will be paused when game state is not playing
 macro makePaused(systems: varargs[untyped]): untyped =
   result = newStmtList()
@@ -251,6 +266,7 @@ makeSystem("core", []):
     createMaps()
     maps = @[mapFirst, mapSecond]
 
+    loadGame()
     #beginMap(mapSecond, 0.0)
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput)
@@ -627,6 +643,10 @@ makeSystem("drawUI", []):
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
   else:
     #draw menu
+
+    if button(rectCenter(fau.cam.pos + vec2(0f, 1f), 3f, 1f), &"Rolls: {save.rolls}"):
+      save.rolls.inc
+      saveGame()
 
     for i, map in maps:
       if button(rectCenter(fau.cam.pos - vec2(0f, i.float32), 3f, 1f), &"[ {map.name} ]"):

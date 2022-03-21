@@ -9,3 +9,4 @@ let
   unitOct* = Unit(name: "oct")
   unitZenith* = Unit(name: "zenith")
   unitQuad* = Unit(name: "quad")
+  allUnits* = [unitMono, unitOct, unitZenith, unitQuad]
