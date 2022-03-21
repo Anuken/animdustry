@@ -4,6 +4,9 @@ var
   mapFirst: Beatmap
   mapSecond: Beatmap
 
+template bullet(pos: Vec2i, dir: Vec2i, tex = "") =
+  discard newEntityWith(Scaled(scl: 1f), DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
+
 template bulletsCorners() =
   let spacing = 2
 
@@ -11,10 +14,7 @@ template bulletsCorners() =
     let corner = d4iedge[(turn div spacing) mod 4] * mapSize
 
     for dir in d8():
-      discard newEntityWith(DrawBullet(), Pos(), GridPos(vec: corner), Velocity(vec: dir), Damage())
-
-template bullet(pos: Vec2i, dir: Vec2i, tex = "") =
-  discard newEntityWith(DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
+      bullet(corner, dir)
 
 template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
   let 
@@ -36,7 +36,9 @@ proc modSize(num: int): int =
 
 template createMaps() =
   mapFirst = BeatMap(
-    track: trackForYou,
+    sound: musicAritusForYou,
+    bpm: 126f,
+    beatOffset: -80f / 1000f,
     fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
@@ -47,7 +49,8 @@ template createMaps() =
       patTiles()
     ),
     update: (proc() =
-      if newTurn:
+      if state.newTurn:
+        let turn = state.turn
         #make routers at first turn.
         #if turn == 1:
         #  for pos in d4edge():
@@ -204,8 +207,10 @@ template createMaps() =
   )
 
   mapSecond = Beatmap(
-    track: trackStoplight, 
-    fadeColor: %"4b2362",
+    sound: musicStoplight,
+    bpm: 85f,
+    beatOffset: 0f / 1000f,
+    fadeColor: %"985eb9",
     drawPixel: (proc() =
       patBackground(%"2b174d")
       patFadeShapes(%"4b2362")
@@ -222,7 +227,35 @@ template createMaps() =
       patTilesSquare(%"cbb2ff", %"ff2eca")
     ),
     update: (proc() =
-        discard
+      if state.newTurn:
+        let turn = state.turn
+        #33: "wicked"
+        #beat on odd turns begins here
+
+        template sideConveyors() =
+          let space = 8
+
+          if (turn mod space) == 0:
+            let side = (turn.mod(space * 2) == 0).int
+            for i in 0..mapSize:
+              conveyor(vec2i(i - side * mapSize, -mapSize), vec2i(0, 1), 5)
+        
+        template sideBullets() =
+          let space = 6
+          let bspace = 3
+          if turn mod space == 0:
+            let side = (turn.mod(space * 2) == 0).int
+            for i in -mapSize..mapSize:
+              if (i + turn div space).emod(bspace) == 0:
+                for side in signsi():
+                  effectWarnBullet(vec2i(side * mapSize, i).vec2, life = beatSpacing())
+                  delayBullet(vec2i(side * mapSize, i), vec2i(-side, 0))
+
+        #if turn in 0..32:
+        sideConveyors()
+
+        if turn >= 30:
+          sideBullets()
     )
   )
 

@@ -12,9 +12,9 @@ proc patTiles() =
   for x in -mapSize..mapSize:
     for y in -mapSize..mapSize:
       let 
-        absed = ((x + mapSize) + (y + mapSize) + turn).mod 5
-        strength = (absed == 0).float32 * moveBeat
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * moveBeat))
+        absed = ((x + mapSize) + (y + mapSize) + state.turn).mod 5
+        strength = (absed == 0).float32 * state.moveBeat
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patTilesFft() =
   for x in -mapSize..mapSize:
@@ -23,15 +23,15 @@ proc patTilesFft() =
         scaled = (y + mapSize) / (mapSize * 2 + 1)
         val = x + mapSize
         strength = (scaled < fftValues[val] / 13f).float32
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * moveBeat))
+      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patTilesSquare(col = colorWhite, col2 = colorBlue) =
   for x in -mapSize..mapSize:
     for y in -mapSize..mapSize:
       let 
-        absed = (x.abs + y.abs - turn).emod(5)
-        strength = (absed == 0).float32 * moveBeat
-      draw("tile".patchConst, vec2(x, y), color = col.mix(col2, strength).withA(0.4f), scl = vec2(1f - 0.11f * moveBeat))
+        absed = (x.abs + y.abs - state.turn).emod(5)
+        strength = (absed == 0).float32 * state.moveBeat
+      draw("tile".patchConst, vec2(x, y), color = col.mix(col2, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patBackground(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
@@ -45,22 +45,15 @@ proc patStripes() =
     ang = 135f.rad
   for i in 0..<amount:
     let
-      frac = (i + turn + ((1f - moveBeat).powout(8f))).mod(amount) / amount - 0.5f
+      frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
       pos = vec2l(ang, swidth) * (frac * amount)
     draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = colorPink.mix(colorWhite, (i.float32 mod 2f) * 0.2f))
 
 proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
-  #so does this use the "player" beat, or does it go on its own and let the player sync?
-  let
-    count = turn #state.beatCount
-    b = moveBeat #state.beat
-  poly(vec2(), 4, (45f + 15f * (count mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(b))
+  poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
 
 proc patBeatAlt(col: Color) =
-  let
-    count = turn #state.beatCount
-    b = moveBeat #state.beat
-  poly(vec2(), 4, (45f + 15f * (1 + count mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(b))
+  poly(vec2(), 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
 
 proc patFadeShapes(col: Color) =
   const 
@@ -77,7 +70,7 @@ proc patFadeShapes(col: Color) =
   var prevRad = 0f
 
   for i in 0..<fadeCount:
-    drawFade((i - (turn + (1f - moveBeat).powout(6f)) * fscl).emod(fadeCount))
+    drawFade((i - (state.turn + (1f - state.moveBeat).powout(6f)) * fscl).emod(fadeCount))
 
 proc patRain() =
   let 
@@ -85,14 +78,14 @@ proc patRain() =
     partRange = 13f
     move = vec2(-0.5f, -0.5f)
     col = colorPink.mix(colorWhite, 0.4f)
-    size = (5f + moveBeat.pow(2f) * 4f).px
+    size = (5f + state.moveBeat.pow(2f) * 4f).px
   
   var r = initRand(1)
   
   for i in 0..<parts:
     var pos = vec2(r.range(partRange), r.range(partRange))
 
-    pos += move * (turn + (1f - moveBeat).powout(30f))
+    pos += move * (state.turn + (1f - state.moveBeat).powout(30f))
     pos = (pos + partRange).emod(vec2(partRange * 2)) - partRange
 
     fillPoly(pos, 4, size, color = col)
@@ -166,7 +159,7 @@ proc patStars(col = colorWhite, flash = colorWhite) =
 
     pos = fau.cam.viewport.wrap(pos, 4f.px)
 
-    draw(sprite, pos.round(1f / tileSize), color = col.mix(flash, moveBeat))
+    draw(sprite, pos.round(1f / tileSize), color = col.mix(flash, state.moveBeat))
 
 proc patTris(col = colorWhite) =
   let 

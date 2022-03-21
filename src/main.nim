@@ -2,28 +2,33 @@ import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
-type MusicTrack = object
-  sound: Sound
-  bpm: float
-  beatOffset: float
-
 type Beatmap = object
-  track: MusicTrack
   drawPixel: proc()
   draw: proc()
   update: proc()
   #used for conveyors and other objects fading in
   fadeColor: Color
 
+  sound: Sound
+  bpm: float
+  beatOffset: float
+
 type GameState = object
   map: Beatmap
   voice: Voice
   secs: float
   lastSecs: float
-  beat: float
-  beatChanged: bool
-  beatCount: int
-  loops: int
+
+  #Raw beat calculated based on music position
+  rawBeat: float
+  #Beat calculated as countdown after a music beat happens. Smoother, but less precise.
+  moveBeat: float32
+  
+  #if true, a new turn was j
+  newTurn: bool
+  turn: int
+
+  hits: int
 
 #TODO better viewport
 const
@@ -37,34 +42,26 @@ const
   fftSize = 50
 
 var
-  #track definitions
-  trackDefault, trackLis, trackRiser, trackEnemy, trackDisco, trackWonder, trackStoplight, trackForYou, trackPeachBeach, trackPsych, trackBright79, trackUltra: MusicTrack
-
-  #basic beat/game state
-  nextMoveBeat = -1f
-  suppressInput = false
-  lastMoveTime = 0f
-  lastInputTime = 0f
-  failCount = 0
-  turn = 0
-  moveBeat = 0f
-  hits = 0
-  skippedBeat = false
-  newTurn = true
+  #basic glgame state
   playerPos: Vec2i
   audioLatency = 0.0
 
-  #should this be separate...?
   state = GameState()
 
   #misc rendering
   dfont: Font
   fftValues: array[fftSize, float32]
 
+  #debug diagonistics
+  beatStats = ""
+
 register(defaultComponentOptions):
   type 
     Input = object
       hitTurn: int
+      nextBeat: int
+      lastInputTime: float32
+      fails: int
   
     GridPos = object
       vec: Vec2i
@@ -134,8 +131,10 @@ defineEffects:
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
   warn:
     poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
-
     draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
+  warnBullet:
+    #poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
+    draw("bullet".patchConst, e.pos, size = vec2(16f.px), mixColor = colorWhite, color = colorWhite.withA(e.fin))
   
   fail:
     draw("fail".patchConst, e.pos, color = colorWhite.withA(e.fout), scl = vec2(1f) + e.fout.pow(4f) * 0.6f)
@@ -158,6 +157,10 @@ DrawTurret.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
+DrawBullet.onAdd:
+  if not entity.has(Scaled):
+    entity.add Scaled(scl: 1f)
+
 #TODO broken
 template runDelay(body: untyped) =
   discard newEntityWith(RunDelay(delay: 0, callback: (proc() =
@@ -167,13 +170,7 @@ template runDelay(body: untyped) =
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
 template makeUnit(pos: Vec2i, aunit: Unit) =
-  discard newEntityWith(Input(), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
-
-template runTurn() =
-  newTurn = true
-  turn.inc
-  moveBeat = 1f
-  #failCount = 0
+  discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
 template reset() =
   #TODO clear variable state
@@ -188,35 +185,18 @@ template reset() =
     map: mapFirst #default map
   )
 
-  #TODO maybe make object?
-  nextMoveBeat = 0f
-  failCount = 0
-  suppressInput = false
-  lastMoveTime = 0f
-  lastInputTime = 0f
-  turn = 0
-  moveBeat = 0f
-  skippedBeat = false
-  newTurn = false
-  hits = 0
-
   makeUnit(vec2i(), unitZenith)
 
 template beginMap(next: Beatmap, offset = 0.0) =
   reset()
 
   state.map = next
-  state.voice = state.map.track.sound.play()
-  lastMoveTime = beatSpacing()
+  state.voice = state.map.sound.play()
   if offset > 0.0:
     state.voice.seek(offset)
-    turn = int(offset / beatSpacing()) - 2
 
-proc beatSpacing(): float = 1.0 / (state.map.track.bpm / 60.0)
+proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
-
-proc canMove(): bool =
-  return (state.beat > 0.5 or state.beat < 0.2) and state.beatCount + (1f - state.beat) >= nextMoveBeat
 
 include patterns, maps
 
@@ -240,8 +220,6 @@ makeSystem("init", []):
 
     #I can actually use these:
     #trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
-    trackStoplight = MusicTrack(sound: musicStoplight, bpm: 85f, beatOffset: -50f / 1000f)
-    trackForYou = MusicTrack(sound: musicAritusForYou, bpm: 126f, beatOffset: -80f / 1000f)
     #trackUltra = MusicTrack(sound: musicUltra, bpm: 240f, beatOffset: 0f)
     #trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
     #trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
@@ -255,8 +233,7 @@ makeSystem("init", []):
 makeSystem("all", [Pos]): discard
 
 makeSystem("updateMusic", []):
-  newTurn = false
-  skippedBeat = false
+  state.newTurn = false
 
   when defined(debug):
     if keySpace.tapped:
@@ -265,20 +242,10 @@ makeSystem("updateMusic", []):
   if state.voice.valid and state.voice.playing:
     let beatSpace = beatSpacing()
 
-    moveBeat -= fau.rawDelta / beatSpace
-    moveBeat = max(moveBeat, 0f)
-
-    #check for loop???
-    if state.loops != state.voice.loopCount:
-      state.loops = state.voice.loopCount
-
-      #reset state
-      state.secs = 0f
-      state.beatCount = 0
-      state.beat = 0f
-      nextMoveBeat = 0
+    state.moveBeat -= fau.rawDelta / beatSpace
+    state.moveBeat = max(state.moveBeat, 0f)
     
-    let nextSecs = state.voice.streamPos - audioLatency + state.map.track.beatOffset
+    let nextSecs = state.voice.streamPos - audioLatency + state.map.beatOffset
 
     if nextSecs == state.lastSecs:
       #beat did not change, move it forward manually to compensate for low "frame rate"
@@ -288,57 +255,59 @@ makeSystem("updateMusic", []):
     state.lastSecs = nextSecs
 
     let
-      prevBeat = state.beatCount
+      prevBeat = state.turn
       nextBeat = int(state.secs / beatSpace)
 
-    state.beatChanged = nextBeat != state.beatCount
-    state.beatCount = nextBeat
-    state.beat = (1.0 - ((state.secs mod beatSpace) / beatSpace)).float32
+    state.newTurn = nextBeat != state.turn
+    state.turn = nextBeat
+    state.rawBeat = (1.0 - ((state.secs mod beatSpace) / beatSpace)).float32
 
     let fft = getFft()
 
     for i in 0..<fftSize:
       fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
-
-  #force skip turns when the player takes too long; this can happen fairly frequently, so it doesn't imply the player being bad.
-  if state.beatChanged:#state.beatCount > nextMoveBeat or (musicTime() - lastMoveTime) / beatSpacing() >= (1f + beatMargin):
-    #lastMoveTime = musicTime()
-    #nextMoveBeat = state.beatCount
-    #if nextMoveBeat < state.beatCount - 0.5f:
-    skippedBeat = true
-    #suppressInput = true
-    runTurn()
+    
+    if state.newTurn:
+      state.moveBeat = 1f
 
 makeTimedSystem()
 
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
-  start:
+  all:
+    let canMove = if state.rawBeat > 0.5:
+      #late - the current beat must be greater than the target
+      state.turn > item.input.nextBeat
+    elif state.rawBeat < 0.2:
+      #early - the current beat can be equal to the target
+      state.turn >= item.input.nextBeat
+    else:
+      false
+
     var moved = false
     var failed = false
 
     #TODO only one direction at a time?
-    var vec = if musicTime() >= lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+    var vec = if musicTime() >= item.input.lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
 
     if vec.zero.not:
       vec = vec.lim(1)
       
-      if canMove():
-        failCount = 0
+      if canMove:
+        item.input.fails = 0
 
     #make direction orthogonal
     if vec.angle.deg.int.mod(90) != 0: vec.angle = vec.angle.deg.round(90f).rad
     
-    if not canMove():
+    if not canMove:
       #tried to move incorrectly, e.g. spam
       if vec.zero.not:
         failed = true
-        failCount.inc
-        if failCount > 1:
-          lastInputTime = musicTime() + beatSpacing()
+        item.input.fails.inc
+        if item.input.fails > 1:
+          item.input.lastInputTime = musicTime() + beatSpacing()
 
       vec = vec2()
     
-  all:
     if keyEscape.tapped:
       quitApp()
     
@@ -364,7 +333,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     item.unitDraw.failTime -= fau.delta / (beatSpacing() / 2f)
 
     #TODO looks kinda bad when moving, less "bounce"
-    if skippedBeat:
+    if state.newTurn:
       item.unitDraw.beatScl = 1f
 
     if vec.zero.not:
@@ -382,17 +351,20 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       if vec.x.abs > 0:
         item.unitDraw.side = vec.x < 0
-  finish:
+
     if moved:
-      #next turn, if it has not been skipped yet
-      #if not suppressInput:
-      #  runTurn()
-      suppressInput = false
-      nextMoveBeat = state.beatCount + (if state.beat <= 0.5: 1f else: 1f)
-      lastMoveTime = musicTime()
+      #check if was late
+      if state.rawBeat > 0.5f:
+        #late; target beat is the current one
+        item.input.nextBeat = state.turn
+        beatStats = "late"
+      else:
+        #early; target beat is the one after this one
+        item.input.nextBeat = state.turn + 1
+        beatStats = "early"
 
 makeSystem("runDelay", [RunDelay]):
-  if newTurn:
+  if state.newTurn:
     all:
       item.runDelay.delay.dec
       if item.runDelay.delay < 0:
@@ -409,7 +381,7 @@ makeSystem("deleting", [Deleting, Scaled]):
       item.entity.delete()
 
 makeSystem("lifetime", [Lifetime]):
-  if newTurn:
+  if state.newTurn:
     all:
       item.lifetime.turns.dec
 
@@ -420,7 +392,7 @@ makeSystem("lifetime", [Lifetime]):
         item.entity.remove(Lifetime)
 
 makeSystem("snek", [Snek, GridPos, Velocity]):
-  if newTurn:
+  if state.newTurn:
     all:
       if item.snek.produced.not and item.snek.gen < item.snek.len - 1:
         let copy = item.entity.clone()
@@ -441,7 +413,7 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
   template spawn(d: Vec2i, length: int) =
     discard newEntityWith(DrawConveyor(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: d), Damage(), Snek(len: length))
 
-  if newTurn:
+  if state.newTurn:
     all:
       if item.spawnConveyors.diagonal.not:
         for dir in d4():
@@ -453,7 +425,7 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
       item.entity.remove(SpawnConveyors)
 
 makeSystem("turretFollow", [Turret, GridPos]):
-  if newTurn and turn mod 2 == 0:
+  if state.newTurn and state.turn mod 2 == 0:
     all:
       if item.gridPos.vec.x.abs == mapSize:
         if item.gridPos.vec.y != playerPos.y:
@@ -463,7 +435,7 @@ makeSystem("turretFollow", [Turret, GridPos]):
           item.gridPos.vec.x += sign(playerPos.x - item.gridPos.vec.x)
 
 makeSystem("turretShoot", [Turret, GridPos]):
-  if newTurn:
+  if state.newTurn:
     all:
       item.turret.reloadCounter.inc
       if item.turret.reloadCounter >= item.turret.reload:
@@ -483,18 +455,18 @@ makeSystem("damagePlayer", [GridPos, Damage]):
         effectHit(item.gridPos.vec.vec2)
 
         #do not actually deal damage (iframes)
-        if other.input.hitTurn < turn - 1:
-          hits.inc
-          other.input.hitTurn = turn
+        if other.input.hitTurn < state.turn - 1:
+          state.hits.inc
+          other.input.hitTurn = state.turn
 
 makeSystem("updateVelocity", [GridPos, Velocity]):
-  if newTurn:
+  if state.newTurn:
     all:
       item.gridPos.vec += item.velocity.vec
 
 #TODO should not require snek...
 makeSystem("collideSnek", [GridPos, Damage, Velocity, Snek]):
-  if newTurn:
+  if state.newTurn:
     all:
       if item.snek.turns > 0:
         for other in sys.groups:
@@ -504,12 +476,22 @@ makeSystem("collideSnek", [GridPos, Damage, Velocity, Snek]):
             sys.deleteList.add other.entity
             effectHit(item.gridPos.vec.vec2)
 
-makeSystem("killBullets", [GridPos, Velocity]):
-  if newTurn:
+makeSystem("killOffscreen", [GridPos, Velocity, not Deleting]):
+  fields:
+    #must be queued for some reason, polymorph bug? investigate later
+    res: seq[EntityRef]
+    
+  if state.newTurn:
+    sys.res.setLen 0
+
     all:
       let p = item.gridPos.vec
       if p.x.abs > mapSize or p.y.abs > mapSize:
-        delete item.entity
+        sys.res.add item.entity
+    
+    for e in sys.res:
+      e.add Deleting(time: 1f)
+    
 
 makeSystem("posLerp", [Pos, GridPos]):
   all:
@@ -556,7 +538,7 @@ makeSystem("drawConveyor", [Pos, DrawConveyor, Velocity, Snek, Scaled]):
     draw("conveyor".patchConst,
       item.pos.vec, 
       rotation = item.velocity.vec.vec2.angle,
-      scl = vec2(1f, 1f - moveBeat * 0.3f) * item.scaled.scl,
+      scl = vec2(1f, 1f - state.moveBeat * 0.3f) * item.scaled.scl,
       mixcolor = state.map.fadeColor.withA(1f - f)
     )
 
@@ -567,11 +549,11 @@ makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):
       draw(patch, pos, rotation = r, scl = scl)
       draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
 
-    spinSprite("router".patchConst, item.pos.vec, vec2(1f + moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * moveBeat.pow(6f))
+    spinSprite("router".patchConst, item.pos.vec, vec2(1f + state.moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * state.moveBeat.pow(6f))
 
 makeSystem("drawTurret", [Pos, DrawTurret, Turret, Scaled]):
   all:
-    draw(item.drawTurret.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+    draw(item.drawTurret.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
 
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
@@ -596,13 +578,13 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       z = zlayer(item)
     )
 
-makeSystem("drawBullet", [Pos, DrawBullet, Velocity]):
+makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
   all:
     #TODO glow!
     let sprite = 
       if item.drawBullet.sprite.len == 0: "bullet"
       else: item.drawBullet.sprite
-    draw(sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(moveBeat.pow(5f))#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
+    draw(sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(state.moveBeat.pow(5f)), scl = item.scaled.scl.vec2#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
 makeSystem("endDraw", []):
   drawBufferScreen()
@@ -614,8 +596,8 @@ makeSystem("drawUI", []):
     time = musicTime()
     minutes = time.int div 60
     secs = time.int mod 60
-  dfont.draw(&"{turn} | beat {state.beatCount} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  dfont.draw(&"{state.turn} | {beatStats} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
-  dfont.draw(&"hits: {hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+  dfont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
 launchFau("absurd")
