@@ -109,10 +109,10 @@ proc patPetals() =
       rotSpeed = r.range(0.6f)
       scale = r.rand(0.4f..1f)
 
-    pos += move * fau.time * speed * 0.8f
+    pos += move * state.time * speed * 0.8f
     pos = fau.cam.viewport.wrap(pos, 2f)
 
-    draw("petal".patchConst, pos, color = col, rotation = rot + fau.time * rotSpeed, scl = scale.vec2)
+    draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
 proc patClouds(col = colorWhite) =
   var clouds {.global.}: array[4, Patch]
@@ -135,7 +135,7 @@ proc patClouds(col = colorWhite) =
       scale = r.rand(0.4f..1f)
       sprite = clouds[r.rand(0..3)]
 
-    pos += move * fau.time * speed * 0.6f
+    pos += move * state.time * speed * 0.6f
     pos = fau.cam.viewport.wrap(pos, 80f.px)
 
     draw(sprite, pos, color = col, scl = scale.vec2)
@@ -177,7 +177,7 @@ proc patTris(col = colorWhite) =
       rotSpeed = 0f#r.range(0.6f)
       scale = r.rand(0.4f..1f)
 
-    pos += move * fau.time * speed * 0.4f
+    pos += move * state.time * speed * 0.4f
     pos = fau.cam.viewport.wrap(pos, 15f)
 
-    fillPoly(pos, 3, scale * 14f.px, color = col, rotation = rot + fau.time * rotSpeed)
+    fillPoly(pos, 3, scale * 14f.px, color = col, rotation = rot + state.time * rotSpeed)

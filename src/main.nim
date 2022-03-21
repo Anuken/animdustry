@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/bloom
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/bloom, macros
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
@@ -11,24 +11,41 @@ type Beatmap = object
 
   sound: Sound
   bpm: float
+  #in seconds
   beatOffset: float
+
+type Gamemode = enum
+  gmMenu,
+  gmPlaying,
+  gmPaused
 
 type GameState = object
   map: Beatmap
   voice: Voice
+  #smoothed position of the music track in seconds
   secs: float
+  #last "discrete" music track position
   lastSecs: float
+
+  #smooth game time, may not necessarily match seconds
+  time: float32
+
+  #last known player position
+  playerPos: Vec2i
 
   #Raw beat calculated based on music position
   rawBeat: float
   #Beat calculated as countdown after a music beat happens. Smoother, but less precise.
   moveBeat: float32
   
-  #if true, a new turn was j
+  #if true, a new turn was just fired this rame
   newTurn: bool
+  #beats that have passed total
   turn: int
 
+  #stats
   hits: int
+  beatStats: string
 
 #TODO better viewport
 const
@@ -42,19 +59,14 @@ const
   fftSize = 50
 
 var
-  #basic glgame state
-  playerPos: Vec2i
   audioLatency = 0.0
-
   state = GameState()
+  mode: Gamemode = gmPlaying
 
   #misc rendering
   dfont: Font
   fftValues: array[fftSize, float32]
-
-  #debug diagonistics
-  beatStats = ""
-
+  
 register(defaultComponentOptions):
   type 
     Input = object
@@ -161,7 +173,13 @@ DrawBullet.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
-#TODO broken
+#All passed systems will be paused when game state is not playing
+macro makePaused(systems: varargs[untyped]): untyped =
+  result = newStmtList()
+  for sys in systems:
+    result.add quote do:
+      `sys`.paused = (mode != gmPlaying)
+
 template runDelay(body: untyped) =
   discard newEntityWith(RunDelay(delay: 0, callback: (proc() =
     body
@@ -173,7 +191,6 @@ template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
 template reset() =
-  #TODO clear variable state
   sysAll.clear()
   sysRunDelay.clear()
 
@@ -181,11 +198,12 @@ template reset() =
   if state.voice.int != 0:
     state.voice.stop()
 
+  #make default map
   state = GameState(
-    map: mapFirst #default map
+    map: mapFirst
   )
 
-  makeUnit(vec2i(), unitZenith)
+  makeUnit(vec2i(), unitOct)
 
 template beginMap(next: Beatmap, offset = 0.0) =
   reset()
@@ -200,7 +218,7 @@ proc musicTime(): float = state.secs
 
 include patterns, maps
 
-makeSystem("init", []):
+makeSystem("core", []):
   init:
     fau.maxDelta = 100f
     #TODO apparently can be a disaster on windows? does the apparent play position actually depend on latency???
@@ -229,15 +247,25 @@ makeSystem("init", []):
     createMaps()
 
     beginMap(mapSecond, 0.0)
+  
+  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput)
+
+  when defined(debug):
+    if keySpace.tapped:
+      mode = if mode != gmPlaying: gmPlaying else: gmPaused
+    
+    if keyEscape.tapped:
+      quitApp()
 
 makeSystem("all", [Pos]): discard
 
 makeSystem("updateMusic", []):
-  state.newTurn = false
+  start:
+    if state.voice.valid:
+      state.voice.paused = sys.paused
 
-  when defined(debug):
-    if keySpace.tapped:
-      state.voice.paused = state.voice.paused.not
+  state.newTurn = false
+  state.time += fau.delta
 
   if state.voice.valid and state.voice.playing:
     let beatSpace = beatSpacing()
@@ -308,11 +336,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       vec = vec2()
     
-    if keyEscape.tapped:
-      quitApp()
-    
     #yes, this is broken with many characters, but good enough
-    playerPos = item.gridPos.vec
+    state.playerPos = item.gridPos.vec
 
     item.unitDraw.scl = item.unitDraw.scl.lerp(1f, 12f * fau.delta)
 
@@ -357,11 +382,11 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       if state.rawBeat > 0.5f:
         #late; target beat is the current one
         item.input.nextBeat = state.turn
-        beatStats = "late"
+        state.beatStats = "late"
       else:
         #early; target beat is the one after this one
         item.input.nextBeat = state.turn + 1
-        beatStats = "early"
+        state.beatStats = "early"
 
 makeSystem("runDelay", [RunDelay]):
   if state.newTurn:
@@ -426,13 +451,14 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
 
 makeSystem("turretFollow", [Turret, GridPos]):
   if state.newTurn and state.turn mod 2 == 0:
+    let target = state.playerPos
     all:
       if item.gridPos.vec.x.abs == mapSize:
-        if item.gridPos.vec.y != playerPos.y:
-          item.gridPos.vec.y += sign(playerPos.y - item.gridPos.vec.y)
+        if item.gridPos.vec.y != target.y:
+          item.gridPos.vec.y += sign(target.y - item.gridPos.vec.y)
       else:
-        if item.gridPos.vec.x != playerPos.x:
-          item.gridPos.vec.x += sign(playerPos.x - item.gridPos.vec.x)
+        if item.gridPos.vec.x != target.x:
+          item.gridPos.vec.x += sign(target.x - item.gridPos.vec.x)
 
 makeSystem("turretShoot", [Turret, GridPos]):
   if state.newTurn:
@@ -596,7 +622,7 @@ makeSystem("drawUI", []):
     time = musicTime()
     minutes = time.int div 60
     secs = time.int mod 60
-  dfont.draw(&"{state.turn} | {beatStats} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  dfont.draw(&"{state.turn} | {state.beatStats} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
 
   dfont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
