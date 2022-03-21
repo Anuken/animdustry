@@ -1,8 +1,7 @@
 import sugar
 
 var
-  mapFirst: Beatmap
-  mapSecond: Beatmap
+  map1, map2, map3, map4, map5: Beatmap
 
 template bullet(pos: Vec2i, dir: Vec2i, tex = "") =
   discard newEntityWith(Scaled(scl: 1f), DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
@@ -35,8 +34,7 @@ proc modSize(num: int): int =
   num.mod(mapSize * 2 + 1) - mapSize
 
 template createMaps() =
-  mapFirst = BeatMap(
-    name: "First",
+  map1 = BeatMap(
     sound: musicAritusForYou,
     bpm: 126f,
     beatOffset: -80f / 1000f,
@@ -199,14 +197,11 @@ template createMaps() =
         
         if turn in 420..437:
           midRouter()
-        
-        #if turn in 4..20:
-        #  bulletsCorners()
     )
   )
 
-  mapSecond = Beatmap(
-    name: "Second",
+  #TODO
+  map2 = Beatmap(
     sound: musicStoplight,
     bpm: 85f,
     beatOffset: 0f / 1000f,
@@ -256,6 +251,57 @@ template createMaps() =
 
         if turn >= 30:
           sideBullets()
+    )
+  )
+
+  #TODO
+  map3 = Beatmap(
+    sound: musicBright79,
+    bpm: 127f,
+    beatOffset: -80f / 1000f,
+    fadeColor: %"205359",
+    drawPixel: (proc() =
+      patBackground(%"205359")
+    ),
+    draw: (proc() =
+      patTilesSquare(%"cbb2ff", %"ff2eca")
+    ),
+    update: (proc() =
+      discard
+    )
+  )
+
+  #TODO
+  map4 = Beatmap(
+    sound: musicPinaColada,
+    bpm: 125f,
+    beatOffset: -240f / 1000f,
+    fadeColor: %"7e44e2",
+    drawPixel: (proc() =
+      patBackground(%"7e44e2")
+    ),
+    draw: (proc() =
+      patTilesSquare(%"cbb2ff", %"ff2eca")
+    ),
+    update: (proc() =
+      discard
+    )
+  )
+
+  #TODO
+  map5 = Beatmap(
+    sound: musicPeachBeach,
+    bpm: 121f,
+    beatOffset: 0f / 1000f,
+    fadeColor: %"e586cb",
+    drawPixel: (proc() =
+      patBackground(%"e586cb")
+    ),
+    draw: (proc() =
+      patTilesSquare(%"cbb2ff", %"ff2eca")
+    ),
+    update: (proc() =
+      discard
     )
   )
 

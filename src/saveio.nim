@@ -1,6 +1,6 @@
 import jsony, zippy, os
 
-#todo: android support???
+#TODO: android support???
 let 
   dataDir = when defined(Android): "" else: getConfigDir() / "absurd"
   dataFile = dataDir / "data.bin"
@@ -38,9 +38,6 @@ proc loadGame =
     try:
       save = uncompress(dataFile.readFile, dataFormat = dfDeflate).fromJson(SaveState)
       echo "Loaded game state."
-    except JsonError:
-      echo &"Invalid save state JSON: {getCurrentExceptionMsg()}"
-    except ZippyError:
-      echo &"Corrupt save state data: {getCurrentExceptionMsg()}"
-    except IOError:
-      echo "Error: Save data cannot be read: {getCurrentExceptionMsg()}"
+    except JsonError: echo &"Invalid save state JSON: {getCurrentExceptionMsg()}"
+    except ZippyError: echo &"Corrupt save state data: {getCurrentExceptionMsg()}"
+    except IOError: echo &"Error: Save data cannot be read: {getCurrentExceptionMsg()}"

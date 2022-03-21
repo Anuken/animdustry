@@ -2,7 +2,7 @@ import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
-type Beatmap = object
+type Beatmap = ref object
   name: string
   #draws backgrounds with the pixelation buffer
   drawPixel: proc()
@@ -18,6 +18,8 @@ type Beatmap = object
   bpm: float
   #in seconds
   beatOffset: float
+  #can be null! this is pixelated
+  preview: Framebuffer
 
 type Gamemode = enum
   gmMenu,
@@ -49,7 +51,7 @@ type GameState = object
 
 #Persistent user data.
 type SaveState = object
-  #all units that the player has collected (unique) - stored as strings
+  #all units that the player has collected (should be unique)
   units: seq[Unit]
   #"gambling tokens"
   points: int
@@ -211,7 +213,7 @@ template reset() =
 
   #make default map
   state = GameState(
-    map: mapFirst
+    map: map1
   )
 
   makeUnit(vec2i(), unitOct)
@@ -264,12 +266,14 @@ makeSystem("core", []):
     #trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
 
     createMaps()
-    maps = @[mapFirst, mapSecond]
+    maps = @[map1, map2, map3, map4, map5]
+
+    #create default game state - this will be overwritten by loadGame if anything exists
+    save.units.add unitMono
 
     loadGame()
-    #beginMap(mapSecond, 0.0)
   
-  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput)
+  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
   if mode != gmMenu and keySpace.tapped:
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
@@ -304,9 +308,7 @@ makeSystem("updateMusic", []):
       state.secs = nextSecs
     state.lastSecs = nextSecs
 
-    let
-      prevBeat = state.turn
-      nextBeat = int(state.secs / beatSpace)
+    let nextBeat = int(state.secs / beatSpace)
 
     state.newTurn = nextBeat != state.turn
     state.turn = nextBeat
@@ -379,7 +381,6 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     item.unitDraw.hitTime -= fau.delta / hitDuration
     item.unitDraw.failTime -= fau.delta / (beatSpacing() / 2f)
 
-    #TODO looks kinda bad when moving, less "bounce"
     if state.newTurn:
       item.unitDraw.beatScl = 1f
 
@@ -545,6 +546,20 @@ makeSystem("posLerp", [Pos, GridPos]):
     let a = 12f * fau.delta
     item.pos.vec.lerp(item.gridPos.vec.vec2, a)
 
+template updateMapPreviews =
+  let size = sysDraw.buffer.size
+  for map in maps:
+    if map.preview.isNil or map.preview.size != size:
+      if map.preview.isNil:
+        map.preview = newFramebuffer(size)
+      else:
+        map.preview.resize(size)
+
+      drawBuffer(map.preview)
+      if map.drawPixel != nil: map.drawPixel()
+      if map.draw != nil: map.draw()
+      drawBufferScreen()
+
 makeSystem("draw", []):
   fields:
     buffer: Framebuffer
@@ -561,6 +576,8 @@ makeSystem("draw", []):
 
   fau.cam.update(fau.size / camScl, vec2())
   fau.cam.use()
+
+  updateMapPreviews()
 
 makeSystem("drawBackground", []):
   #TODO what happens in the menu then?
@@ -616,7 +633,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
 
     draw(
       #TODO bad
-      (&"unit-{item.unitDraw.unit.name}" & suffix).patch,
+      (&"unit-{item.unitDraw.unit.name}{suffix}").patch,
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.14f), 
       align = daBot,
@@ -633,23 +650,70 @@ makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
     draw(sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(state.moveBeat.pow(5f)), scl = item.scaled.scl.vec2#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
 makeSystem("drawUI", []):
+  fields:
+    #epic hardcoded array size
+    offsets: array[32, float32]
+
+  drawFlush()
+
+  #TODO looks bad
   if mode == gmPaused:
     defaultFont.draw("[paused]", fau.cam.pos)
   
   if mode != gmMenu:
     #draw debug text
-    #TODO fancy stats
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
   else:
     #draw menu
 
-    if button(rectCenter(fau.cam.pos + vec2(0f, 1f), 3f, 1f), &"Rolls: {save.rolls}"):
-      save.rolls.inc
-      saveGame()
+    #if button(rectCenter(fau.cam.pos + vec2(0f, 1f), 3f, 1f), &"Rolls: {save.rolls}"):
+    #  save.rolls.inc
+    #  saveGame()
 
-    for i, map in maps:
-      if button(rectCenter(fau.cam.pos - vec2(0f, i.float32), 3f, 1f), &"[ {map.name} ]"):
+    let
+      screenBounds = fau.cam.viewport
+      #bounds of level select buttons
+      bounds = fau.cam.viewport
+      sliced = bounds.w / maps.len
+      mouse = fau.mouseWorld
+      vertLen = 0.8f
+      fadeCol = colorBlack.withA(0.7f)
+      panMove = 1f
+
+    for i in countdown(maps.len - 1, 0):
+      let map = maps[i]
+      assert map.preview != nil
+
+      var
+        offset = sys.offsets[i]
+        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
+        over = r.contains(mouse)
+
+      sys.offsets[i] = offset.lerp(over.float32, fau.delta * 20f)
+      
+      #only expands after bounds check to prevent weird input
+      r.w += offset * panMove
+
+      let region = initPatch(map.preview.texture, (r.xy - screenBounds.xy) / screenBounds.wh, (r.topRight - screenBounds.xy) / screenBounds.wh)
+
+      drawRect(region, r.x, r.y, r.w, r.h, mixColor = if over: colorWhite.withA(0.2f) else: colorClear, blend = blendDisabled)
+
+      lineRect(r, stroke = 2f.px, color = map.fadeColor * 1.5f, margin = 1f.px)
+
+      text(r, &"Map {i + 1}", align = daTop)
+
+      #fading black shadow
+      let uv = fau.white.uv
+      drawVert(region.texture, [
+        vert2(r.botRight, uv, fadeCol, colorClear),
+        vert2(r.topRight, uv, fadeCol, colorClear),
+        vert2(r.topRight + vec2(vertLen, 0f), uv, colorClear, colorClear),
+        vert2(r.botRight + vec2(vertLen, 0f), uv, colorClear, colorClear),
+      ])
+
+      #click handling
+      if over and keyMouseLeft.down:
         playMap(map)
         mode = gmPlaying
 

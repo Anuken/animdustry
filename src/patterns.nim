@@ -59,15 +59,11 @@ proc patFadeShapes(col: Color) =
   const 
     fadeSides = 4
     fadeCount = 10
-    fadeCol = colorBlue
-    fadeRadInc = 4f
     fscl = 0.5f
   
   proc drawFade(index: float32) =
     let rad = index * 100f.px
     poly(vec2(), fadeSides, rad, stroke = min(30f.px, rad * 1.5f), rotation = index * 10f.rad, color = col)
-
-  var prevRad = 0f
 
   for i in 0..<fadeCount:
     drawFade((i - (state.turn + (1f - state.moveBeat).powout(6f)) * fscl).emod(fadeCount))
