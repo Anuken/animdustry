@@ -1,15 +1,20 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/bloom, macros
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
 type Beatmap = object
+  name: string
+  #draws backgrounds with the pixelation buffer
   drawPixel: proc()
+  #draws non-pixelated background (tiles)
   draw: proc()
+  #creates patterns
   update: proc()
   #used for conveyors and other objects fading in
   fadeColor: Color
-
+  #music track to use
   sound: Sound
+  #bpm for the music track
   bpm: float
   #in seconds
   beatOffset: float
@@ -21,29 +26,24 @@ type Gamemode = enum
 
 type GameState = object
   map: Beatmap
+  #currently playing voice ID
   voice: Voice
   #smoothed position of the music track in seconds
   secs: float
-  #last "discrete" music track position
+  #last "discrete" music track position, internally used
   lastSecs: float
-
-  #smooth game time, may not necessarily match seconds
+  #smooth game time, may not necessarily match seconds. visuals only!
   time: float32
-
   #last known player position
   playerPos: Vec2i
-
   #Raw beat calculated based on music position
   rawBeat: float
   #Beat calculated as countdown after a music beat happens. Smoother, but less precise.
   moveBeat: float32
-  
   #if true, a new turn was just fired this rame
   newTurn: bool
   #beats that have passed total
   turn: int
-
-  #stats
   hits: int
   beatStats: string
 
@@ -52,19 +52,15 @@ const
   #pixels
   tileSize = 20f
   hitDuration = 0.6f
-  pixelate = false
   noMusic = false
-  beatMargin = 0.025f
   mapSize = 6
   fftSize = 50
 
 var
   audioLatency = 0.0
+  maps: seq[Beatmap]
   state = GameState()
-  mode: Gamemode = gmPlaying
-
-  #misc rendering
-  dfont: Font
+  mode = gmMenu
   fftValues: array[fftSize, float32]
   
 register(defaultComponentOptions):
@@ -205,7 +201,7 @@ template reset() =
 
   makeUnit(vec2i(), unitOct)
 
-template beginMap(next: Beatmap, offset = 0.0) =
+template playMap(next: Beatmap, offset = 0.0) =
   reset()
 
   state.map = next
@@ -226,8 +222,16 @@ makeSystem("core", []):
 
     echo &"Audio stats: {getAudioBufferSize()} buffer / {getAudioSampleRate()}hz; calculated latency: {getAudioBufferSize() / getAudioSampleRate() * 1000} ms"
 
-    dfont = loadFont("font.ttf", size = 16)
     fau.pixelScl = 1f / tileSize
+    uiFontScale = fau.pixelScl
+    uiPatchScale = fau.pixelScl
+    uiScale = fau.pixelScl
+
+    defaultFont = loadFont("font.ttf", size = 16)
+    defaultButtonStyle.up = "button".patch9
+    defaultButtonStyle.overColor = colorWhite.withA(0.3f)
+    defaultButtonStyle.downColor = colorWhite.withA(0.5f)
+
     when noMusic:
       setGlobalVolume(0f)
     enableSoundVisualization()
@@ -245,14 +249,16 @@ makeSystem("core", []):
     #trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
 
     createMaps()
+    maps = @[mapFirst, mapSecond]
 
-    beginMap(mapSecond, 0.0)
+    #beginMap(mapSecond, 0.0)
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput)
 
+  if mode != gmMenu and keySpace.tapped:
+    mode = if mode != gmPlaying: gmPlaying else: gmPaused
+
   when defined(debug):
-    if keySpace.tapped:
-      mode = if mode != gmPlaying: gmPlaying else: gmPaused
     
     if keyEscape.tapped:
       quitApp()
@@ -517,7 +523,6 @@ makeSystem("killOffscreen", [GridPos, Velocity, not Deleting]):
     
     for e in sys.res:
       e.add Deleting(time: 1f)
-    
 
 makeSystem("posLerp", [Pos, GridPos]):
   all:
@@ -538,21 +543,20 @@ makeSystem("draw", []):
   sys.buffer.clear(colorBlack)
   sys.buffer.resize(fau.size * tileSize / camScl)
 
-  when pixelate:
-    drawBuffer(sys.buffer)
-
   fau.cam.update(fau.size / camScl, vec2())
   fau.cam.use()
 
 makeSystem("drawBackground", []):
-  if state.map.drawPixel != nil:
-    drawBuffer(sysDraw.buffer)
-    state.map.drawPixel()
-    drawBufferScreen()
-    sysDraw.buffer.blit()
+  #TODO what happens in the menu then?
+  if mode != gmMenu:
+    if state.map.drawPixel != nil:
+      drawBuffer(sysDraw.buffer)
+      state.map.drawPixel()
+      drawBufferScreen()
+      sysDraw.buffer.blit()
 
-  if state.map.draw != nil:
-    state.map.draw()
+    if state.map.draw != nil:
+      state.map.draw()
 
 makeEffectsSystem()
 
@@ -612,18 +616,21 @@ makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
       else: item.drawBullet.sprite
     draw(sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.velocity.vec.vec2.angle, mixColor = colorWhite.withA(state.moveBeat.pow(5f)), scl = item.scaled.scl.vec2#[, scl = vec2(1f - moveBeat.pow(7f) * 0.3f, 1f + moveBeat.pow(7f) * 0.3f)]#)
 
-makeSystem("endDraw", []):
-  drawBufferScreen()
-  when pixelate:
-    sysDraw.buffer.blit()
-
 makeSystem("drawUI", []):
-  let
-    time = musicTime()
-    minutes = time.int div 60
-    secs = time.int mod 60
-  dfont.draw(&"{state.turn} | {state.beatStats} | {minutes}:{secs:02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+  if mode == gmPaused:
+    defaultFont.draw("[paused]", fau.cam.pos)
+  
+  if mode != gmMenu:
+    #draw debug text
+    #TODO fancy stats
+    defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+    defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+  else:
+    #draw menu
 
-  dfont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+    for i, map in maps:
+      if button(rectCenter(fau.cam.pos - vec2(0f, i.float32), 3f, 1f), &"[ {map.name} ]"):
+        playMap(map)
+        mode = gmPlaying
 
 launchFau("absurd")

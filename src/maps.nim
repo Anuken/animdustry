@@ -36,6 +36,7 @@ proc modSize(num: int): int =
 
 template createMaps() =
   mapFirst = BeatMap(
+    name: "First",
     sound: musicAritusForYou,
     bpm: 126f,
     beatOffset: -80f / 1000f,
@@ -207,6 +208,7 @@ template createMaps() =
   )
 
   mapSecond = Beatmap(
+    name: "Second",
     sound: musicStoplight,
     bpm: 85f,
     beatOffset: 0f / 1000f,
