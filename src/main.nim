@@ -1,9 +1,10 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
 type Beatmap = ref object
   name: string
+  songName: string
   #draws backgrounds with the pixelation buffer
   drawPixel: proc()
   #draws non-pixelated background (tiles)
@@ -77,7 +78,14 @@ var
   save = SaveState()
   mode = gmMenu
   fftValues: array[fftSize, float32]
-  
+
+  #UI state section
+
+  #currently shown unit in splash screen, null when no unit
+  splashUnit: Option[Unit]
+  #splash screen fade-in time
+  splashTime: float32
+
 register(defaultComponentOptions):
   type 
     Input = object
@@ -184,6 +192,9 @@ DrawBullet.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
+#unit textures dynamically loaded
+preloadFolder("textures")
+
 include saveio
 
 #All passed systems will be paused when game state is not playing
@@ -203,6 +214,10 @@ template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
+template showSplashUnit(unit: Unit) =
+  splashUnit = unit.some
+  splashTime = 0f
+
 template reset() =
   sysAll.clear()
   sysRunDelay.clear()
@@ -215,8 +230,9 @@ template reset() =
   state = GameState(
     map: map1
   )
-
-  makeUnit(vec2i(), unitOct)
+  
+  #start with first unit
+  makeUnit(vec2i(), save.units[0])
 
 template playMap(next: Beatmap, offset = 0.0) =
   reset()
@@ -249,9 +265,15 @@ makeSystem("core", []):
     uiScale = fau.pixelScl
 
     defaultFont = loadFont("font.ttf", size = 16, outline = true)
-    defaultButtonStyle.up = "button".patch9
-    defaultButtonStyle.overColor = colorWhite.withA(0.3f)
-    defaultButtonStyle.downColor = colorWhite.withA(0.5f)
+    defaultButtonStyle = ButtonStyle(
+      up: "button".patch9,
+      overColor: colorWhite.withA(0.3f),
+      downColor: colorWhite.withA(0.5f),
+      #disabledColor: rgb(0.6f).withA(0.4f),
+      textUpColor: colorWhite,
+      textDisabledColor: rgb(0.6f)
+    )
+
 
     when noMusic:
       setGlobalVolume(0f)
@@ -264,10 +286,11 @@ makeSystem("core", []):
     createMaps()
     maps = @[map1, map2, map3, map4, map5]
 
-    #create default game state - this will be overwritten by loadGame if anything exists
-    save.units.add unitMono
-
     loadGame()
+
+    #must have at least one unit as a default
+    if save.units.len == 0:
+      save.units.add unitMono
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
@@ -553,7 +576,7 @@ template updateMapPreviews =
 
       drawBuffer(map.preview)
       if map.drawPixel != nil: map.drawPixel()
-      if map.draw != nil: map.draw()
+      #if map.draw != nil: map.draw()
       drawBufferScreen()
 
 makeSystem("draw", []):
@@ -576,7 +599,6 @@ makeSystem("draw", []):
   updateMapPreviews()
 
 makeSystem("drawBackground", []):
-  #TODO what happens in the menu then?
   if mode != gmMenu:
     if state.map.drawPixel != nil:
       drawBuffer(sysDraw.buffer)
@@ -586,6 +608,14 @@ makeSystem("drawBackground", []):
 
     if state.map.draw != nil:
       state.map.draw()
+  else: 
+    #draw menu background
+    drawBuffer(sysDraw.buffer)
+
+    patStripes(%"accce3", %"57639a")
+
+    drawBufferScreen()
+    sysDraw.buffer.blit()
 
 makeEffectsSystem()
 
@@ -622,7 +652,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
 
     let suffix = 
       if item.unitDraw.hitTime > 0: "-hit"
-      elif item.unitDraw.failTime > 0: "-angery"
+      elif item.unitDraw.failTime > 0 and (&"unit-{item.unitDraw.unit.name}-angery").patch.exists: "-angery"
       #TODO looks bad?
       #elif item.unitDraw.beatScl > 0.75: "-bounce"
       else: ""
@@ -631,7 +661,7 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       #TODO bad
       (&"unit-{item.unitDraw.unit.name}{suffix}").patch,
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
-      scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl).pow(1) * 0.14f), 
+      scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl) * 0.16f), 
       align = daBot,
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)),
       z = zlayer(item)
@@ -664,12 +694,14 @@ makeSystem("drawUI", []):
     #draw debug text
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+  elif splashUnit.isSome:
+    #draw splash unit
+    let unit = splashUnit.get
+
+    for layer in unit.layers:
+      layer(unit, vec2())
   else:
     #draw menu
-
-    #if button(rectCenter(fau.cam.pos + vec2(0f, 1f), 3f, 1f), &"Rolls: {save.rolls}"):
-    #  save.rolls.inc
-    #  saveGame()
 
     let
       screen = fau.cam.viewport
@@ -685,15 +717,25 @@ makeSystem("drawUI", []):
       panMove = 1f
       unitSpace = 25f.px
     
-    fillRect(statsBounds, color = colorBlack)
-    lineRect(statsBounds, stroke = 2f.px, color = colorPink, margin = 1f.px)
+    let buttonY = statsBounds.y + 35f.px + 0.75f + 2.px
+
+    #gambling interface
+    text(rectCenter(statsBounds.centerX + 4f, buttonY, 3f, 1f), &"{save.points} / {pointsForRoll}", align = daLeft, color = if save.points >= pointsForRoll: colorWhite else: %"ff4843")
+    draw("copper".patchConst, vec2(statsBounds.centerX + 2f, buttonY))
+
+    var bstyle = defaultButtonStyle
+    bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.3f, 1f))
+
+    if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Gamble", disabled = save.points < pointsForRoll, style = bstyle):
+      discard
 
     for i, unit in allUnits:
-      let 
+      let
+        unlock = unit.unlocked
         x = statsBounds.centerX - allUnits.len * unitSpace/2f + i.float32 * unitSpace
-        y = statsBounds.y + 3f.px
+        y = statsBounds.y + 6f.px
         hit = rect(x - unitSpace/2f, y, unitSpace, 32f.px)
-        over = hit.contains(mouse)
+        over = hit.contains(mouse) and unlock
       
       unit.fade = unit.fade.lerp(over.float32, fau.delta * 20f)
 
@@ -704,8 +746,15 @@ makeSystem("drawUI", []):
 
       unit.clickTime -= fau.delta / 0.2f
 
-      if over and keyMouseLeft.down:
+      #TODO make it hold-able?
+      if over and keyMouseRight.tapped:
         unit.clickTime = 1f
+        if unit == unitBoulder:
+          soundVineboom.play()
+      
+      #TODO
+      if over and keyMouseLeft.tapped:
+        showSplashUnit(unit)
 
       if unit.jumping:
         unit.jump += fau.delta / 0.21f
@@ -721,9 +770,19 @@ makeSystem("drawUI", []):
         patch = patch(&"unit-{unit.name}{suffix}")
         jumpScl = sin(unit.jump * PI).float32
         click = unit.clickTime.clamp
+      
+      draw("shadow".patchConst, vec2(x, y - jumpScl * 3f.px), color = rgba(0f, 0f, 0f, 0.3f))
 
-      draw(patch, vec2(x, y + jumpScl * 6f.px), align = daBot, mixColor = rgba(1f, 1f, 1f, unit.fade * 0.2f), scl = vec2(1f + click * 0.1f, 1f - click * 0.1f))
+      draw(patch, vec2(x, y + jumpScl * 6f.px), 
+        align = daBot, 
+        mixColor = if unlock.not: rgb(0.26f) else: rgba(1f, 1f, 1f, unit.fade * 0.2f), 
+        scl = vec2(1f + click * 0.1f, 1f - click * 0.1f)
+      )
+    
+    #outline around everything
+    lineRect(statsBounds, stroke = 2f.px, color = %"bfecf3", margin = 1f.px)
 
+    #draw map select
     for i in countdown(maps.len - 1, 0):
       let map = maps[i]
       assert map.preview != nil
@@ -749,7 +808,10 @@ makeSystem("drawUI", []):
       if offset > 0.001f:
         sys.glowPatch.draw(patchBounds.grow(16f.px), color = colorWhite.withA(offset * (0.8f + fau.time.sin(0.2f, 0.2f))), scale = fau.pixelScl, blend = blendAdditive, z = 2f)
 
+      #map name
       text(r - rect(vec2(), 0f, offset * 8f.px), &"Map {i + 1}", align = daTop)
+      #song name (fade in?)
+      text(r - rect(vec2(0f, -8f.px), 0f, offset * 8f.px), &"Music:\n{map.songName}", align = daBot, color = rgb(0.8f).mix(%"ffd565", offset.slope).withA(offset))
 
       #fading black shadow
       let uv = fau.white.uv
@@ -762,7 +824,7 @@ makeSystem("drawUI", []):
 
       #click handling
       if over and keyMouseLeft.down:
-        #TODO level transition
+        #TODO level transition animation
         playMap(map)
         mode = gmPlaying
 

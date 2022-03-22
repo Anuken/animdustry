@@ -35,6 +35,7 @@ proc modSize(num: int): int =
 
 template createMaps() =
   map1 = BeatMap(
+    songName: "Aritus - For You",
     sound: musicAritusForYou,
     bpm: 126f,
     beatOffset: -80f / 1000f,
@@ -202,6 +203,7 @@ template createMaps() =
 
   #TODO
   map2 = Beatmap(
+    songName: "PYC - Stoplight",
     sound: musicStoplight,
     bpm: 85f,
     beatOffset: 0f / 1000f,
@@ -256,6 +258,7 @@ template createMaps() =
 
   #TODO
   map3 = Beatmap(
+    songName: "Keptor's Room - Bright 79", # (from Topaze Club)?
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
@@ -273,6 +276,7 @@ template createMaps() =
 
   #TODO
   map4 = Beatmap(
+    songName: "Aritus - Pina Colada II",
     sound: musicPinaColada,
     bpm: 125f,
     beatOffset: -240f / 1000f,
@@ -290,6 +294,7 @@ template createMaps() =
 
   #TODO
   map5 = Beatmap(
+    songName: "ADRIANWAVE - Peach Beach",
     sound: musicPeachBeach,
     bpm: 121f,
     beatOffset: 0f / 1000f,

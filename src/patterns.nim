@@ -37,7 +37,7 @@ proc patBackground(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
 
 #moving stripes
-proc patStripes() =
+proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f)) =
   
   let 
     amount = 20
@@ -47,7 +47,7 @@ proc patStripes() =
     let
       frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
       pos = vec2l(ang, swidth) * (frac * amount)
-    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = colorPink.mix(colorWhite, (i.float32 mod 2f) * 0.2f))
+    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = col1.mix(col2, (i.float32 mod 2f)))
 
 proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
