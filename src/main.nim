@@ -229,6 +229,10 @@ template playMap(next: Beatmap, offset = 0.0) =
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
 
+proc unlocked(unit: Unit): bool =
+  for u in save.units:
+    if u == unit: return true
+
 include patterns, maps
 
 makeSystem("core", []):
@@ -244,7 +248,7 @@ makeSystem("core", []):
     uiPatchScale = fau.pixelScl
     uiScale = fau.pixelScl
 
-    defaultFont = loadFont("font.ttf", size = 16)
+    defaultFont = loadFont("font.ttf", size = 16, outline = true)
     defaultButtonStyle.up = "button".patch9
     defaultButtonStyle.overColor = colorWhite.withA(0.3f)
     defaultButtonStyle.downColor = colorWhite.withA(0.5f)
@@ -256,14 +260,6 @@ makeSystem("core", []):
     #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
     #trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
     #trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
-
-    #I can actually use these:
-    #trackWonder = MusicTrack(sound: musicpycIWonder, bpm: 125f, beatOffset: -30f / 1000f)
-    #trackUltra = MusicTrack(sound: musicUltra, bpm: 240f, beatOffset: 0f)
-    #trackPeachBeach = MusicTrack(sound: musicAdrianwavePeachBeach, bpm: 121, beatOffset: 0f / 1000f)
-    #trackBright79 = MusicTrack(sound: musicKrBright79, bpm: 127f, beatOffset: 0f / 1000f)
-    #what does "fevereiro" even mean
-    #trackPsych = MusicTrack(sound: musicTpzPsychedFevereiro, bpm: 150, beatOffset: -20f / 1000f)
 
     createMaps()
     maps = @[map1, map2, map3, map4, map5]
@@ -651,8 +647,12 @@ makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
 
 makeSystem("drawUI", []):
   fields:
-    #epic hardcoded array size
-    offsets: array[32, float32]
+    #epic hardcoded array size (it really doesn't get any better than this)
+    levelFade: array[32, float32]
+    unitFade: array[32, float32]
+    glowPatch: Patch9
+  init:
+    sys.glowPatch = "glow".patch9
 
   drawFlush()
 
@@ -672,36 +672,84 @@ makeSystem("drawUI", []):
     #  saveGame()
 
     let
-      screenBounds = fau.cam.viewport
+      screen = fau.cam.viewport
+      #height of stats box
+      statsh = screen.h * 0.2f
+      statsBounds = rect(screen.xy + vec2(0f, screen.h - statsh), screen.w, statsh)
       #bounds of level select buttons
-      bounds = fau.cam.viewport
+      bounds = rect(screen.x, screen.y, screen.w, screen.h - statsh)
       sliced = bounds.w / maps.len
       mouse = fau.mouseWorld
       vertLen = 0.8f
       fadeCol = colorBlack.withA(0.7f)
       panMove = 1f
+      unitSpace = 25f.px
+    
+    fillRect(statsBounds, color = colorBlack)
+    lineRect(statsBounds, stroke = 2f.px, color = colorPink, margin = 1f.px)
+
+    for i, unit in allUnits:
+      let 
+        x = statsBounds.centerX - allUnits.len * unitSpace/2f + i.float32 * unitSpace
+        y = statsBounds.y + 3f.px
+        hit = rect(x - unitSpace/2f, y, unitSpace, 32f.px)
+        over = hit.contains(mouse)
+      
+      unit.fade = unit.fade.lerp(over.float32, fau.delta * 20f)
+
+      if over and not unit.wasOver:
+        unit.jumping = true
+      
+      unit.wasOver = over
+
+      unit.clickTime -= fau.delta / 0.2f
+
+      if over and keyMouseLeft.down:
+        unit.clickTime = 1f
+
+      if unit.jumping:
+        unit.jump += fau.delta / 0.21f
+        if unit.jump >= 1f:
+          unit.jump = 0f
+          unit.jumping = false
+
+      let suffix = 
+        if unit.clickTime > 0: "-hit"
+        else: ""
+      
+      let 
+        patch = patch(&"unit-{unit.name}{suffix}")
+        jumpScl = sin(unit.jump * PI).float32
+        click = unit.clickTime.clamp
+
+      draw(patch, vec2(x, y + jumpScl * 6f.px), align = daBot, mixColor = rgba(1f, 1f, 1f, unit.fade * 0.2f), scl = vec2(1f + click * 0.1f, 1f - click * 0.1f))
 
     for i in countdown(maps.len - 1, 0):
       let map = maps[i]
       assert map.preview != nil
 
       var
-        offset = sys.offsets[i]
+        offset = sys.levelFade[i]
         r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
         over = r.contains(mouse)
 
-      sys.offsets[i] = offset.lerp(over.float32, fau.delta * 20f)
+      sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
       
       #only expands after bounds check to prevent weird input
       r.w += offset * panMove
 
-      let region = initPatch(map.preview.texture, (r.xy - screenBounds.xy) / screenBounds.wh, (r.topRight - screenBounds.xy) / screenBounds.wh)
+      var region = initPatch(map.preview.texture, (r.xy - screen.xy) / screen.wh, (r.topRight - screen.xy) / screen.wh)
+      swap(region.v, region.v2)
 
       drawRect(region, r.x, r.y, r.w, r.h, mixColor = if over: colorWhite.withA(0.2f) else: colorClear, blend = blendDisabled)
+      lineRect(r, stroke = 2f.px, color = map.fadeColor * (1.5f + offset * 0.5f), margin = 1f.px)
 
-      lineRect(r, stroke = 2f.px, color = map.fadeColor * 1.5f, margin = 1f.px)
+      let patchBounds = r
 
-      text(r, &"Map {i + 1}", align = daTop)
+      if offset > 0.001f:
+        sys.glowPatch.draw(patchBounds.grow(16f.px), color = colorWhite.withA(offset * (0.8f + fau.time.sin(0.2f, 0.2f))), scale = fau.pixelScl, blend = blendAdditive, z = 2f)
+
+      text(r - rect(vec2(), 0f, offset * 8f.px), &"Map {i + 1}", align = daTop)
 
       #fading black shadow
       let uv = fau.white.uv
@@ -714,6 +762,7 @@ makeSystem("drawUI", []):
 
       #click handling
       if over and keyMouseLeft.down:
+        #TODO level transition
         playMap(map)
         mode = gmPlaying
 
