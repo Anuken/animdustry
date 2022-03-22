@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
@@ -78,6 +78,7 @@ var
   save = SaveState()
   mode = gmMenu
   fftValues: array[fftSize, float32]
+  titleFont: Font
 
   #UI state section
 
@@ -214,6 +215,12 @@ template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
+template drawPixel(body: untyped) =
+  drawBuffer(sysDraw.buffer)
+  body
+  drawBufferScreen()
+  sysDraw.buffer.blit()
+
 template showSplashUnit(unit: Unit) =
   splashUnit = unit.some
   splashTime = 0f
@@ -249,7 +256,7 @@ proc unlocked(unit: Unit): bool =
   for u in save.units:
     if u == unit: return true
 
-include patterns, maps
+include patterns, maps, unitdraw
 
 makeSystem("core", []):
   init:
@@ -265,6 +272,8 @@ makeSystem("core", []):
     uiScale = fau.pixelScl
 
     defaultFont = loadFont("font.ttf", size = 16, outline = true)
+    titleFont = loadFont("title.ttf", size = 16, outline = true)
+
     defaultButtonStyle = ButtonStyle(
       up: "button".patch9,
       overColor: colorWhite.withA(0.3f),
@@ -273,7 +282,6 @@ makeSystem("core", []):
       textUpColor: colorWhite,
       textDisabledColor: rgb(0.6f)
     )
-
 
     when noMusic:
       setGlobalVolume(0f)
@@ -287,6 +295,7 @@ makeSystem("core", []):
     maps = @[map1, map2, map3, map4, map5]
 
     loadGame()
+    createUnitDraw()
 
     #must have at least one unit as a default
     if save.units.len == 0:
@@ -601,21 +610,15 @@ makeSystem("draw", []):
 makeSystem("drawBackground", []):
   if mode != gmMenu:
     if state.map.drawPixel != nil:
-      drawBuffer(sysDraw.buffer)
-      state.map.drawPixel()
-      drawBufferScreen()
-      sysDraw.buffer.blit()
+      drawPixel:
+        state.map.drawPixel()
 
     if state.map.draw != nil:
       state.map.draw()
-  else: 
+  elif splashUnit.isNone: 
     #draw menu background
-    drawBuffer(sysDraw.buffer)
-
-    patStripes(%"accce3", %"57639a")
-
-    drawBufferScreen()
-    sysDraw.buffer.blit()
+    drawPixel:
+      patStripes(%"accce3", %"57639a")
 
 makeEffectsSystem()
 
@@ -695,11 +698,45 @@ makeSystem("drawUI", []):
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
   elif splashUnit.isSome:
+    splashTime += fau.delta / 4f
+    splashTime = min(splashTime, 1f)
+
+    let
+      screen = fau.cam.viewport
+      titleBounds = screen.grow(-0.4f)
+      subtitleBounds = screen.grow(-2.05f)
+
     #draw splash unit
     let unit = splashUnit.get
 
     for layer in unit.layers:
       layer(unit, vec2())
+    
+    #scale: float32 = fau.pixelScl, bounds = fmath.vec2(0, 0), color: Color = rgba(1, 1, 1, 1), align: Align = daCenter, z: float32 = 0.0, modifier: untyped
+    #draw title and other UI
+    titleFont.draw(
+      unit.title.toUpperAscii, 
+      titleBounds.xy, 
+      bounds = titleBounds.wh, 
+      scale = 1.5f.px, 
+      color = colorWhite,#.mix(%"ffcc74", fau.time.sin(0.5f, 0.5f).abs), 
+      align = daTop, 
+      modifier = (proc(index: int, offset: var fmath.Vec2, color: var Color, draw: var bool) =
+        offset.x += ((index + 0.5f) - unit.title.len/2f) * 15f.px * splashTime.powout(3f)
+        let si = (-fau.time * 0.7f + index * 0.3f).sin(0.2f, 1f)
+        #offset.y -= si.max(0f) * 5f.px
+        #color = colorWhite.mix(%"84f490", si * 0.8f)
+      )
+    )
+
+    defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
+
+    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back"):
+      splashUnit = none[Unit]()
+      splashTime = 0f
+    
+    #flash
+    draw(fau.white, fau.cam.pos, size = fau.cam.size, color = rgba(1f, 1f, 1f, 1f - splashTime.powout(6f)))
   else:
     #draw menu
 
@@ -823,7 +860,7 @@ makeSystem("drawUI", []):
       ])
 
       #click handling
-      if over and keyMouseLeft.down:
+      if over and keyMouseLeft.tapped:
         #TODO level transition animation
         playMap(map)
         mode = gmPlaying

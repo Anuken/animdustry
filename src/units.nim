@@ -29,11 +29,8 @@ let
   unitAlpha* = Unit(name: "alpha")
   unitMono* = Unit(
     name: "mono",
-    layers: @[
-      (proc(unit: Unit, pos: Vec2) =
-        unit.getTexture("").draw(pos, scl = vec2(0.15f))
-      )
-    ]
+    title: "Mono",
+    subtitle: "insert subtitle here"
   )
   unitCrawler* = Unit(name: "crawler")
   unitOct* = Unit(name: "oct")
