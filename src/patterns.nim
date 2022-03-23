@@ -195,13 +195,30 @@ proc patCircles(col = colorWhite, time = state.time, amount = 50) =
 
     fillCircle(pos, size, color = col)
 
-proc patLines(col = colorWhite) =
+proc patSquares(col = colorWhite, time = state.time, amount = 50, seed = 2) =
+  let partRange = 18f 
+  
+  var r = initRand(seed)
+  
+  for i in 0..<amount:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(1f..2f) * 0.2f
+      rot = r.range(180f.rad)
+      pulseScl = r.rand(0.6f..0.9f)
+      size = r.rand(2.3f..6f).px * (1f + time.sin(pulseScl, 0.2f))
+      
+    pos += vec2l(rot, speed) * time * speed
+    pos = fau.cam.viewport.wrap(pos, 1f)
+
+    draw(fau.white, pos, size = size.vec2 * 2f, color = col, rotation = 45f.rad)
+
+proc patLines(col = colorWhite, seed = 1, amount = 30) =
   let 
-    amount = 30
-    spread = 14f
+    spread = 13.5f
     stroke = 0.25f
 
-  var r = initRand(1)
+  var r = initRand(seed)
   
   for i in 0..<amount:
     let 

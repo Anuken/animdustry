@@ -17,11 +17,24 @@ template createUnitDraw() =
   )
 
   unitAlpha.draw = (proc(unit: Unit, basePos: Vec2) =
+    patStripes(%"b25840", %"c07659")
+
+    patGradient(colorAccent, colorAccent)
+
+    fillPoly(basePos, 3, 3.5f, color = colorAccent, rotation = -90f.rad)
+    poly(basePos, 3, 5.5f, stroke = 1f, color = colorAccent, rotation = -90f.rad)
+
+    patLines(colorAccent, seed = 4)
+
     let 
       scl = getScl(0.165f)
-      pos = basePos# + hoverOffset()
+      pos = basePos - vec2(0f, 0.5f) + hoverOffset() * 0.5f
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
+
+    drawBloom:
+      patSquares(colorAccent, time = fau.time, amount = 80, seed = 2)
+
     unit.getTexture.draw(pos, scl = scl)
   )
 
