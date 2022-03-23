@@ -177,3 +177,51 @@ proc patTris(col = colorWhite) =
     pos = fau.cam.viewport.wrap(pos, 15f)
 
     fillPoly(pos, 3, scale * 14f.px, color = col, rotation = rot + state.time * rotSpeed)
+
+proc patCircles(col = colorWhite, time = state.time, amount = 50) =
+  let partRange = 18f 
+  
+  var r = initRand(1)
+  
+  for i in 0..<amount:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(1f..2f) * 0.2f
+      rot = r.range(180f.rad)
+      size = r.rand(2f..7f).px
+
+    pos += vec2l(rot, speed) * time * speed
+    pos = fau.cam.viewport.wrap(pos, 1f)
+
+    fillCircle(pos, size, color = col)
+
+proc patLines(col = colorWhite) =
+  let 
+    amount = 30
+    spread = 14f
+    stroke = 0.25f
+
+  var r = initRand(1)
+  
+  for i in 0..<amount:
+    let 
+      ftime = fau.time + r.rand(2f)
+      moveMag = r.rand(0.1f..0.3f)
+      offset = vec2(ftime.sin(r.rand(0.6f..1f), moveMag), ftime.sin(r.rand(0.6f..1f), moveMag))
+      pos = vec2(r.range(spread), r.range(spread)) + offset
+      len = r.rand(2f..7f)
+      
+    lineAngleCenter(pos, 45f.rad, len, color = col, stroke = stroke)
+    for i in signs():
+      fillCircle(vec2l(45f.rad, len/2f + stroke/2f) * i.float32 + pos, stroke / 2f, color = col)
+
+proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 = colorClear) =
+  let r = fau.cam.viewport
+
+  let uv = fau.white.uv
+  drawVert(fau.white.texture, [
+    vert2(r.botLeft, uv, col1, colorClear),
+    vert2(r.botRight, uv, col2, colorClear),
+    vert2(r.topRight, uv, col3, colorClear),
+    vert2(r.topLeft, uv, col4, colorClear),
+  ])

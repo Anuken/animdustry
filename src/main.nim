@@ -68,6 +68,7 @@ const
   mapSize = 6
   fftSize = 50
   pointsForRoll = 10
+  colorAccent = %"ffd37f"
 
 var
   audioLatency = 0.0
@@ -220,6 +221,12 @@ template drawPixel(body: untyped) =
   body
   drawBufferScreen()
   sysDraw.buffer.blit()
+
+template drawBloom(body: untyped) =
+  drawBuffer(sysDraw.bloom.buffer)
+  body
+  drawBufferScreen()
+  sysDraw.bloom.blit(params = meshParams(blend = blendNormal))
 
 template showSplashUnit(unit: Unit) =
   splashUnit = unit.some
@@ -697,28 +704,27 @@ makeSystem("drawUI", []):
     #draw debug text
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
-  elif splashUnit.isSome:
+  elif splashUnit.isSome: #draw splash unit
     splashTime += fau.delta / 4f
     splashTime = min(splashTime, 1f)
 
     let
+      unit = splashUnit.get
+      pos = vec2(0f, -5f.px)
       screen = fau.cam.viewport
       titleBounds = screen.grow(-0.4f)
-      subtitleBounds = screen.grow(-2.05f)
+      subtitleBounds = screen.grow(-2.1f)
+      fullPatch = patch(&"{unit.name}-real")
 
-    #draw splash unit
-    let unit = splashUnit.get
-
-    for layer in unit.layers:
-      layer(unit, vec2())
+    if not unit.draw.isNil:
+      unit.draw(unit, pos)
     
-    #scale: float32 = fau.pixelScl, bounds = fmath.vec2(0, 0), color: Color = rgba(1, 1, 1, 1), align: Align = daCenter, z: float32 = 0.0, modifier: untyped
     #draw title and other UI
     titleFont.draw(
-      unit.title.toUpperAscii, 
+      unit.title, 
       titleBounds.xy, 
       bounds = titleBounds.wh, 
-      scale = 1.5f.px, 
+      scale = 1.5f.px,
       color = colorWhite,#.mix(%"ffcc74", fau.time.sin(0.5f, 0.5f).abs), 
       align = daTop, 
       modifier = (proc(index: int, offset: var fmath.Vec2, color: var Color, draw: var bool) =
@@ -728,6 +734,10 @@ makeSystem("drawUI", []):
         #color = colorWhite.mix(%"84f490", si * 0.8f)
       )
     )
+
+    #draw non-waifu sprite???
+    for i in signs():
+      draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f)) * i.float32, screen.top - 0.75f))
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
@@ -768,7 +778,7 @@ makeSystem("drawUI", []):
 
     for i, unit in allUnits:
       let
-        unlock = unit.unlocked
+        unlock = true#unit.unlocked #TODO uncomment once testing is over
         x = statsBounds.centerX - allUnits.len * unitSpace/2f + i.float32 * unitSpace
         y = statsBounds.y + 6f.px
         hit = rect(x - unitSpace/2f, y, unitSpace, 32f.px)
