@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
@@ -69,6 +69,8 @@ const
   fftSize = 50
   pointsForRoll = 10
   colorAccent = %"ffd37f"
+  #time between character switches
+  switchDelay = 1f
 
 var
   audioLatency = 0.0
@@ -83,6 +85,7 @@ var
 
   #UI state section
 
+  smokeFrames: array[6, Patch]
   #currently shown unit in splash screen, null when no unit
   splashUnit: Option[Unit]
   #splash screen fade-in time
@@ -94,6 +97,7 @@ register(defaultComponentOptions):
       hitTurn: int
       nextBeat: int
       lastInputTime: float32
+      lastSwitchTime: float32
       fails: int
   
     GridPos = object
@@ -104,6 +108,7 @@ register(defaultComponentOptions):
       side: bool
       beatScl: float32
       scl: float32
+      switchTime: float32
       hitTime: float32
       walkTime: float32
       failTime: float32
@@ -155,8 +160,11 @@ register(defaultComponentOptions):
 
 defineEffects:
   walk(lifetime = 0.8f):
-    particlesLife(e.id, 10, e.pos, e.fin, 12f.px):
-      fillCircle(pos, (4f * fout.powout(3f)).px, color = %"6e7080")
+    particlesLife(e.id, 10, e.pos, e.fin, 13f.px):
+      draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = %"a6a7b6")
+  charSwitch(lifetime = 1f):
+    particlesLife(e.id, 13, e.pos, e.fin + 0.2f, 20f.px):
+      draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = colorAccent, z = 3000f)
   walkWave:
     poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
   hit(lifetime = 0.9f):
@@ -263,6 +271,10 @@ proc unlocked(unit: Unit): bool =
   for u in save.units:
     if u == unit: return true
 
+proc sortUnits =
+  save.units.sort do (a, b: Unit) -> int:
+    cmp(allUnits.find(a), allUnits.find(b))
+
 include patterns, maps, unitdraw
 
 makeSystem("core", []):
@@ -294,10 +306,6 @@ makeSystem("core", []):
       setGlobalVolume(0f)
     enableSoundVisualization()
 
-    #trackLis = MusicTrack(sound: musicLis, bpm: 113f, beatOffset: 0f / 1000f)
-    #trackDefault = MusicTrack(sound: musicLost, bpm: 122f, beatOffset: -10.0 / 1000.0)
-    #trackEnemy = MusicTrack(sound: musicEnemy, bpm: 123f, beatOffset: -250.0 / 1000.0)
-
     createMaps()
     maps = @[map1, map2, map3, map4, map5]
 
@@ -307,6 +315,8 @@ makeSystem("core", []):
     #must have at least one unit as a default
     if save.units.len == 0:
       save.units.add unitMono
+    
+    sortUnits()
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
@@ -361,6 +371,17 @@ makeTimedSystem()
 
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
   all:
+    const switchKeys = [key1, key2, key3, key4, key5, key6, key7, key8, key9, key0]
+
+    if item.input.lastSwitchTime == 0f or musicTime() >= item.input.lastSwitchTime + switchDelay:
+      for i, unit in save.units:
+        if unit != item.unitDraw.unit and i < switchKeys.len and switchKeys[i].tapped:
+          item.unitDraw.unit = unit
+          item.unitDraw.switchTime = 1f
+          item.input.lastSwitchTime = musicTime()
+          effectCharSwitch(item.pos.vec + vec2(0f, 6f.px))
+          break
+
     let canMove = if state.rawBeat > 0.5:
       #late - the current beat must be greater than the target
       state.turn > item.input.nextBeat
@@ -415,6 +436,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
     item.unitDraw.hitTime -= fau.delta / hitDuration
     item.unitDraw.failTime -= fau.delta / (beatSpacing() / 2f)
+    item.unitDraw.switchTime -= fau.delta / hitDuration
 
     if state.newTurn:
       item.unitDraw.beatScl = 1f
@@ -602,7 +624,10 @@ makeSystem("draw", []):
   init:
     sys.bloom = newBloom()
     sys.buffer = newFramebuffer()
-  
+
+    for i in 0..<smokeFrames.len:
+      smokeFrames[i] = patch("smoke" & $i)
+
   #margin is currently 4, adjust as needed
   let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))).round
 
@@ -657,23 +682,17 @@ makeSystem("drawTurret", [Pos, DrawTurret, Turret, Scaled]):
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
 
-    #looks bad
-    #draw("shadow".patchConst, item.pos.vec, color = rgba(0f, 0f, 0f, 0.3f))
-
     let suffix = 
       if item.unitDraw.hitTime > 0: "-hit"
       elif item.unitDraw.failTime > 0 and (&"unit-{item.unitDraw.unit.name}-angery").patch.exists: "-angery"
-      #TODO looks bad?
-      #elif item.unitDraw.beatScl > 0.75: "-bounce"
       else: ""
 
     draw(
-      #TODO bad
       (&"unit-{item.unitDraw.unit.name}{suffix}").patch,
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl) * 0.16f), 
       align = daBot,
-      mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)),
+      mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)).mix(colorAccent, item.unitDraw.switchTime.max(0f)),
       z = zlayer(item)
     )
 
@@ -704,6 +723,23 @@ makeSystem("drawUI", []):
     #draw debug text
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
     defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+
+    #TODO:
+    #- proper hits
+    #- progress bar
+    #- unit switching
+
+    let screen = fau.cam.viewport
+    if sysInput.groups.len > 0:
+      let player = sysInput.groups[0]
+
+      for i, unit in save.units:
+        let 
+          pos = screen.xy + vec2(i.float32 * 1f, 0f)
+          current = player.unitDraw.unit == unit
+        draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear)
+        defaultFont.draw($(i + 1), rect(pos + vec2(4f.px, -2f.px), 1f.vec2), align = daBotLeft, color = if current: colorGray else: colorWhite)
+
   elif splashUnit.isSome: #draw splash unit
     splashTime += fau.delta / 4f
     splashTime = min(splashTime, 1f)
@@ -713,7 +749,7 @@ makeSystem("drawUI", []):
       pos = vec2(0f, -5f.px)
       screen = fau.cam.viewport
       titleBounds = screen.grow(-0.4f)
-      subtitleBounds = screen.grow(-2.1f)
+      subtitleBounds = screen.grow(-2.2f)
       fullPatch = patch(&"{unit.name}-real")
 
     if not unit.draw.isNil:
@@ -735,13 +771,14 @@ makeSystem("drawUI", []):
       )
     )
 
-    #draw non-waifu sprite???
+    #draw non-waifu sprite
     for i in signs():
-      draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f)) * i.float32, screen.top - 0.75f))
+      draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f) * 0.9f) * i.float32, screen.top - 0.75f))
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back"):
+      unit.clearTextures()
       splashUnit = none[Unit]()
       splashTime = 0f
     

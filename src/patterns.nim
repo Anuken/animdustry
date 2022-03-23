@@ -55,6 +55,19 @@ proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
 proc patBeatAlt(col: Color) =
   poly(vec2(), 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
 
+proc patSpin(col1, col2: Color, blades = 10) =
+  let 
+    len = max(fau.cam.size.x, fau.cam.size.y)
+    space = 360f.rad / blades
+
+  for i in 0..<blades:
+    fillTri(
+      vec2(),
+      vec2l(i * space, len),
+      vec2l((i + 1) * space, len),
+      if i mod 2 == 0: col1 else: col2
+    )
+
 proc patFadeShapes(col: Color) =
   const 
     fadeSides = 4

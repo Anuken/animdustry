@@ -14,6 +14,8 @@ type Unit* = ref object
   jumping*: bool
   clickTime*: float32
 
+proc clearTextures*(unit: Unit) = unit.textures.clear()
+
 proc getTexture*(unit: Unit, name: string = ""): Texture =
   ## Loads a unit texture from the textures/ folder. Result is cached. Crashes if the texture isn't found!
   if not unit.textures.hasKey(name):

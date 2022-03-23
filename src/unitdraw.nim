@@ -11,6 +11,12 @@ template createUnitDraw() =
     let 
       scl = getScl(0.165f)
       pos = basePos
+    
+    patSpin(%"52525c", %"393843")
+
+    let grad = %"393843"
+
+    patGradient(grad, grad)
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
     unit.getTexture.draw(pos, scl = scl)
