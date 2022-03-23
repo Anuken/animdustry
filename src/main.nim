@@ -236,6 +236,12 @@ template drawBloom(body: untyped) =
   drawBufferScreen()
   sysDraw.bloom.blit(params = meshParams(blend = blendNormal))
 
+template drawBloomi(bloomIntensity: float32, body: untyped) =
+  drawBuffer(sysDraw.bloom.buffer)
+  body
+  drawBufferScreen()
+  sysDraw.bloom.blit(params = meshParams(blend = blendNormal), intensity = bloomIntensity)
+
 template showSplashUnit(unit: Unit) =
   splashUnit = unit.some
   splashTime = 0f

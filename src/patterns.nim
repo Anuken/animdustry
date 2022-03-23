@@ -37,23 +37,26 @@ proc patBackground(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
 
 #moving stripes
-proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f)) =
+proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle = 135f.rad) =
   
   let 
     amount = 20
     swidth = 70f.px
-    ang = 135f.rad
   for i in 0..<amount:
     let
       frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
-      pos = vec2l(ang, swidth) * (frac * amount)
-    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = ang, color = col1.mix(col2, (i.float32 mod 2f)))
+      pos = vec2l(angle, swidth) * (frac * amount)
+    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = angle, color = col1.mix(col2, (i.float32 mod 2f)))
 
 proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
 
 proc patBeatAlt(col: Color) =
   poly(vec2(), 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
+
+proc patTriSquare(pos: Vec2, col: Color, len = 4f, rad = 2f, offset = 45f.rad, amount = 4, sides = 3, shapeOffset = 0f.rad) =
+  for i in 0..<amount:
+    fillPoly(vec2l(i * (360f.rad / amount) + offset, len) + pos, sides, rad, color = col, rotation = i * (360f.rad / amount) + offset + shapeOffset)
 
 proc patSpin(col1, col2: Color, blades = 10) =
   let 
@@ -67,6 +70,13 @@ proc patSpin(col1, col2: Color, blades = 10) =
       vec2l((i + 1) * space, len),
       if i mod 2 == 0: col1 else: col2
     )
+
+proc patShapeBack(col1, col2: Color, sides = 4, spacing = 2.5f, angle = 90f.rad) =
+  let amount = (fau.cam.size.x.max(fau.cam.size.y) / spacing).int + 1
+
+  fillPoly(vec2(), sides, spacing, color = col1, rotation = angle)
+  for i in 1..amount:
+    poly(vec2(), sides, (i + 0.5f) * spacing, rotation = angle, stroke = spacing, color = if (i and 1) == 0: col1 else: col2)
 
 proc patFadeShapes(col: Color) =
   const 
@@ -191,15 +201,15 @@ proc patTris(col = colorWhite) =
 
     fillPoly(pos, 3, scale * 14f.px, color = col, rotation = rot + state.time * rotSpeed)
 
-proc patCircles(col = colorWhite, time = state.time, amount = 50) =
+proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   let partRange = 18f 
   
-  var r = initRand(1)
+  var r = initRand(seed)
   
   for i in 0..<amount:
     var pos = vec2(r.range(partRange), r.range(partRange))
     let
-      speed = r.rand(1f..2f) * 0.2f
+      speed = r.rand(0.8f..2f) * 0.2f
       rot = r.range(180f.rad)
       size = r.rand(2f..7f).px
 
@@ -207,6 +217,57 @@ proc patCircles(col = colorWhite, time = state.time, amount = 50) =
     pos = fau.cam.viewport.wrap(pos, 1f)
 
     fillCircle(pos, size, color = col)
+
+proc patMissiles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
+  let partRange = 18f 
+  
+  var r = initRand(seed)
+  
+  for i in 0..<amount:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(0.9f..2f) * 1f
+      sizeScl = 1f + (time + r.rand(0f..4f)).sin(0.5f, 0.2f)
+      size = r.rand(4f..7f).px * sizeScl
+      
+    pos += vec2(speed) * time
+    pos = fau.cam.viewport.wrap(pos, 3f)
+
+    for index, scl in [1f, 0.75f, 0.5f, 0.25f]:
+      fillCircle(pos - vec2l(45f.rad, index.float32 * 0.5f) * 1.1f, size * scl, color = col)
+
+proc patFallSquares(col = colorWhite, col2 = colorWhite, time = state.time, amount = 50) =
+  let partRange = fau.cam.size.x / 2f 
+  
+  var r = initRand(1)
+  
+  for i in 0..<amount:
+    let
+      view = fau.cam.viewport
+      lifetime = r.rand(15f..34f)
+      life = (r.rand(1f) + time / lifetime).mod 1f
+      rot = r.range(180f.rad) + time * r.rand(0.8f..1.5f)
+      size = r.rand(3f..9f).px * 1.25f
+      pos = vec2(r.range(partRange), view.top + 1f - life * (view.h * 2f))
+
+    draw(fau.white, pos, size = size.vec2, color = col.mix(col2, life), rotation = rot)
+
+proc patFlame(col = colorWhite, col2 = colorWhite, time = state.time, amount = 80) =
+  let partRange = fau.cam.size.x / 2f 
+  
+  var r = initRand(1)
+  
+  for i in 0..<amount:
+    let
+      view = fau.cam.viewport
+      lifetime = r.rand(13f..24f)
+      life = (r.rand(1f) + time / lifetime).mod 1f
+      size = r.rand(5f..11f).px * 2.1f * (1f - life)
+      smag = r.rand(0.5f)
+      sscl = r.rand(0.8f..3f)
+      pos = vec2(r.range(partRange) + time.sin(sscl, smag), view.y - 2f + life * (view.h + 4f))
+
+    fillCircle(pos, size / 2f, color = col.mix(col2, life))
 
 proc patSquares(col = colorWhite, time = state.time, amount = 50, seed = 2) =
   let partRange = 18f 
@@ -226,7 +287,12 @@ proc patSquares(col = colorWhite, time = state.time, amount = 50, seed = 2) =
 
     draw(fau.white, pos, size = size.vec2 * 2f, color = col, rotation = 45f.rad)
 
-proc patLines(col = colorWhite, seed = 1, amount = 30) =
+proc roundLine(pos: Vec2, angle: float32, len: float32, color = colorWhite, stroke = 1f) =
+  lineAngleCenter(pos, angle, len, color = color, stroke = stroke)
+  for i in signs():
+    fillCircle(vec2l(angle, len/2f + stroke/2f) * i.float32 + pos, stroke / 2f, color = color)
+
+proc patLines(col = colorWhite, seed = 1, amount = 30, angle = 45f.rad) =
   let 
     spread = 13.5f
     stroke = 0.25f
@@ -240,10 +306,27 @@ proc patLines(col = colorWhite, seed = 1, amount = 30) =
       offset = vec2(ftime.sin(r.rand(0.6f..1f), moveMag), ftime.sin(r.rand(0.6f..1f), moveMag))
       pos = vec2(r.range(spread), r.range(spread)) + offset
       len = r.rand(2f..7f)
-      
-    lineAngleCenter(pos, 45f.rad, len, color = col, stroke = stroke)
-    for i in signs():
-      fillCircle(vec2l(45f.rad, len/2f + stroke/2f) * i.float32 + pos, stroke / 2f, color = col)
+    
+    roundLine(pos, angle, len, col, stroke)
+
+proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f) =
+  var r = initRand(seed)
+  
+  for i in 0..<amount:
+    let 
+      ftime = fau.time + r.rand(2f)
+      moveMag = r.rand(0.1f..0.3f)
+      offset = vec2(ftime.sin(r.rand(0.6f..1f), moveMag), ftime.sin(r.rand(0.6f..1f), moveMag))
+      angle = r.rand(360f.rad)
+      len = r.rand(2f..5f)
+      pos = vec2l(angle, len/2f + r.rand(2.5f..16f)) + offset
+    
+    roundLine(pos, angle, len, col, stroke)
+
+proc patSpikes(pos: Vec2, col = colorWhite, amount = 10, offset = 8f, len = 3f, angleOffset = 0f) =
+  for i in 0..<amount:
+    let angle = i.float32 / amount * 360f.rad + angleOffset
+    roundLine(pos + vec2l(angle, offset), angle, len, col, 0.25f)
 
 proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 = colorClear) =
   let r = fau.cam.viewport
@@ -255,3 +338,6 @@ proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 =
     vert2(r.topRight, uv, col3, colorClear),
     vert2(r.topLeft, uv, col4, colorClear),
   ])
+
+proc patVertGradient(col1 = colorClear, col2 = colorClear) =
+  patGradient(col1, col1, col2, col2)

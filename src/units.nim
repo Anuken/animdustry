@@ -59,7 +59,7 @@ let
   unitQuad* = Unit(
     name: "quad",
     title: "-QUAD-",
-    subtitle: ""
+    subtitle: "the \"support\" has arrived"
   )
   unitOxynoe* = Unit(
     name: "oxynoe",
