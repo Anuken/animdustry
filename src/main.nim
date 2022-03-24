@@ -71,6 +71,8 @@ const
   colorAccent = %"ffd37f"
   #time between character switches
   switchDelay = 1f
+  transitionTime = 0.3f
+  transitionPow = 4f
 
 var
   audioLatency = 0.0
@@ -90,6 +92,12 @@ var
   splashUnit: Option[Unit]
   #splash screen fade-in time
   splashTime: float32
+  
+  #transition time for fading between scenes
+  #when fading out, this will reach 1, call fadeTarget, and the fade back from 1 to 0
+  fadeTime: float32
+  #proc that will handle the fade-in when it happens - can be nil!
+  fadeTarget: proc()
 
 register(defaultComponentOptions):
   type 
@@ -224,6 +232,17 @@ template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
+template transition(body: untyped) =
+  fadeTime = 0f
+  fadeTarget = proc() =
+    body
+
+template safeTransition(body: untyped) =
+  if not fading():
+    fadeTime = 0f
+    fadeTarget = proc() =
+      body
+
 template drawPixel(body: untyped) =
   drawBuffer(sysDraw.buffer)
   body
@@ -269,6 +288,8 @@ template playMap(next: Beatmap, offset = 0.0) =
   state.voice = state.map.sound.play()
   if offset > 0.0:
     state.voice.seek(offset)
+
+proc fading(): bool = fadeTarget != nil
 
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
@@ -784,9 +805,10 @@ makeSystem("drawUI", []):
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back"):
-      unit.clearTextures()
-      splashUnit = none[Unit]()
-      splashTime = 0f
+      safeTransition:
+        unit.clearTextures()
+        splashUnit = none[Unit]()
+        splashTime = 0f
     
     #flash
     draw(fau.white, fau.cam.pos, size = fau.cam.size, color = rgba(1f, 1f, 1f, 1f - splashTime.powout(6f)))
@@ -816,6 +838,7 @@ makeSystem("drawUI", []):
     var bstyle = defaultButtonStyle
     bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.3f, 1f))
 
+    #TODO gambling implementation
     if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Gamble", disabled = save.points < pointsForRoll, style = bstyle):
       discard
 
@@ -914,8 +937,23 @@ makeSystem("drawUI", []):
 
       #click handling
       if over and keyMouseLeft.tapped:
-        #TODO level transition animation
-        playMap(map)
-        mode = gmPlaying
+        capture map:
+          safeTransition:
+            playMap(map)
+            mode = gmPlaying
+  
+  drawFlush()
+
+  #handle fading
+  if fadeTarget != nil:
+    patFadeOut(fadeTime.powout(transitionPow))
+    fadeTime += fau.delta / transitionTime
+    if fadeTime >= 1f:
+      fadeTarget()
+      fadeTime = 1f
+      fadeTarget = nil
+  elif fadeTime > 0:
+    patFadeIn(fadeTime.pow(transitionPow))
+    fadeTime -= fau.delta / transitionTime
 
 launchFau("absurd")

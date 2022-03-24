@@ -358,3 +358,31 @@ proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 =
 
 proc patVertGradient(col1 = colorClear, col2 = colorClear) =
   patGradient(col1, col1, col2, col2)
+
+proc patFadeOut(time: float32) =
+  let 
+    view = fau.cam.viewport
+    shiftLen = view.w + view.h
+    offset = vec2(shiftLen * time, 0f)
+  
+  fillQuad(
+    view.topLeft + offset,
+    view.topLeft - vec2(view.h) + offset,
+    view.topLeft - vec2(view.h) - vec2(view.w, 0f) + offset,
+    view.topLeft - vec2(view.h, 0f) - vec2(view.w, 0f) + offset,
+    colorBlack
+  )
+
+proc patFadeIn(time: float32) =
+  let 
+    view = fau.cam.viewport
+    shiftLen = view.w + view.h
+    offset = vec2(shiftLen * (1f - time), 0f)
+  
+  fillQuad(
+    view.topRight + offset,
+    view.botRight + offset,
+    view.botLeft + offset - vec2(view.h, 0f),
+    view.topLeft + offset,
+    colorBlack
+  )

@@ -260,7 +260,7 @@ template createUnitDraw() =
 
     patVertGradient(missilec)
 
-    patLines(colorAccent, angle = -45f.rad, seed = 12)
+    patLines(colorAccent, angle = -45f.rad, seed = 13)
 
     fillPoly(basePos, 4, 3f, color = colorAccent)
     poly(basePos, 4, 5f, stroke = 1f, color = colorAccent)
