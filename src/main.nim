@@ -70,10 +70,11 @@ const
   pointsForRoll = 10
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
+  colorUiDark = %"57639a"
   #time between character switches
   switchDelay = 1f
-  transitionTime = 0.3f
-  transitionPow = 4f
+  transitionTime = 0.2f
+  transitionPow = 1f
 
 var
   audioLatency = 0.0
@@ -748,7 +749,11 @@ makeSystem("drawUI", []):
   if mode == gmPaused:
     pauseTime += fau.delta / 0.5f
     pauseTime = min(pauseTime, 1f)
-
+  else:
+    pauseTime -= fau.delta / 0.2f
+    pauseTime = pauseTime.max(0f)
+  
+  if pauseTime > 0:
     let midrad = 5f * pauseTime.powout(8)
 
     fillPoly(vec2(), 4, midrad, color = rgba(0f, 0f, 0f, 0.5f))
@@ -760,8 +765,6 @@ makeSystem("drawUI", []):
       safeTransition:
         reset()
         mode = gmMenu
-  else:
-    pauseTime = 0f
 
   if mode != gmMenu:
     #draw debug text

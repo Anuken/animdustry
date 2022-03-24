@@ -370,7 +370,7 @@ proc patFadeOut(time: float32) =
     view.topLeft - vec2(view.h) + offset,
     view.topLeft - vec2(view.h) - vec2(view.w, 0f) + offset,
     view.topLeft - vec2(view.h, 0f) - vec2(view.w, 0f) + offset,
-    colorBlack
+    colorUi
   )
 
 proc patFadeIn(time: float32) =
@@ -384,5 +384,5 @@ proc patFadeIn(time: float32) =
     view.botRight + offset,
     view.botLeft + offset - vec2(view.h, 0f),
     view.topLeft + offset,
-    colorBlack
+    colorUi
   )
