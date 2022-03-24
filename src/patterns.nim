@@ -218,6 +218,23 @@ proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
 
     fillCircle(pos, size, color = col)
 
+proc patRadTris(col = colorWhite, time = state.time, amount = 50, seed = 1) =
+  let partRange = 18f 
+  
+  var r = initRand(seed)
+  
+  for i in 0..<amount:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(0.8f..2f) * 0.2f
+      rot = pos.angle
+      size = r.rand(2f..7f).px * 2.1f
+
+    pos += vec2l(rot, speed) * time * speed
+    pos = fau.cam.viewport.wrap(pos, 1f)
+
+    fillPoly(pos, 3, size, color = col, rotation = pos.angle)
+
 proc patMissiles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   let partRange = 18f 
   

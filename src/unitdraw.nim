@@ -20,21 +20,24 @@ template createUnitDraw() =
 
     let grad = %"393843"
 
-    patGradient(grad, grad)
+    patVertGradient(grad)
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
     unit.getTexture.draw(pos, scl = scl)
   )
 
   unitAlpha.draw = (proc(unit: Unit, basePos: Vec2) =
+    let light = %"b25840"
     patStripes(%"b25840", %"c07659")
 
-    patGradient(colorAccent, colorAccent)
+    patVertGradient(colorAccent)
 
     fillPoly(basePos, 3, 3.5f, color = colorAccent, rotation = -90f.rad)
     poly(basePos, 3, 5.5f, stroke = 1f, color = colorAccent, rotation = -90f.rad)
 
     patLines(colorAccent, seed = 4)
+
+    patVertGradient(light.withA(0.4f), light.withA(0f))
 
     let 
       scl = getScl(0.165f)
@@ -49,16 +52,20 @@ template createUnitDraw() =
   )
 
   unitMono.draw = (proc(unit: Unit, basePos: Vec2) =
-    let heal = %"84f490"
+    let 
+      heal = %"84f490"
+      col1 = %"235e62"
+      col2 = %"3a8a72"
 
-    patStripes(%"235e62", %"3a8a72")
-    patGradient(%"3a8a72")
+    patStripes(col1, col2)
+    patGradient(col2)
     patVertGradient(heal)
 
     fillPoly(basePos, 4, 3f, color = heal)
     poly(basePos, 4, 5f, stroke = 1f, color = heal)
-
     patLines(heal)
+
+    patVertGradient(col2.withA(0.6f), col2.withA(0f))
 
     let 
       scl = getScl(0.175f)
@@ -76,16 +83,24 @@ template createUnitDraw() =
   )
 
   unitOct.draw = (proc(unit: Unit, basePos: Vec2) =
-    let heal = %"84f490"
+    let 
+      heal = %"84f490"
+      stripe1 = %"235e62"
+      stripe2 = %"3a8a72"
 
-    patStripes(%"235e62", %"3a8a72")
-    patGradient(%"3a8a72")
+    patStripes(stripe1, stripe2)
+
+    patLines(heal, seed = 8)
+
     patVertGradient(heal)
 
-    fillPoly(basePos, 4, 3f, color = heal)
-    poly(basePos, 4, 5f, stroke = 1f, color = heal)
+    fillPoly(basePos, 8, 3f, color = heal)
+    poly(basePos, 8, 5f, stroke = 1f, color = heal)
 
-    patLines(heal)
+    patSpikes(basePos, heal, amount = 8)
+    patTriSquare(basePos, heal, 7f, 1.5f, amount = 8, offset = 45f.rad / 2f)
+
+    patVertGradient(stripe2.withA(0.4f), stripe2.withA(0f))
 
     let 
       scl = getScl(0.155f)
@@ -94,17 +109,20 @@ template createUnitDraw() =
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
 
     drawBloom:
-      patCircles(heal, time = fau.time, amount = 120)
+      patCircles(heal, time = fau.time, amount = 130, seed = 5)
 
     unit.getTexture.draw(pos, scl = scl)
   )
 
   unitOxynoe.draw = (proc(unit: Unit, basePos: Vec2) =
     let 
+      stripe1 = %"235e62"
+      stripe2 = %"3a8a72"
       heal = %"84f490"
       energy = %"c7ffb7"
 
-    patStripes(%"235e62", %"3a8a72")
+    patStripes(stripe1, stripe2)
+
     patVertGradient(energy)
 
     fillPoly(basePos, 4, 3f, color = heal)
@@ -112,6 +130,8 @@ template createUnitDraw() =
 
     patSpikes(basePos, heal, amount = 12)
     patSpikes(basePos, heal, amount = 24, offset = 13f, len = 3f)#, angleOffset = 360f.rad / 24)
+
+    patVertGradient(stripe2.withA(0.5f), stripe2.withA(0f))
 
     let 
       scl = getScl(0.175f)
@@ -140,17 +160,17 @@ template createUnitDraw() =
 
     patSpikes(pos, light, amount = 12)
 
-    patVertGradient(col1.withA(0.6f), col1.withA(0f).mix(colorClear, 0.2f))
+    fillPoly(pos, 3, 3f, color = light, rotation = -90f.rad)
+    poly(pos, 3, 5f, stroke = 1f, color = light, rotation = -90f.rad)
 
-    fillPoly(pos, 4, 3f, color = light)
-    poly(pos, 4, 5f, stroke = 1f, color = light)
+    patVertGradient(col1.withA(0.7f), col1.withA(0f).mix(colorClear, 0.2f))
 
     let scl = getScl(0.175f)
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
 
     drawBloom:
-      patCircles(light, time = fau.time, amount = 100, seed = 7)
+      patRadTris(light, time = fau.time, amount = 100, seed = 7)
 
     unit.getTexture.draw(pos, scl = scl)
   )
@@ -159,16 +179,20 @@ template createUnitDraw() =
     let
       heal = %"84f490"
       energy = %"c7ffb7"
+      col1 = %"235e62"
+      col2 = %"3a8a72"
 
-    patSpin(%"235e62", %"3a8a72", blades = 16)
+    patSpin(col1, col2, blades = 16)
 
-    patLines(heal, seed = 4)
+    patRadLines(heal, seed = 4, amount = 70)
     patVertGradient(energy)
 
     fillPoly(basePos, 4, 2.5f, color = heal)
     poly(basePos, 4, 4.5f, stroke = 1f, color = heal)
 
     patTriSquare(basePos, heal, 5.5f, 2f)
+
+    patVertGradient(col2.withA(0.4f), col2.withA(0f))
 
     let 
       scl = getScl(0.164f)
@@ -203,12 +227,12 @@ template createUnitDraw() =
 
     patLines(colorAccent, seed = 4)
 
-    patVertGradient(col2.withA(0.7f), col2.withA(0f))
-
     fillPoly(basePos, 3, 3.5f, color = colorAccent, rotation = -90f.rad)
     poly(basePos, 3, 6f, stroke = 1f, color = colorAccent, rotation = -90f.rad)
 
     patTriSquare(basePos, colorAccent, amount = 3, len = 6f, offset = -30f.rad)
+
+    patVertGradient(col2.withA(0.7f), col2.withA(0f))
 
     let 
       scl = getScl(0.165f)
@@ -236,12 +260,14 @@ template createUnitDraw() =
 
     patVertGradient(missilec)
 
-    patLines(colorAccent, angle = -45f.rad)
+    patLines(colorAccent, angle = -45f.rad, seed = 12)
 
     fillPoly(basePos, 4, 3f, color = colorAccent)
     poly(basePos, 4, 5f, stroke = 1f, color = colorAccent)
 
     patTriSquare(basePos, colorAccent, amount = 4, len = 6f)
+
+    patVertGradient(missilec.withA(0.5f), missilec.withA(0f))
 
     let 
       scl = getScl(0.175f)
