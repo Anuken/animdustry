@@ -23,6 +23,8 @@ type Beatmap = ref object
   maxHits: int
   #can be null! this is pixelated
   preview: Framebuffer
+  #amount of copper that you get on completing this map with perfect score (0 = default)
+  copperAmount: int
 
 type Gamemode = enum
   gmMenu,
@@ -53,12 +55,15 @@ type GameState = object
   moveBeat: float32
   #if true, a new turn was just fired this rame
   newTurn: bool
-  #beats that have passed total
-  turn: int
-  hits: int
-  misses: int
   #snaps to 1 when player is hit for health animation
   hitTime: float32
+  #points awarded based on various events
+  points: int
+  #beats that have passed total
+  turn: int
+  copperReceived: int
+  hits: int
+  misses: int
   beatStats: string
 
 #Persistent user data.
@@ -66,9 +71,13 @@ type SaveState = object
   #all units that the player has collected (should be unique)
   units: seq[Unit]
   #"gambling tokens"
-  points: int
+  copper: int
   #how many times the player has gambled
   rolls: int
+  #map high scores by map index (0 = no completion)
+  scores: seq[int]
+  #last unit switched to - can be nil!
+  lastUnit: Unit
 
 #TODO better viewport
 const
@@ -78,10 +87,13 @@ const
   noMusic = false
   mapSize = 6
   fftSize = 50
-  pointsForRoll = 10
+  copperForRoll = 10
+  #copper received for first map completion
+  completionCopper = 30
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
   colorUiDark = %"57639a"
+  colorHit =  %"ff584c"
   #time between character switches
   switchDelay = 1f
   transitionTime = 0.2f
@@ -107,6 +119,10 @@ var
   splashTime: float32
   #increments when paused
   pauseTime: float32
+  #1 when score changes
+  scoreTime: float32
+  #if true, score change was positive
+  scorePositive: bool
   
   #transition time for fading between scenes
   #when fading out, this will reach 1, call fadeTarget, and the fade back from 1 to 0
@@ -294,9 +310,9 @@ template reset() =
   )
   
   #start with first unit
-  makeUnit(vec2i(), save.units[0])
+  makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
-template playMap(next: Beatmap, offset = 0f) =
+template playMap(next: Beatmap, offset = 3f * 60f + 25f) =
   reset()
 
   state.map = next
@@ -309,8 +325,29 @@ proc fading(): bool = fadeTarget != nil
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
 
+proc highScore(map: Beatmap): int =
+  let index = maps.find(map)
+  return save.scores[index]
+
+proc `highScore=`(map: Beatmap, value: int) =
+  let index = maps.find(map)
+  if save.scores[index] != value:
+    save.scores[index] = value
+    saveGame()
+
+proc unlocked(map: Beatmap): bool =
+  let index = maps.find(map)
+  return index <= 0 or save.scores[index - 1] > 0
+
 proc health(): int = 
   if state.map.isNil: 1 else: state.map.maxHits.max(1) - state.hits
+
+
+proc addPoints(amount = 1) =
+  state.points += amount
+  state.points = state.points.max(1)
+  scoreTime = 1f
+  scorePositive = amount >= 0
 
 proc unlocked(unit: Unit): bool =
   for u in save.units:
@@ -359,9 +396,13 @@ makeSystem("core", []):
 
     #must have at least one unit as a default
     if save.units.len == 0:
-      save.units.add unitMono
+      save.units.add unitAlpha
     
     sortUnits()
+
+    #resize scores to hold all maps
+    if save.scores.len < maps.len:
+      save.scores.setLen(maps.len)
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
@@ -418,6 +459,22 @@ makeSystem("updateMusic", []):
       state.moveBeat = 1f
   elif state.voice.valid.not:
     mode = gmFinished
+    soundWin.play()
+
+    #calculate copper received and add it to inventory
+    let 
+      maxCopper = if state.map.copperAmount == 0: 40 else: state.map.copperAmount
+      #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
+      perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
+      #fraction that was actually obtained
+      perfectFraction = (state.points / perfectPoints).min(1f)
+      #final amount based on score
+      resultAmount = 1 + (perfectFraction * maxCopper).int + (if state.map.highScore == 0: completionCopper else: 0)
+
+    state.copperReceived = resultAmount
+    save.copper += resultAmount
+    state.map.highScore = state.map.highScore.max(state.points)
+    saveGame()
 
 makeTimedSystem()
 
@@ -432,6 +489,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
           item.unitDraw.switchTime = 1f
           item.input.lastSwitchTime = musicTime()
           effectCharSwitch(item.pos.vec + vec2(0f, 6f.px))
+          save.lastUnit = unit
           break
 
     let canMove = if state.rawBeat > 0.5:
@@ -443,11 +501,10 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     else:
       false
 
-    var moved = false
-    var failed = false
-
-    #TODO only one direction at a time?
-    var vec = if musicTime() >= item.input.lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+    var 
+      moved = false
+      failed = false
+      vec = if musicTime() >= item.input.lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
 
     if vec.zero.not:
       vec = vec.lim(1)
@@ -476,6 +533,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     if failed:
       effectFail(item.pos.vec, life = beatSpacing())
       state.misses.inc
+      addPoints(-2)
       item.unitDraw.failTime = 1f
 
     if item.unitDraw.walkTime > 0:
@@ -506,6 +564,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       item.unitDraw.walkTime = 1f
       effectWalk(item.pos.vec + vec2(0f, 2f.px))
       effectWalkWave(item.gridPos.vec.vec2, life = beatSpacing())
+
+      addPoints(1)
 
       if vec.x.abs > 0:
         item.unitDraw.side = vec.x < 0
@@ -564,9 +624,6 @@ makeSystem("snek", [Snek, GridPos, Velocity]):
 
       item.snek.turns.inc
 
-      #if item.snek.turns > 5:
-      #  sys.deleteList.add item.entity
-
 makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
   template spawn(d: Vec2i, length: int) =
     discard newEntityWith(DrawConveyor(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: d), Damage(), Snek(len: length))
@@ -614,6 +671,7 @@ makeSystem("damagePlayer", [GridPos, Damage]):
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
         soundHit.play()
+        addPoints(-5)
 
         #do not actually deal damage (iframes)
         if other.input.hitTurn < state.turn - 1:
@@ -770,8 +828,6 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
-  let hitCol = %"ff584c"
-
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
     state.hitTime = state.hitTime.max(0f)
@@ -797,10 +853,14 @@ makeSystem("drawUI", []):
     if mode == gmPaused:
       defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fontSize)
     elif mode == gmFinished:
-      defaultFont.draw(&"[ level complete! ]\nhits: {state.hits}\nmisses: {state.misses}", vec2(0f, 0.5f), scale = fontSize)
-      buttonPos.y -= 1f
+      defaultFont.draw(&"[ level complete! ]\nfinal score: {state.points}", vec2(0f, 0.75f), scale = fontSize, color = colorUi)
+
+      draw("copper".patchConst, vec2(-0.6f, -0.4f), scl = vec2(fontSize / fau.pixelScl), mixcolor = colorWhite.withA(1f - pauseTime))
+      defaultFont.draw(&" +{state.copperReceived}", vec2(0f, -0.35f), align = daLeft, scale = fontSize, color = %"d99d73")
+
+      buttonPos.y -= 1.1f
     elif mode == gmDead:
-      defaultFont.draw(&"[ level failed! ]", vec2(0f, 0.5f), scale = fontSize, color = hitCol)
+      defaultFont.draw(&"[ level failed! ]", vec2(0f, 0.5f), scale = fontSize, color = colorHit)
       buttonPos.y -= 1.3f
 
       if button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
@@ -821,15 +881,21 @@ makeSystem("drawUI", []):
       draw(fau.white, fau.cam.pos, size = fau.cam.size, color = colorWhite.withA((1f - pauseTime).pow(4f)))
       poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = colorWhite)
     elif mode == gmDead:
-      draw(fau.white, fau.cam.pos, size = fau.cam.size, color = hitCol.withA((1f - pauseTime).pow(4f)))
-      poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = hitCol)
+      draw(fau.white, fau.cam.pos, size = fau.cam.size, color = colorHit.withA((1f - pauseTime).pow(4f)))
+      poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = colorHit)
 
   if mode != gmMenu:
     #draw debug text
     #defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
-    #defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
 
-    let 
+    if scoreTime > 0:
+      scoreTime -= fau.delta / 0.5f
+    
+    scoreTime = scoreTime.max(0f)
+
+    defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
+
+    let
       progSize = vec2(22f.px, 0f)
       progress = state.secs / state.map.sound.length
       healthPos = fau.cam.viewport.topRight - vec2(0.75f)
@@ -837,11 +903,8 @@ makeSystem("drawUI", []):
     draw("progress".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f))
     draw("progress-tick".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f) + progSize * (progress - 0.5f) * 2f, color = colorUiDark)
 
-    #TODO:
-    #- diplay health
-
-    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(hitCol, state.hitTime))
-    defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(hitCol, state.hitTime))
+    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHit, state.hitTime))
+    defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(colorHit, state.hitTime))
 
     let screen = fau.cam.viewport
     if sysInput.groups.len > 0:
@@ -919,19 +982,21 @@ makeSystem("drawUI", []):
     let buttonY = statsBounds.y + 35f.px + 0.75f + 2.px
 
     #gambling interface
-    text(rectCenter(statsBounds.centerX + 4f, buttonY, 3f, 1f), &"{save.points} / {pointsForRoll}", align = daLeft, color = if save.points >= pointsForRoll: colorWhite else: %"ff4843")
+    text(rectCenter(statsBounds.centerX + 4f, buttonY, 3f, 1f), &"{save.copper} / {copperForRoll}", align = daLeft, color = if save.copper >= copperForRoll: colorWhite else: %"ff4843")
     draw("copper".patchConst, vec2(statsBounds.centerX + 2f, buttonY))
 
     var bstyle = defaultButtonStyle
-    bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.3f, 1f))
+    bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.25f, 1f))
 
     #TODO gambling implementation
-    if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Gamble", disabled = save.points < pointsForRoll, style = bstyle):
-      discard
+    if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Gamble", disabled = save.copper < copperForRoll, style = bstyle):
+      save.copper -= copperForRoll
+      
+      saveGame()
 
     for i, unit in allUnits:
       let
-        unlock = true#unit.unlocked #TODO uncomment once testing is over
+        unlock = unit.unlocked #TODO uncomment once testing is over
         x = statsBounds.centerX - allUnits.len * unitSpace/2f + i.float32 * unitSpace
         y = statsBounds.y + 6f.px
         hit = rect(x - unitSpace/2f, y, unitSpace, 32f.px)
@@ -995,7 +1060,8 @@ makeSystem("drawUI", []):
       sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
       
       #only expands after bounds check to prevent weird input
-      r.w += offset * panMove
+      if i != maps.len - 1: #do not expand last map, no space for it
+        r.w += offset * panMove
 
       var region = initPatch(map.preview.texture, (r.xy - screen.xy) / screen.wh, (r.topRight - screen.xy) / screen.wh)
       swap(region.v, region.v2)
@@ -1010,7 +1076,10 @@ makeSystem("drawUI", []):
 
       #map name
       text(r - rect(vec2(), 0f, offset * 8f.px), &"Map {i + 1}", align = daTop)
-      #song name (fade in?)
+      #high score, if applicable
+      if save.scores[i] > 0:
+        text(r - rect(vec2(), 0f, offset * 8f.px + 1f), &"High Score: {save.scores[i]}", align = daTop, color = colorUi.withA(offset))
+      #song name
       text(r - rect(vec2(0f, -8f.px), 0f, offset * 8f.px), &"Music:\n{map.songName}", align = daBot, color = rgb(0.8f).mix(%"ffd565", offset.slope).withA(offset))
 
       #fading black shadow

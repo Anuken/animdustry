@@ -8,6 +8,9 @@ let
 proc parseHook*(s: string, i: var int, u: var Unit) =
   var str: string
   parseHook(s, i, str)
+  if str == "nil":
+    u = nil
+    return
   for other in allUnits:
     if other.name == str:
       u = other
@@ -17,7 +20,7 @@ proc parseHook*(s: string, i: var int, u: var Unit) =
 
 proc dumpHook*(s: var string, u: Unit) =
   s.add '"'
-  s.add u.name
+  s.add if u == nil: "nil" else: u.name
   s.add '"'
 
 proc saveGame =
