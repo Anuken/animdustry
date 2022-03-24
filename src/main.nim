@@ -69,6 +69,7 @@ const
   fftSize = 50
   pointsForRoll = 10
   colorAccent = %"ffd37f"
+  colorUi = %"bfecf3"
   #time between character switches
   switchDelay = 1f
   transitionTime = 0.3f
@@ -92,6 +93,8 @@ var
   splashUnit: Option[Unit]
   #splash screen fade-in time
   splashTime: float32
+  #increments when paused
+  pauseTime: float32
   
   #transition time for fading between scenes
   #when fading out, this will reach 1, call fadeTarget, and the fade back from 1 to 0
@@ -347,7 +350,7 @@ makeSystem("core", []):
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
-  if mode != gmMenu and keySpace.tapped:
+  if mode != gmMenu and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
 
   when defined(debug):
@@ -742,10 +745,24 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
-  #TODO looks bad
   if mode == gmPaused:
-    defaultFont.draw("[paused]", fau.cam.pos)
-  
+    pauseTime += fau.delta / 0.5f
+    pauseTime = min(pauseTime, 1f)
+
+    let midrad = 5f * pauseTime.powout(8)
+
+    fillPoly(vec2(), 4, midrad, color = rgba(0f, 0f, 0f, 0.5f))
+    poly(vec2(), 4, midrad, stroke = 4f.px, color = colorUi)
+
+    defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fau.pixelScl * (1f + 2.5f * (1f - pauseTime.powout(5f))))
+
+    if button(rectCenter(vec2(fau.cam.viewport.centerX, fau.cam.viewport.y).lerp(vec2(), pauseTime.powout(8f)) - vec2(0f, 0.5f), 3f, 1f), "Menu"):
+      safeTransition:
+        reset()
+        mode = gmMenu
+  else:
+    pauseTime = 0f
+
   if mode != gmMenu:
     #draw debug text
     defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
@@ -893,7 +910,7 @@ makeSystem("drawUI", []):
       )
     
     #outline around everything
-    lineRect(statsBounds, stroke = 2f.px, color = %"bfecf3", margin = 1f.px)
+    lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
 
     #draw map select
     for i in countdown(maps.len - 1, 0):
