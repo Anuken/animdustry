@@ -129,12 +129,12 @@ template createUnitDraw() =
     poly(basePos, 4, 5f, stroke = 1f, color = heal)
 
     patSpikes(basePos, heal, amount = 12)
-    patSpikes(basePos, heal, amount = 24, offset = 13f, len = 3f)#, angleOffset = 360f.rad / 24)
+    patSpikes(basePos, heal, amount = 24, offset = 13f, len = 3f, angleOffset = 360f.rad / 24 / 2f)
 
     patVertGradient(stripe2.withA(0.5f), stripe2.withA(0f))
 
     let 
-      scl = getScl(0.175f)
+      scl = getScl(0.171f)
       pos = basePos
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)

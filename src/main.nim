@@ -19,13 +19,21 @@ type Beatmap = ref object
   bpm: float
   #in seconds
   beatOffset: float
+  #max hits taken in this map before game over
+  maxHits: int
   #can be null! this is pixelated
   preview: Framebuffer
 
 type Gamemode = enum
   gmMenu,
+  #currently in track
   gmPlaying,
-  gmPaused
+  #temporarily paused with space/esc
+  gmPaused,
+  #ran out of health
+  gmDead,
+  #finished track, diisplaying stats
+  gmFinished
 
 type GameState = object
   map: Beatmap
@@ -48,6 +56,9 @@ type GameState = object
   #beats that have passed total
   turn: int
   hits: int
+  misses: int
+  #snaps to 1 when player is hit for health animation
+  hitTime: float32
   beatStats: string
 
 #Persistent user data.
@@ -285,7 +296,7 @@ template reset() =
   #start with first unit
   makeUnit(vec2i(), save.units[0])
 
-template playMap(next: Beatmap, offset = 0.0) =
+template playMap(next: Beatmap, offset = 0f) =
   reset()
 
   state.map = next
@@ -297,6 +308,9 @@ proc fading(): bool = fadeTarget != nil
 
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
+
+proc health(): int = 
+  if state.map.isNil: 1 else: state.map.maxHits.max(1) - state.hits
 
 proc unlocked(unit: Unit): bool =
   for u in save.units:
@@ -351,8 +365,13 @@ makeSystem("core", []):
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
-  if mode != gmMenu and (keySpace.tapped or keyEscape.tapped):
+  if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
+  
+  #trigger game over
+  if mode == gmPlaying and health() <= 0:
+    mode = gmDead
+    soundDie.play()
 
   when defined(debug):
     
@@ -397,6 +416,8 @@ makeSystem("updateMusic", []):
     
     if state.newTurn:
       state.moveBeat = 1f
+  elif state.voice.valid.not:
+    mode = gmFinished
 
 makeTimedSystem()
 
@@ -454,6 +475,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
     if failed:
       effectFail(item.pos.vec, life = beatSpacing())
+      state.misses.inc
       item.unitDraw.failTime = 1f
 
     if item.unitDraw.walkTime > 0:
@@ -588,8 +610,10 @@ makeSystem("damagePlayer", [GridPos, Damage]):
       let pos = other.gridPos
       if pos.vec == item.gridPos.vec:
         other.unitDraw.hitTime = 1f
+        state.hitTime = 1f
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
+        soundHit.play()
 
         #do not actually deal damage (iframes)
         if other.input.hitTurn < state.turn - 1:
@@ -660,7 +684,7 @@ makeSystem("draw", []):
       smokeFrames[i] = patch("smoke" & $i)
 
   #margin is currently 4, adjust as needed
-  let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4))).round
+  let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4)))
 
   sys.buffer.clear(colorBlack)
   sys.buffer.resize(fau.size * tileSize / camScl)
@@ -746,8 +770,16 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
-  if mode == gmPaused:
-    pauseTime += fau.delta / 0.5f
+  let hitCol = %"ff584c"
+
+  if state.hitTime > 0:
+    state.hitTime -= fau.delta / 0.4f
+    state.hitTime = state.hitTime.max(0f)
+
+  if mode != gmPlaying and mode != gmMenu:
+    let transitionTime = if mode == gmPaused: 0.5f else: 2.3f
+    
+    pauseTime += fau.delta / transitionTime
     pauseTime = min(pauseTime, 1f)
   else:
     pauseTime -= fau.delta / 0.2f
@@ -759,22 +791,57 @@ makeSystem("drawUI", []):
     fillPoly(vec2(), 4, midrad, color = rgba(0f, 0f, 0f, 0.5f))
     poly(vec2(), 4, midrad, stroke = 4f.px, color = colorUi)
 
-    defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fau.pixelScl * (1f + 2.5f * (1f - pauseTime.powout(5f))))
+    let fontSize = fau.pixelScl * (1f + 2.5f * (1f - pauseTime.powout(5f)))
+    var buttonPos = vec2(fau.cam.viewport.centerX, fau.cam.viewport.y).lerp(vec2(), pauseTime.powout(8f)) - vec2(0f, 0.5f)
 
-    if button(rectCenter(vec2(fau.cam.viewport.centerX, fau.cam.viewport.y).lerp(vec2(), pauseTime.powout(8f)) - vec2(0f, 0.5f), 3f, 1f), "Menu"):
+    if mode == gmPaused:
+      defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fontSize)
+    elif mode == gmFinished:
+      defaultFont.draw(&"[ level complete! ]\nhits: {state.hits}\nmisses: {state.misses}", vec2(0f, 0.5f), scale = fontSize)
+      buttonPos.y -= 1f
+    elif mode == gmDead:
+      defaultFont.draw(&"[ level failed! ]", vec2(0f, 0.5f), scale = fontSize, color = hitCol)
+      buttonPos.y -= 1.3f
+
+      if button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
+        let map = state.map
+        capture map:
+          safeTransition:
+            reset()
+            playMap(map)
+            mode = gmPlaying
+
+    if button(rectCenter(buttonPos, 3f, 1f), "Menu"):
       safeTransition:
         reset()
         mode = gmMenu
+    
+    #flash screen animation after winning
+    if mode == gmFinished:
+      draw(fau.white, fau.cam.pos, size = fau.cam.size, color = colorWhite.withA((1f - pauseTime).pow(4f)))
+      poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = colorWhite)
+    elif mode == gmDead:
+      draw(fau.white, fau.cam.pos, size = fau.cam.size, color = hitCol.withA((1f - pauseTime).pow(4f)))
+      poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = hitCol)
 
   if mode != gmMenu:
     #draw debug text
-    defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
-    defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+    #defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+    #defaultFont.draw(&"hits: {state.hits}", fau.cam.pos - fau.cam.size * vec2(0f, 0.5f), align = daBot)
+
+    let 
+      progSize = vec2(22f.px, 0f)
+      progress = state.secs / state.map.sound.length
+      healthPos = fau.cam.viewport.topRight - vec2(0.75f)
+
+    draw("progress".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f))
+    draw("progress-tick".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f) + progSize * (progress - 0.5f) * 2f, color = colorUiDark)
 
     #TODO:
-    #- proper hits
-    #- progress bar
-    #- unit switching
+    #- diplay health
+
+    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(hitCol, state.hitTime))
+    defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(hitCol, state.hitTime))
 
     let screen = fau.cam.viewport
     if sysInput.groups.len > 0:

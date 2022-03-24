@@ -39,6 +39,7 @@ template createMaps() =
     sound: musicAritusForYou,
     bpm: 126f,
     beatOffset: -80f / 1000f,
+    maxHits: 20,
     fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
@@ -145,7 +146,7 @@ template createMaps() =
         
         #"you"
         let next = turn + 1
-        if next in [68, 84, 148, 164, 228, 236, 260, 268, 292, 300, 324, 332, 356, 372, 388, 397, 420, 430]:
+        if next in [68, 84, 148, 164, 228, 236, 260, 268, 292, 300, 324, 332, 356, 372, 388, 397, 420, 428]:
           for pos in d4():
             effectWarn((pos * mapSize).vec2, life = beatSpacing())
           runDelay:
