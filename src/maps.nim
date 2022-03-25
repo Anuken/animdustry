@@ -3,9 +3,6 @@ import sugar
 var
   map1, map2, map3, map4, map5: Beatmap
 
-template bullet(pos: Vec2i, dir: Vec2i, tex = "") =
-  discard newEntityWith(Scaled(scl: 1f), DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
-
 template bulletsCorners() =
   let spacing = 2
 
@@ -13,7 +10,7 @@ template bulletsCorners() =
     let corner = d4iedge[(turn div spacing) mod 4] * mapSize
 
     for dir in d8():
-      bullet(corner, dir)
+      makeBullet(corner, dir)
 
 template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
   let 
@@ -21,14 +18,15 @@ template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
     d = dir
   capture p, d:
     runDelay:
-      bullet(p, d, tex)
+      makeBullet(p, d, tex)
 
-template conveyor(pos: Vec2i, dir: Vec2i, length = 2) =
-  discard newEntityWith(DrawConveyor(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
+template delayBulletWarn(pos: Vec2i, dir: Vec2i, tex = "") =
+  delayBullet(pos, dir, tex)
+  effectWarnBullet(pos.vec2, rot = dir.vec2.angle, life = beatSpacing())
 
-template bulletCircle(pos: Vec2i) =
+template bulletCircle(pos: Vec2i, tex = "") =
   for dir in d8():
-    bullet(pos, dir)
+    makeBullet(pos, dir, tex)
 
 proc modSize(num: int): int =
   num.mod(mapSize * 2 + 1) - mapSize
@@ -40,6 +38,7 @@ template createMaps() =
     bpm: 126f,
     beatOffset: -80f / 1000f,
     maxHits: 20,
+    copperAmount: 25,
     fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
@@ -70,7 +69,7 @@ template createMaps() =
             effectWarn(vec2(), life = beatSpacing())
 
           if off mod(routSpace) == 0:
-            discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: vec2i()), Damage(), SpawnConveyors(len: 2, diagonal: (off.mod(routSpace * 2) == 0)), Lifetime(turns: 2))
+            makeRouter(vec2i(), diag = off.mod(routSpace * 2) == 0)
         
         template moveRouter(offset: int) =
           let 
@@ -82,33 +81,33 @@ template createMaps() =
           if (off + 1) mod(routSpace) == 0:
             effectWarn(pos.vec2, life = beatSpacing())
             runDelay:
-              discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: 3, diagonal: (off.mod(routSpace * 2) == 0)), Lifetime(turns: 2))
+              makeRouter(pos, length = 3, diag = (off.mod(routSpace * 2) == 0))
         
         template horizontalConveyors(len = 2) =
           if turn mod space == 0:
             let dir = (((turn div space).mod 2) == 0).signi
             for i in signsi():
-              conveyor(vec2i(-mapSize * dir, ((turn div space).mod(mapSize + 1)) * i), vec2i(dir, 0), len)
+              makeConveyor(vec2i(-mapSize * dir, ((turn div space).mod(mapSize + 1)) * i), vec2i(dir, 0), len)
         
         template vertConveyors() =
           if turn mod(space * 4) == 0:
             for i in signsi():
-              conveyor(vec2i(mapSize - ((turn div (space * 4)) mod mapSize), mapSize) * i, vec2i(0, -i), 5)
+              makeConveyor(vec2i(mapSize - ((turn div (space * 4)) mod mapSize), mapSize) * i, vec2i(0, -i), 5)
 
         template vertConveyorsMore() =
           if turn mod(space) == 0:
             for i in signsi():
-              conveyor(vec2i(mapSize - ((turn div (space)) mod mapSize) - 1, mapSize) * i, vec2i(0, -i), 2)
+              makeConveyor(vec2i(mapSize - ((turn div (space)) mod mapSize) - 1, mapSize) * i, vec2i(0, -i), 2)
 
         template sideDuos() =
           if turn.mod(space * 8) == 0 and sysTurretShoot.groups.len == 0:
             let side = (turn.mod(space * 8 * 2) == 0).signi
-            discard newEntityWith(Pos(), GridPos(vec: vec2i(-mapSize * side, 0)), DrawTurret(sprite: "duo"), Turret(reload: 4, dir: vec2i(side, 0)), Lifetime(turns: space * 4))
+            makeTurret(vec2i(-mapSize * side, 0), vec2i(side, 0), 4, space * 4)
             
         template topDuos() =
           if turn.mod(space * 8) == 0 and sysTurretShoot.groups.len == 0:
             for side in signsi():
-              discard newEntityWith(Pos(), GridPos(vec: vec2i(0, -mapSize * side)), DrawTurret(sprite: "duo"), Turret(reload: 4, dir: vec2i(0, side)), Lifetime(turns: space * 4))
+              makeTurret(vec2i(0, -mapSize * side), vec2i(0, side), 4, space * 4)
         
         template spiral() =
           let s = space
@@ -120,7 +119,7 @@ template createMaps() =
               effectWarn(v.vec2)
               capture v, i:
                 runDelay:
-                  conveyor(v, d4i[(i + 2).mod(4)], 1)
+                  makeConveyor(v, d4i[(i + 2).mod(4)], 1)
 
         template horStripes(offset: int) =
           let t = turn - offset
@@ -130,7 +129,7 @@ template createMaps() =
               side = ((t mod (s * 2)) == 0).signi
               y = (t div s).mod(mapSize * 2 + 1) - mapSize
             
-            conveyor(vec2i(-mapSize * side, y), vec2i(side, 0), 6)
+            makeConveyor(vec2i(-mapSize * side, y), vec2i(side, 0), 6)
 
         if turn in 0..35:
           horizontalConveyors()
@@ -152,11 +151,11 @@ template createMaps() =
           runDelay:
             for pos in d4():
               for dir in d8():
-                bullet(pos * mapSize, dir, "bullet-pink")
+                makeBullet(pos * mapSize, dir, "bullet-pink")
 
         if turn == 35:
           for i in signsi():
-            conveyor(vec2i(mapSize, mapSize) * i, vec2i(0, -i), 5)
+            makeConveyor(vec2i(mapSize, mapSize) * i, vec2i(0, -i), 5)
         
         #bullet walls
         if turn in 91..116:
@@ -166,7 +165,7 @@ template createMaps() =
             let r = (if side: 0..<3 else: 3..mapSize)
             for val in r:
               for s in signsi():
-                bullet(vec2i(mapSize, val * s), vec2i(-1, 0), "bullet-pink")
+                makeBullet(vec2i(mapSize, val * s), vec2i(-1, 0), "bullet-pink")
         
         if turn in 117..164:
           horizontalConveyors(3)
@@ -186,7 +185,7 @@ template createMaps() =
           runDelay:
             for pos in d4edge():
               for dir in d8():
-                bullet(pos * mapSize, dir, "bullet-pink")
+                makeBullet(pos * mapSize, dir, "bullet-pink")
         
         if turn in 291..360:
           vertConveyorsMore()
@@ -208,6 +207,7 @@ template createMaps() =
     sound: musicStoplight,
     bpm: 85f,
     beatOffset: 0f / 1000f,
+    maxHits: 15,
     fadeColor: %"985eb9",
     drawPixel: (proc() =
       patBackground(%"2b174d")
@@ -227,18 +227,18 @@ template createMaps() =
     update: (proc() =
       if state.newTurn:
         let turn = state.turn
-        #33: "wicked"
+        #32: "wicked"
         #beat on odd turns begins here
 
-        template sideConveyors() =
+        template sideConveyors =
           let space = 8
 
           if (turn mod space) == 0:
             let side = (turn.mod(space * 2) == 0).int
             for i in 0..mapSize:
-              conveyor(vec2i(i - side * mapSize, -mapSize), vec2i(0, 1), 5)
+              makeConveyor(vec2i(i - side * mapSize, -mapSize), vec2i(0, 1), 5)
         
-        template sideBullets() =
+        template sideBullets =
           let space = 6
           let bspace = 3
           if turn mod space == 0:
@@ -247,13 +247,105 @@ template createMaps() =
               if (i + turn div space).emod(bspace) == 0:
                 for side in signsi():
                   effectWarnBullet(vec2i(side * mapSize, i).vec2, life = beatSpacing())
-                  delayBullet(vec2i(side * mapSize, i), vec2i(-side, 0))
+                  delayBullet(vec2i(side * mapSize, i), vec2i(-side, 0), "bullet-purple")
+        
+        template timeStrikes =
+          let space = 4
 
-        #if turn in 0..32:
-        sideConveyors()
+          if turn mod space == 0:
+            let pos = state.playerPos
+            for i in 0..3:
+              capture i, pos:
+                runDelayi(i):
+                  effectStrikeWave(pos.vec2, rot = i.float32, life = beatSpacing())
+                  if i == 3:
+                    bulletCircle(pos, "bullet-purple")
+        
+        template topDownConveyors =
+          let space = 8
+          if turn mod space == 0:
+            let side = (turn.mod(space * 2) == 0).int
+            for y in signsi():
+              for i in -mapSize..mapSize:
+                if (i + (y == 1).int).emod(2) == 0:
+                  makeConveyor(vec2i(i, y * mapSize), vec2i(0, -y), 5)
+        
+        #single event
+        template sideWeave =
+          for x in signsi():
+            for i in -mapSize..mapSize:
+              if (i + (x == 1).int).emod(2) == 0:
+                makeConveyor(vec2i(x * mapSize, i), vec2i(-x, 0), 1)
 
-        if turn >= 30:
+        template sideSorters =
+          let space = 4
+          if turn mod space == 0:
+            makeSorter(vec2i(mapSize, 0), vec2i(-1, 0))
+        
+        template rightConveyors =
+          let space = 2
+          if turn mod space == 0:
+            for i in signsi():
+              makeConveyor(vec2i(mapSize, mapSize * i), vec2i(0, -i), length = 1)
+        
+        template midBullets = 
+          for dir in d8():
+            delayBulletWarn(dir * mapSize, -dir, "bullet-purple")
+        
+        template quadDuos =
+          for dir in d4():
+            makeTurret(dir * mapSize, -dir, life = 26)
+
+        template crossRouters =
+          let 
+            off = turn + 1
+            space = 4
+
+          #warning for router spawn?
+          if (off + 1) mod space == 0:
+            effectWarn(vec2(), life = beatSpacing())
+
+          if off mod space == 0:
+            bulletCircle(vec2i(), "bullet-purple")
+            #makeRouter(vec2i(), diag = turn.mod(space * 2) == 0)
+            
+          if off mod (space*2) == 0:
+            let cor = (off / (space * 2)).mod(mapSize * 2 + 1)
+            var i = 0
+            for corner in d4edge():
+              makeRouter(corner * mapSize + vec2l(i * 90f.rad + 180f.rad, cor).vec2i, length = 3)
+              i.inc
+        
+        if turn == 32:
+          sideWeave()
+
+        if turn in 0..38:
+          sideConveyors()
+
+        if turn in 35..44:
           sideBullets()
+
+        if turn in 41..60:
+          timeStrikes()
+        
+        if turn in 60..85:
+          topDownConveyors()
+        
+        #fade in
+        if turn == 95 or turn == 159:
+          midBullets()
+        
+        if turn in 100..120:
+          sideSorters()
+          rightConveyors()
+        
+        #132, it is safe to begin next pattern
+        if turn == 132:
+          quadDuos()
+        
+        #160 - more stuff?
+        if turn in 160..190:
+          crossRouters()
     )
   )
 
@@ -310,22 +402,3 @@ template createMaps() =
       discard
     )
   )
-
-#the old patterns for crosses and routers and stuff
-#[
-          let off = turn + 1
-
-          #warning for router spawn?
-          if (off + 1) mod space == 0:
-            effectWarn(vec2(), life = beatSpacing())
-
-          if off mod space == 0:
-            discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: vec2i()), Damage(), SpawnConveyors(len: 2, diagonal: (turn.mod(space * 2) == 0)), Lifetime(turns: 2))
-            
-          if off mod (space*2) == 0:
-            let cor = (off / (space * 2)).mod(mapSize * 2 + 1)
-            var i = 0
-            for corner in d4edge():
-              discard newEntityWith(DrawRouter(), Pos(), GridPos(vec: corner * mapSize + vec2l(i * 90f.rad + 180f.rad, cor).vec2i), Damage(), SpawnConveyors(len: 3), Lifetime(turns: 2))
-              i.inc
-]#

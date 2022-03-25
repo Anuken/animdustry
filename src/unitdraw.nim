@@ -284,3 +284,7 @@ template createUnitDraw() =
       unit.getTexture("-missiles").draw(basePos + hoverOffset(offset = 3f), scl = scl)
   )
   
+  #TODO abilities
+  unitMono.abilityProc = (proc(entity: EntityRef) =
+    discard
+  )

@@ -1,9 +1,11 @@
-import tables, core, random
+import tables, core, random, polymorph
 
 type Unit* = ref object
   name*: string
   title*: string
   subtitle*: string
+  ability*: string
+  abilityProc*: proc(unit: EntityRef)
   draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
   textures*: Table[string, Texture]
   unmoving*: bool
@@ -78,7 +80,7 @@ let
 
 proc rollUnit*(): Unit =
   #boulder has a much higher chance to be selected, because it's useless
-  if chance(0.3f):
+  if chance(0.33f):
     return unitBoulder
 
   return sample(allUnits)

@@ -139,6 +139,8 @@ register(defaultComponentOptions):
       nextBeat: int
       lastInputTime: float32
       lastSwitchTime: float32
+      justMoved: bool
+      couldMove: bool
       fails: int
   
     GridPos = object
@@ -156,6 +158,7 @@ register(defaultComponentOptions):
     
     Velocity = object
       vec: Vec2i
+      space: int
     
     Scaled = object
       scl: float32
@@ -164,12 +167,16 @@ register(defaultComponentOptions):
       rot: float32
       sprite: string
     
-    DrawRouter = object
-
-    DrawConveyor = object
-
-    DrawTurret = object
+    DrawSpin = object
       sprite: string
+
+    DrawSquish = object
+      sprite: string
+
+    DrawBounce = object
+      sprite: string
+    
+    DrawDamageField = object
 
     Turret = object
       dir: Vec2i
@@ -192,6 +199,12 @@ register(defaultComponentOptions):
     SpawnConveyors = object
       len: int
       diagonal: bool
+      dir: Vec2i
+    
+    SpawnEvery = object
+      space: int
+      offset: int
+      spawn: SpawnConveyors
     
     Damage = object
 
@@ -203,20 +216,35 @@ defineEffects:
   walk(lifetime = 0.8f):
     particlesLife(e.id, 10, e.pos, e.fin, 13f.px):
       draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = %"a6a7b6")
+  
   charSwitch(lifetime = 1f):
     particlesLife(e.id, 13, e.pos, e.fin + 0.2f, 20f.px):
       draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = colorAccent, z = 3000f)
+  
   walkWave:
     poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
+  
+  strikeWave:
+    #TODO looks bad
+    #(%"bc8cff")
+    let col = colorWhite.mix(colorAccent, e.fout.pow(4f)).withA(e.fout.pow(1.4f) * 0.9f)
+    draw(patch(&"wave{e.rotation.int}"), e.pos, color = col)
+
+    #let size = (4f - e.rotation)
+    #poly(e.pos, 4, size * 5f.px + 4f.px, stroke = 5f.px, color = col, rotation = 45f.rad)
+    #spikes(e.pos, 8, size * 5f.px + 10f.px, 4f.px, stroke = 3f.px, color = col)
+  
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
+  
   warn:
     poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
     draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
+  
   warnBullet:
     #poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
-    draw("bullet".patchConst, e.pos, size = vec2(16f.px), mixColor = colorWhite, color = colorWhite.withA(e.fin))
+    draw("bullet".patchConst, e.pos, rotation = e.rotation, size = vec2(16f.px), mixColor = colorWhite, color = colorWhite.withA(e.fin))
   
   fail:
     draw("fail".patchConst, e.pos, color = colorWhite.withA(e.fout), scl = vec2(1f) + e.fout.pow(4f) * 0.6f)
@@ -227,15 +255,15 @@ GridPos.onAdd:
   if pos.valid:
     pos.vec = curComponent.vec.vec2
 
-DrawRouter.onAdd:
+DrawSpin.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
-DrawConveyor.onAdd:
+DrawSquish.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
-DrawTurret.onAdd:
+DrawBounce.onAdd:
   if not entity.has(Scaled):
     entity.add Scaled(scl: 1f)
 
@@ -260,7 +288,27 @@ template runDelay(body: untyped) =
     body
   )))
 
+template runDelayi(amount: int, body: untyped) =
+  discard newEntityWith(RunDelay(delay: amount, callback: (proc() =
+    body
+  )))
+
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
+
+template makeBullet(pos: Vec2i, dir: Vec2i, tex = "bullet") =
+  discard newEntityWith(Scaled(scl: 1f), DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
+
+template makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
+  discard newEntityWith(DrawSquish(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
+
+template makeRouter(pos: Vec2i, length = 2, life = 2, diag = false) =
+  discard newEntityWith(DrawSpin(sprite: "router"), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag), Lifetime(turns: life))
+
+template makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
+  discard newEntityWith(DrawSpin(sprite: "sorter"), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
+
+template makeTurret(pos: Vec2i, face: Vec2i, reloadTime = 4, life = 8, tex = "duo") =
+  discard newEntityWith(Pos(), GridPos(vec: pos), DrawBounce(sprite: tex), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
 
 template makeUnit(pos: Vec2i, aunit: Unit) =
   discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
@@ -314,7 +362,7 @@ template reset() =
   #start with first unit
   makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
-template playMap(next: Beatmap, offset = 3f * 60f + 25f) =
+template playMap(next: Beatmap, offset = 0.0) =
   reset()
 
   state.map = next
@@ -339,11 +387,10 @@ proc `highScore=`(map: Beatmap, value: int) =
 
 proc unlocked(map: Beatmap): bool =
   let index = maps.find(map)
-  return index <= 0 or save.scores[index - 1] > 0
+  return index <= 0 or save.scores[index - 1] > 0 or save.scores[index] > 0
 
 proc health(): int = 
   if state.map.isNil: 1 else: state.map.maxHits.max(1) - state.hits
-
 
 proc addPoints(amount = 1) =
   state.points += amount
@@ -405,6 +452,11 @@ makeSystem("core", []):
     #resize scores to hold all maps
     if save.scores.len < maps.len:
       save.scores.setLen(maps.len)
+    
+    #TODO remove
+    when defined(debug):
+      playMap(map2, 90)
+      mode = gmPlaying
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
@@ -417,7 +469,6 @@ makeSystem("core", []):
     soundDie.play()
 
   when defined(debug):
-    
     if keyEscape.tapped:
       quitApp()
 
@@ -503,6 +554,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     else:
       false
     
+    item.input.couldMove = canMove
+    
     var 
       moved = false
       failed = false
@@ -582,6 +635,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
         #early; target beat is the one after this one
         item.input.nextBeat = state.turn + 1
         state.beatStats = "early"
+    
+    item.input.justMoved = moved
 
 makeSystem("runDelay", [RunDelay]):
   if state.newTurn:
@@ -626,9 +681,16 @@ makeSystem("snek", [Snek, GridPos, Velocity]):
 
       item.snek.turns.inc
 
+makeSystem("spawnEvery", [SpawnEvery]):
+  if state.newTurn:
+    all:
+      if (state.turn + item.spawnEvery.offset).mod(item.spawnEvery.space.max(1)) == 0:
+        item.entity.add item.spawnEvery.spawn
+
 makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
   template spawn(d: Vec2i, length: int) =
-    discard newEntityWith(DrawConveyor(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: d), Damage(), Snek(len: length))
+    if item.spawnConveyors.dir != d:
+      makeConveyor(item.gridPos.vec, d, length)
 
   if state.newTurn:
     all:
@@ -663,11 +725,16 @@ makeSystem("turretShoot", [Turret, GridPos]):
 makeSystem("updateMap", []):
   state.map.update()
 
-makeSystem("damagePlayer", [GridPos, Damage]):
+makeSystem("damagePlayer", [GridPos, Pos, Damage]):
   all:
+    #only actually apply damage when:
+    #1. player just moved this turn, or
+    #2. ~~player just skipped a turn (was too late)~~ doesn't work, looks really bad
+    #3. item has approached player close enough
+    #TODO maybe item movement should be based on player movement?
     for other in sysInput.groups:
       let pos = other.gridPos
-      if pos.vec == item.gridPos.vec:
+      if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
         other.unitDraw.hitTime = 1f
         state.hitTime = 1f
         sys.deleteList.add item.entity
@@ -683,7 +750,8 @@ makeSystem("damagePlayer", [GridPos, Damage]):
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if state.newTurn:
     all:
-      item.gridPos.vec += item.velocity.vec
+      if state.turn.mod(item.velocity.space.max(1)) == 0:
+        item.gridPos.vec += item.velocity.vec
 
 #TODO should not require snek...
 makeSystem("collideSnek", [GridPos, Damage, Velocity, Snek]):
@@ -769,30 +837,30 @@ makeSystem("drawBackground", []):
 
 makeEffectsSystem()
 
-makeSystem("drawConveyor", [Pos, DrawConveyor, Velocity, Snek, Scaled]):
+makeSystem("drawSquish", [Pos, DrawSquish, Velocity, Snek, Scaled]):
   all:
     item.snek.fade += fau.delta / 0.5f
     let f = item.snek.fade.clamp
 
-    draw("conveyor".patchConst,
+    draw(item.drawSquish.sprite.patch,
       item.pos.vec, 
       rotation = item.velocity.vec.vec2.angle,
       scl = vec2(1f, 1f - state.moveBeat * 0.3f) * item.scaled.scl,
       mixcolor = state.map.fadeColor.withA(1f - f)
     )
 
-makeSystem("drawRouter", [Pos, DrawRouter, Scaled]):
+makeSystem("drawSpin", [Pos, DrawSpin, Scaled]):
   all:
     proc spinSprite(patch: Patch, pos: Vec2, scl: Vec2, rot: float32) =
       let r = rot.mod 90f
       draw(patch, pos, rotation = r, scl = scl)
       draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
 
-    spinSprite("router".patchConst, item.pos.vec, vec2(1f + state.moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * state.moveBeat.pow(6f))
+    spinSprite(item.drawSpin.sprite.patch, item.pos.vec, vec2(1f + state.moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * state.moveBeat.pow(6f))
 
-makeSystem("drawTurret", [Pos, DrawTurret, Turret, Scaled]):
+makeSystem("drawBounce", [Pos, DrawBounce, Turret, Scaled]):
   all:
-    draw(item.drawTurret.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+    draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
 
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
@@ -888,7 +956,8 @@ makeSystem("drawUI", []):
 
   if mode != gmMenu:
     #draw debug text
-    #defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.pos + fau.cam.size * vec2(0f, 0.5f), align = daTop)
+    when defined(debug):
+      defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.view, align = daBot)
 
     if scoreTime > 0:
       scoreTime -= fau.delta / 0.5f
@@ -1065,26 +1134,29 @@ makeSystem("drawUI", []):
         scl = vec2(1f + click * 0.1f, 1f - click * 0.1f)
       )
     
-      #must be after units so shown stuff doesn't disappear
-      if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Roll", disabled = save.copper < copperForRoll, style = bstyle):
-        save.copper -= copperForRoll
-        let unit = rollUnit()
+    
+    #must be after units so shown stuff doesn't disappear
+    if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Roll", disabled = save.copper < copperForRoll, style = bstyle):
+      save.copper -= copperForRoll
+      let unit = rollUnit()
 
-        if save.units.find(unit) == -1:
-          save.units.add unit
-        
-        sortUnits()
-        saveGame()
+      if save.units.find(unit) == -1:
+        save.units.add unit
+      
+      sortUnits()
+      saveGame()
 
-        splashRevealTime = 1f
-        showSplashUnit(unit)
+      splashRevealTime = 1f
+      showSplashUnit(unit)
     
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
 
     #draw map select
     for i in countdown(maps.len - 1, 0):
-      let map = maps[i]
+      let 
+        map = maps[i]
+        unlocked = map.unlocked
       assert map.preview != nil
 
       var
@@ -1095,27 +1167,28 @@ makeSystem("drawUI", []):
       sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
       
       #only expands after bounds check to prevent weird input
-      if i != maps.len - 1: #do not expand last map, no space for it
+      if i != maps.len - 1 and unlocked: #do not expand last map, no space for it
         r.w += offset * panMove
 
       var region = initPatch(map.preview.texture, (r.xy - screen.xy) / screen.wh, (r.topRight - screen.xy) / screen.wh)
       swap(region.v, region.v2)
 
-      drawRect(region, r.x, r.y, r.w, r.h, mixColor = if over: colorWhite.withA(0.2f) else: colorClear, blend = blendDisabled)
+      drawRect(region, r.x, r.y, r.w, r.h, mixColor = (if over: colorWhite.withA(0.2f) else: colorClear).mix(rgb(0.3f), unlocked.not.float32 * 0.7f), blend = blendDisabled)
       lineRect(r, stroke = 2f.px, color = map.fadeColor * (1.5f + offset * 0.5f), margin = 1f.px)
 
       let patchBounds = r
 
-      if offset > 0.001f:
+      if offset > 0.001f and unlocked:
         sys.glowPatch.draw(patchBounds.grow(16f.px), color = colorWhite.withA(offset * (0.8f + fau.time.sin(0.2f, 0.2f))), scale = fau.pixelScl, blend = blendAdditive, z = 2f)
 
       #map name
-      text(r - rect(vec2(), 0f, offset * 8f.px), &"Map {i + 1}", align = daTop)
+      text(r - rect(vec2(), 0f, offset * 8f.px) - rect(0f, 0f, 0f, 1f.px), if unlocked: &"Map {i + 1}" else: "[ locked ]", align = daTop, color = if unlocked: colorWhite else: rgb(0.5f))
       #high score, if applicable
-      if save.scores[i] > 0:
-        text(r - rect(vec2(), 0f, offset * 8f.px + 1f), &"High Score: {save.scores[i]}", align = daTop, color = colorUi.withA(offset))
+      if unlocked:
+        text(r - rect(vec2(), 0f, offset * 8f.px + 1f), if save.scores[i] > 0: &"High Score: {save.scores[i]}" else: "[ incomplete ]", align = daTop, color = (if save.scores[i] > 0: colorUi else: rgb(0.6f)).withA(offset))
       #song name
-      text(r - rect(vec2(0f, -8f.px), 0f, offset * 8f.px), &"Music:\n{map.songName}", align = daBot, color = rgb(0.8f).mix(%"ffd565", offset.slope).withA(offset))
+      if unlocked:
+        text(r - rect(vec2(0f, -8f.px), 0f, offset * 8f.px), &"Music:\n{map.songName}", align = daBot, color = rgb(0.8f).mix(%"ffd565", offset.slope).withA(offset))
 
       #fading black shadow
       let uv = fau.white.uv
@@ -1127,7 +1200,7 @@ makeSystem("drawUI", []):
       ])
 
       #click handling
-      if over and keyMouseLeft.tapped:
+      if over and keyMouseLeft.tapped and unlocked:
         capture map:
           safeTransition:
             playMap(map)
