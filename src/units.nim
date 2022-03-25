@@ -1,4 +1,4 @@
-import tables, core
+import tables, core, random
 
 type Unit* = ref object
   name*: string
@@ -6,6 +6,7 @@ type Unit* = ref object
   subtitle*: string
   draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
   textures*: Table[string, Texture]
+  unmoving*: bool
 
   #UI state (ugh)
   wasOver*: bool
@@ -29,7 +30,8 @@ let
   unitBoulder* = Unit(
     name: "boulder",
     title: "-BOULDER-",
-    subtitle: "it's just a rock"
+    subtitle: "it's just a rock",
+    unmoving: true
   )
   unitAlpha* = Unit(
     name: "alpha",
@@ -73,3 +75,10 @@ let
   )
 
   allUnits* = [unitBoulder, unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei]
+
+proc rollUnit*(): Unit =
+  #boulder has a much higher chance to be selected, because it's useless
+  if chance(0.3f):
+    return unitBoulder
+
+  return sample(allUnits)

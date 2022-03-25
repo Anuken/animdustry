@@ -117,6 +117,8 @@ var
   splashUnit: Option[Unit]
   #splash screen fade-in time
   splashTime: float32
+  #when >0, the splash screen is in "reveal" mode
+  splashRevealTime: float32
   #increments when paused
   pauseTime: float32
   #1 when score changes
@@ -500,11 +502,11 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       state.turn >= item.input.nextBeat
     else:
       false
-
+    
     var 
       moved = false
       failed = false
-      vec = if musicTime() >= item.input.lastInputTime: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
 
     if vec.zero.not:
       vec = vec.lim(1)
@@ -549,7 +551,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     item.unitDraw.failTime -= fau.delta / (beatSpacing() / 2f)
     item.unitDraw.switchTime -= fau.delta / hitDuration
 
-    if state.newTurn:
+    if state.newTurn and item.unitDraw.unit.unmoving.not:
       item.unitDraw.beatScl = 1f
 
     if vec.zero.not:
@@ -916,7 +918,32 @@ makeSystem("drawUI", []):
           current = player.unitDraw.unit == unit
         draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear)
         defaultFont.draw($(i + 1), rect(pos + vec2(4f.px, -2f.px), 1f.vec2), align = daBotLeft, color = if current: colorGray else: colorWhite)
+  elif splashUnit.isSome and splashRevealTime > 0f: #draw splash unit reveal animation
+    splashRevealTime -= fau.delta / 3f
 
+    let
+      inv = 1f - splashRevealTime
+      unit = splashUnit.get
+      baseScl = inv.pow(14f)
+      scl = vec2(0.17f) * baseScl
+    
+    draw(fau.white, vec2(), size = fau.cam.size, color = colorUiDark)
+    patZoom(colorUi, inv.pow(2f), 10, sides = 4)
+
+    drawBloom:
+      patRadLines(col = colorUi, seed = 9, amount = 90, stroke = 0.2f, lenScl = 0.3f + inv.pow(4f) * 1.5f, posScl = 0.9f + inv.pow(5f) * 4.5f)
+      patRadCircles(colorUi, fin = inv.pow(5f))
+
+    patVertGradient(colorWhite)
+
+    unit.getTexture.draw(vec2() - vec2(0.3f) * baseScl, scl = scl, color = rgba(0f, 0f, 0f, 0.4f))
+    unit.getTexture.draw(vec2(), scl = scl, mixcolor = rgb(0.11f))
+
+    #flash
+    draw(fau.white, vec2(), size = fau.cam.size, color = rgba(1f, 1f, 1f, splashRevealTime.pow(2f)))
+
+    #inv flash
+    draw(fau.white, vec2(), size = fau.cam.size, color = rgba(1f, 1f, 1f, inv.pow(13f)))
   elif splashUnit.isSome: #draw splash unit
     splashTime += fau.delta / 4f
     splashTime = min(splashTime, 1f)
@@ -954,7 +981,7 @@ makeSystem("drawUI", []):
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
-    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back"):
+    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
@@ -986,13 +1013,7 @@ makeSystem("drawUI", []):
     draw("copper".patchConst, vec2(statsBounds.centerX + 2f, buttonY))
 
     var bstyle = defaultButtonStyle
-    bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.25f, 1f))
-
-    #TODO gambling implementation
-    if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Gamble", disabled = save.copper < copperForRoll, style = bstyle):
-      save.copper -= copperForRoll
-      
-      saveGame()
+    bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.23f, 1f))
 
     for i, unit in allUnits:
       let
@@ -1043,6 +1064,20 @@ makeSystem("drawUI", []):
         mixColor = if unlock.not: rgb(0.26f) else: rgba(1f, 1f, 1f, unit.fade * 0.2f), 
         scl = vec2(1f + click * 0.1f, 1f - click * 0.1f)
       )
+    
+      #must be after units so shown stuff doesn't disappear
+      if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Roll", disabled = save.copper < copperForRoll, style = bstyle):
+        save.copper -= copperForRoll
+        let unit = rollUnit()
+
+        if save.units.find(unit) == -1:
+          save.units.add unit
+        
+        sortUnits()
+        saveGame()
+
+        splashRevealTime = 1f
+        showSplashUnit(unit)
     
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)

@@ -326,7 +326,7 @@ proc patLines(col = colorWhite, seed = 1, amount = 30, angle = 45f.rad) =
     
     roundLine(pos, angle, len, col, stroke)
 
-proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f) =
+proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f, posScl = 1f, lenScl = 1f) =
   var r = initRand(seed)
   
   for i in 0..<amount:
@@ -335,10 +335,22 @@ proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f) =
       moveMag = r.rand(0.1f..0.3f)
       offset = vec2(ftime.sin(r.rand(0.6f..1f), moveMag), ftime.sin(r.rand(0.6f..1f), moveMag))
       angle = r.rand(360f.rad)
-      len = r.rand(2f..5f)
-      pos = vec2l(angle, len/2f + r.rand(2.5f..16f)) + offset
+      len = r.rand(2f..5f) * lenScl
+      pos = vec2l(angle, len/2f + r.rand(2.5f..16f) * posScl) + offset
     
     roundLine(pos, angle, len, col, stroke)
+
+proc patRadCircles(col = colorWhite, seed = 7, amount = 40, fin = 0.5f) =
+  var r = initRand(seed)
+  
+  for i in 0..<amount:
+    let 
+      angle = r.rand(360f.rad)
+      len = r.rand(6f..30f) * fin + r.rand(1f..3f)
+      rad = r.rand(1.2f) * fin
+      pos = vec2l(angle, len)
+    
+    fillCircle(pos, rad, color = col)
 
 proc patSpikes(pos: Vec2, col = colorWhite, amount = 10, offset = 8f, len = 3f, angleOffset = 0f) =
   for i in 0..<amount:
@@ -358,6 +370,11 @@ proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 =
 
 proc patVertGradient(col1 = colorClear, col2 = colorClear) =
   patGradient(col1, col1, col2, col2)
+
+proc patZoom(col = colorWhite, offset = 0f, amount = 10, sides = 4) =
+  for i in 0..<amount:
+    let frac = (i / amount + offset).mod(1f)
+    poly(vec2(), sides, 1f + frac.pow(1.3f) * 44f, stroke = frac * 5f, color = col)
 
 proc patFadeOut(time: float32) =
   let 
