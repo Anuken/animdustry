@@ -455,7 +455,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map2, 90)
+      playMap(map2, 135)
       mode = gmPlaying
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)

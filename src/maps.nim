@@ -316,6 +316,18 @@ template createMaps() =
               makeRouter(corner * mapSize + vec2l(i * 90f.rad + 180f.rad, cor).vec2i, length = 3)
               i.inc
         
+        #TODO bad pattern
+        template sineBullets(offset: int) =
+          for i in signsi():
+            makeBullet(vec2i(i * ((turn - offset).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
+            makeBullet(vec2i(i * ((turn - offset + mapSize).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
+        
+        template sideSorters =
+          let spacing = 8
+          if turn mod spacing == 0:
+            for i in signsi():
+              makeSorter(vec2i(mapSize * i, (mapSize - 1) * i), vec2i(-i, 0))
+
         if turn == 32:
           sideWeave()
 
@@ -343,9 +355,11 @@ template createMaps() =
         if turn == 132:
           quadDuos()
         
-        #160 - more stuff?
-        if turn in 160..190:
+        if turn in 160..180:
           crossRouters()
+        
+        if turn in 185..210:
+          sideSorters()
     )
   )
 
