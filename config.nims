@@ -1,6 +1,6 @@
 --path:"fau/src"
 --passC:"-DSTBI_ONLY_PNG"
---hints:off
+#--hints:off
 --gc:arc
 --d:nimPreviewHashRef
 

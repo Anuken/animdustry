@@ -1,5 +1,5 @@
 
-template createUnitDraw() =
+template createUnits() =
   const 
     shadowOffset = vec2(0.3f)
     shadowColor = rgba(0f, 0f, 0f, 0.4f)
@@ -285,6 +285,26 @@ template createUnitDraw() =
   )
   
   #TODO abilities
-  unitMono.abilityProc = (proc(entity: EntityRef) =
-    discard
-  )
+  unitMono.abilityProc = proc(entity: EntityRef, moves: int) =
+    if moves mod 4 == 0:
+      addPoints(1)
+
+  unitOct.abilityProc = proc(entity: EntityRef, moves: int) =
+    if moves mod 15 == 0 and state.hits > 0:
+      state.hits.dec
+      state.healTime = 1f
+  
+  unitCrawler.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    if moves mod 4 == 0:
+      for dir in d4mid():
+        effectExplode((pos + dir).vec2)
+        damageBlocks(pos + dir)
+  
+  unitQuad.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    if moves mod 6 == 0:
+      for dir in d8mid():
+        effectExplodeHeal((pos + dir).vec2)
+        damageBlocks(pos + dir)
+      

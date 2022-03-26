@@ -57,6 +57,8 @@ type GameState = object
   newTurn: bool
   #snaps to 1 when player is hit for health animation
   hitTime: float32
+  #snaps to 1 when player is healed
+  healTime: float32
   #points awarded based on various events
   points: int
   #beats that have passed total
@@ -89,11 +91,12 @@ const
   fftSize = 50
   copperForRoll = 10
   #copper received for first map completion
-  completionCopper = 30
+  completionCopper = 20
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
   colorUiDark = %"57639a"
   colorHit =  %"ff584c"
+  colorHeal = %"84f490"
   #time between character switches
   switchDelay = 1f
   transitionTime = 0.2f
@@ -113,6 +116,7 @@ var
   #UI state section
 
   smokeFrames: array[6, Patch]
+  explodeFrames: array[5, Patch]
   #currently shown unit in splash screen, null when no unit
   splashUnit: Option[Unit]
   #splash screen fade-in time
@@ -142,6 +146,7 @@ register(defaultComponentOptions):
       justMoved: bool
       couldMove: bool
       fails: int
+      moves: int
   
     GridPos = object
       vec: Vec2i
@@ -188,6 +193,9 @@ register(defaultComponentOptions):
     
     Deleting = object
       time: float32
+    
+    #can be hit by player attacks
+    Destructible = object
 
     Snek = object
       turns: int
@@ -221,6 +229,12 @@ defineEffects:
     particlesLife(e.id, 13, e.pos, e.fin + 0.2f, 20f.px):
       draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = colorAccent, z = 3000f)
   
+  explode(lifetime = 0.4f):
+    draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = (%"ffb954").mix(%"d86a4e", e.fin))
+
+  explodeHeal(lifetime = 0.42f):
+    draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = colorWhite.mix(colorHeal, e.fin.powout(2f)))
+
   walkWave:
     poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
   
@@ -237,6 +251,10 @@ defineEffects:
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
       fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
+  
+  destroy(lifetime = 0.7f):
+    particlesLife(e.id, 12, e.pos, e.fin + 0.1f, 19f.px):
+      draw(smokeFrames[(fin.pow(1.5f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = (%"ffa747").mix(%"d86a4e", e.fin))
   
   warn:
     poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
@@ -255,22 +273,6 @@ GridPos.onAdd:
   if pos.valid:
     pos.vec = curComponent.vec.vec2
 
-DrawSpin.onAdd:
-  if not entity.has(Scaled):
-    entity.add Scaled(scl: 1f)
-
-DrawSquish.onAdd:
-  if not entity.has(Scaled):
-    entity.add Scaled(scl: 1f)
-
-DrawBounce.onAdd:
-  if not entity.has(Scaled):
-    entity.add Scaled(scl: 1f)
-
-DrawBullet.onAdd:
-  if not entity.has(Scaled):
-    entity.add Scaled(scl: 1f)
-
 #unit textures dynamically loaded
 preloadFolder("textures")
 
@@ -283,35 +285,39 @@ macro makePaused(systems: varargs[untyped]): untyped =
     result.add quote do:
       `sys`.paused = (mode != gmPlaying)
 
-template runDelay(body: untyped) =
-  discard newEntityWith(RunDelay(delay: 0, callback: (proc() =
-    body
-  )))
-
-template runDelayi(amount: int, body: untyped) =
-  discard newEntityWith(RunDelay(delay: amount, callback: (proc() =
-    body
-  )))
-
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
-template makeBullet(pos: Vec2i, dir: Vec2i, tex = "bullet") =
-  discard newEntityWith(Scaled(scl: 1f), DrawBullet(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
+onEcsBuilt:
+  proc makeDelay(delay: int, callback: proc()) =
+    discard newEntityWith(RunDelay(delay: 0, callback: callback))
 
-template makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
-  discard newEntityWith(DrawSquish(sprite: tex), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
+  template runDelay(body: untyped) =
+    makeDelay(0, proc() =
+      body
+    )
 
-template makeRouter(pos: Vec2i, length = 2, life = 2, diag = false) =
-  discard newEntityWith(DrawSpin(sprite: "router"), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag), Lifetime(turns: life))
+  template runDelayi(amount: int, body: untyped) =
+    makeDelay(amount, proc() =
+      body
+    )
 
-template makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
-  discard newEntityWith(DrawSpin(sprite: "sorter"), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
+  proc makeBullet(pos: Vec2i, dir: Vec2i, tex = "bullet") =
+    discard newEntityWith(DrawBullet(sprite: tex), Scaled(scl: 1f), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
 
-template makeTurret(pos: Vec2i, face: Vec2i, reloadTime = 4, life = 8, tex = "duo") =
-  discard newEntityWith(Pos(), GridPos(vec: pos), DrawBounce(sprite: tex), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
+  proc makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
+    discard newEntityWith(DrawSquish(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
 
-template makeUnit(pos: Vec2i, aunit: Unit) =
-  discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
+  proc makeRouter(pos: Vec2i, length = 2, life = 2, diag = false) =
+    discard newEntityWith(DrawSpin(sprite: "router"), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag), Lifetime(turns: life))
+
+  proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
+    discard newEntityWith(DrawSpin(sprite: "sorter"), Scaled(scl: 1f), Destructible(), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
+
+  proc makeTurret(pos: Vec2i, face: Vec2i, reloadTime = 4, life = 8, tex = "duo") =
+    discard newEntityWith(DrawBounce(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
+
+  proc makeUnit(pos: Vec2i, aunit: Unit) =
+    discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
 template transition(body: untyped) =
   fadeTime = 0f
@@ -342,33 +348,45 @@ template drawBloomi(bloomIntensity: float32, body: untyped) =
   drawBufferScreen()
   sysDraw.bloom.blit(params = meshParams(blend = blendNormal), intensity = bloomIntensity)
 
-template showSplashUnit(unit: Unit) =
+proc showSplashUnit(unit: Unit) =
   splashUnit = unit.some
   splashTime = 0f
 
-template reset() =
-  sysAll.clear()
-  sysRunDelay.clear()
+onEcsBuilt:
+  proc reset() =
+    sysAll.clear()
+    sysRunDelay.clear()
 
-  #stop old music
-  if state.voice.int != 0:
-    state.voice.stop()
+    #stop old music
+    if state.voice.int != 0:
+      state.voice.stop()
 
-  #make default map
-  state = GameState(
-    map: map1
-  )
-  
-  #start with first unit
-  makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
+    #make default map
+    state = GameState(
+      map: map1
+    )
+    
+    #start with first unit
+    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
-template playMap(next: Beatmap, offset = 0.0) =
-  reset()
+  proc playMap(next: Beatmap, offset = 0.0) =
+    reset()
 
-  state.map = next
-  state.voice = state.map.sound.play()
-  if offset > 0.0:
-    state.voice.seek(offset)
+    state.map = next
+    state.voice = state.map.sound.play()
+    if offset > 0.0:
+      state.voice.seek(offset)
+
+  proc damageBlocks(target: Vec2i) =
+    #echo "damagng at ", target
+    for item in sysDestructible.groups:
+      if item.gridPos.vec == target:
+        effectDestroy(item.pos.vec)
+        #item.entity.delete
+        if not item.entity.has(Deleting):
+          item.entity.add(Deleting(time: 1f))
+      #else:
+      #  echo item.gridPos.vec, " != ", target
 
 proc fading(): bool = fadeTarget != nil
 
@@ -440,8 +458,9 @@ makeSystem("core", []):
     createMaps()
     maps = @[map1, map2, map3, map4, map5]
 
+    createUnits()
+
     loadGame()
-    createUnitDraw()
 
     #must have at least one unit as a default
     if save.units.len == 0:
@@ -455,7 +474,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map2, 135)
+      playMap(map2, 4)
       mode = gmPlaying
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
@@ -473,6 +492,8 @@ makeSystem("core", []):
       quitApp()
 
 makeSystem("all", [Pos]): discard
+
+makeSystem("destructible", [GridPos, Pos, Destructible]): discard
 
 makeSystem("updateMusic", []):
   start:
@@ -611,6 +632,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       moved = true
 
       item.unitDraw.beatScl = 1f
+      item.input.moves.inc
 
       item.gridPos.vec += vec.vec2i
       item.gridpos.vec.clamp(vec2i(-mapSize), vec2i(mapSize))
@@ -624,6 +646,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       if vec.x.abs > 0:
         item.unitDraw.side = vec.x < 0
+      
+      if item.unitDraw.unit.abilityProc != nil:
+        item.unitDraw.unit.abilityProc(item.entity, item.input.moves)
 
     if moved:
       #check if was late
@@ -719,7 +744,7 @@ makeSystem("turretShoot", [Turret, GridPos]):
     all:
       item.turret.reloadCounter.inc
       if item.turret.reloadCounter >= item.turret.reload:
-        discard newEntityWith(DrawBullet(), Pos(), GridPos(vec: item.gridPos.vec), Velocity(vec: item.turret.dir), Damage())
+        makeBullet(item.gridPos.vec, item.turret.dir)
         item.turret.reloadCounter = 0
       
 makeSystem("updateMap", []):
@@ -810,6 +835,9 @@ makeSystem("draw", []):
 
     for i in 0..<smokeFrames.len:
       smokeFrames[i] = patch("smoke" & $i)
+
+    for i in 0..<explodeFrames.len:
+      explodeFrames[i] = patch("explode" & $i)
 
   #margin is currently 4, adjust as needed
   let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4)))
@@ -902,6 +930,10 @@ makeSystem("drawUI", []):
     state.hitTime -= fau.delta / 0.4f
     state.hitTime = state.hitTime.max(0f)
 
+  if state.healTime > 0:
+    state.healTime -= fau.delta / 0.4f
+    state.healTime = state.healTime.max(0f)
+
   if mode != gmPlaying and mode != gmMenu:
     let transitionTime = if mode == gmPaused: 0.5f else: 2.3f
     
@@ -974,8 +1006,8 @@ makeSystem("drawUI", []):
     draw("progress".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f))
     draw("progress-tick".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f) + progSize * (progress - 0.5f) * 2f, color = colorUiDark)
 
-    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHit, state.hitTime))
-    defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(colorHit, state.hitTime))
+    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
+    defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
 
     let screen = fau.cam.viewport
     if sysInput.groups.len > 0:
@@ -1023,6 +1055,8 @@ makeSystem("drawUI", []):
       screen = fau.cam.viewport
       titleBounds = screen.grow(-0.4f)
       subtitleBounds = screen.grow(-2.2f)
+      abilityW = screen.w / 4f
+      abilityBounds = rect(screen.x + (screen.w - abilityW), screen.y, abilityW, screen.h).grow(-0.4f)
       fullPatch = patch(&"{unit.name}-real")
 
     if not unit.draw.isNil:
@@ -1038,7 +1072,6 @@ makeSystem("drawUI", []):
       align = daTop, 
       modifier = (proc(index: int, offset: var fmath.Vec2, color: var Color, draw: var bool) =
         offset.x += ((index + 0.5f) - unit.title.len/2f) * 15f.px * splashTime.powout(3f)
-        let si = (-fau.time * 0.7f + index * 0.3f).sin(0.2f, 1f)
         #offset.y -= si.max(0f) * 5f.px
         #color = colorWhite.mix(%"84f490", si * 0.8f)
       )
@@ -1049,6 +1082,9 @@ makeSystem("drawUI", []):
       draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f) * 0.9f) * i.float32, screen.top - 0.75f))
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
+
+    if unit.ability.len > 0:
+      defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.5f.px)
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
@@ -1220,4 +1256,4 @@ makeSystem("drawUI", []):
     patFadeIn(fadeTime.pow(transitionPow))
     fadeTime -= fau.delta / transitionTime
 
-launchFau("absurd")
+launchFau(initParams(title = "absurd"))

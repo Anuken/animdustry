@@ -51,12 +51,6 @@ template createMaps() =
     update: (proc() =
       if state.newTurn:
         let turn = state.turn
-        #make routers at first turn.
-        #if turn == 1:
-        #  for pos in d4edge():
-        #    discard newEntityWith(Pos(), GridPos(vec: pos * mapSize), DrawRouter())
-
-        #bulletsCorners()
 
         let space = 4
 
@@ -317,10 +311,12 @@ template createMaps() =
               i.inc
         
         #TODO bad pattern
+        #[
         template sineBullets(offset: int) =
           for i in signsi():
             makeBullet(vec2i(i * ((turn - offset).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
             makeBullet(vec2i(i * ((turn - offset + mapSize).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
+            ]#
         
         template sideSorters =
           let spacing = 8

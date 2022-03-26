@@ -5,7 +5,7 @@ type Unit* = ref object
   title*: string
   subtitle*: string
   ability*: string
-  abilityProc*: proc(unit: EntityRef)
+  abilityProc*: proc(unit: EntityRef, moves: int)
   draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
   textures*: Table[string, Texture]
   unmoving*: bool
@@ -33,27 +33,30 @@ let
     name: "boulder",
     title: "-BOULDER-",
     subtitle: "it's just a rock",
-    unmoving: true
+    unmoving: true,
+    ability: "utterly useless"
   )
   unitAlpha* = Unit(
     name: "alpha",
     title: "-ALPHA-",
-    subtitle: "first"
+    subtitle: "first",
+    #ability: "creates a wall every 10 moves",
   )
   unitMono* = Unit(
     name: "mono",
     title: "-MONO-",
-    subtitle: "the gatherer"
+    subtitle: "the gatherer",
+    ability: "earns one extra point every 4 moves"
   )
   unitCrawler* = Unit(
     name: "crawler",
     title: "-CRAWLER-",
-    subtitle: ""
+    ability: "destroys 4 adjacent blocks every 4 moves"
   )
   unitOct* = Unit(
     name: "oct",
     title: "-OCT-",
-    subtitle: ""
+    ability: "regenerates 1 health every 15 moves"
   )
   unitZenith* = Unit(
     name: "zenith",
@@ -63,7 +66,8 @@ let
   unitQuad* = Unit(
     name: "quad",
     title: "-QUAD-",
-    subtitle: "the \"support\" has arrived"
+    subtitle: "the \"support\" has arrived",
+    ability: "destroys 8 adjacent blocks every 6 moves"
   )
   unitOxynoe* = Unit(
     name: "oxynoe",
