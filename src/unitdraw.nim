@@ -293,13 +293,12 @@ template createUnits() =
     if moves mod 10 == 0:
       makeWall(entity.fetch(GridPos).vec, health = 3)
 
-  #TODO abilities
   unitMono.abilityProc = proc(entity: EntityRef, moves: int) =
     if moves mod 4 == 0:
       addPoints(1)
 
   unitOct.abilityProc = proc(entity: EntityRef, moves: int) =
-    if moves mod 15 == 0 and state.hits > 0:
+    if moves mod 20 == 0 and state.hits > 0:
       state.hits.dec
       state.healTime = 1f
   

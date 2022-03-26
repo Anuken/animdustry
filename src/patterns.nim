@@ -38,15 +38,17 @@ proc patBackground(col: Color) =
 
 #moving stripes
 proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle = 135f.rad) =
+  patBackground(col1)
   
   let 
     amount = 20
     swidth = 70f.px
   for i in 0..<amount:
-    let
-      frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
-      pos = vec2l(angle, swidth) * (frac * amount)
-    draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = angle, color = col1.mix(col2, (i.float32 mod 2f)))
+    if i mod 2 == 1:
+      let
+        frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
+        pos = vec2l(angle, swidth) * (frac * amount)
+      draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = angle, color = col2)
 
 proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
@@ -180,26 +182,38 @@ proc patStars(col = colorWhite, flash = colorWhite) =
 
     draw(sprite, pos.round(1f / tileSize), color = col.mix(flash, state.moveBeat))
 
-proc patTris(col = colorWhite) =
+proc patTris(col1 = colorWhite, col2 = colorWhite, amount = 50, seed = 1) =
   let 
-    parts = 50
     partRange = 18f
     move = vec2(-0.3f, -0.5f)
   
-  var r = initRand(1)
+  var r = initRand(seed)
   
-  for i in 0..<parts:
+  for i in 0..<amount:
     var pos = vec2(r.range(partRange), r.range(partRange))
     let
       speed = r.rand(1f..2f)
       rot = r.range(180f.rad)
       rotSpeed = 0f#r.range(0.6f)
-      scale = r.rand(0.4f..1f)
+      scale = r.rand(0.45f..1.3f)
 
     pos += move * state.time * speed * 0.4f
-    pos = fau.cam.viewport.wrap(pos, 15f)
+    pos = fau.cam.viewport.wrap(pos, 1.5f)
 
-    fillPoly(pos, 3, scale * 14f.px, color = col, rotation = rot + state.time * rotSpeed)
+    fillPoly(pos, 3, scale * 14f.px, color = col1.mix(col2, state.moveBeat), rotation = rot + state.time * rotSpeed)
+
+proc patBounceSquares(col = colorWhite) =
+  let 
+    size = 2f
+    bounds = (fau.cam.size / 2f / size).vec2i
+  
+  for x in -bounds.x..bounds.x:
+    for y in -bounds.y..bounds.y:
+      let 
+        res = (x + y + bounds.x + bounds.y + state.turn).float32.mod 2f
+        inv = 1f - res
+
+      fillPoly(vec2(x.float32, y.float32) * size, 4, size / 2f * (1f - res.lerp(inv, state.moveBeat.pow(15f)) * 0.5f + state.moveBeat.pow(5f) * 0.3f), color = col)
 
 proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   let partRange = 18f 

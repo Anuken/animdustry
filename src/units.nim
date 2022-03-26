@@ -57,7 +57,7 @@ let
   unitOct* = Unit(
     name: "oct",
     title: "-OCT-",
-    ability: "regenerates 1 health every 15 moves"
+    ability: "regenerates 1 health every 20 moves"
   )
   unitZenith* = Unit(
     name: "zenith",

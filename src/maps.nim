@@ -28,6 +28,21 @@ template bulletCircle(pos: Vec2i, tex = "") =
   for dir in d8():
     makeBullet(pos, dir, tex)
 
+template laser(pos, dir: Vec2i) =
+  effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 2f, rot = dir.vec2.angle)
+  
+  let p = pos
+  capture p:
+    runDelay:
+      effectLaserShoot(p.vec2)
+  
+  for len in 0..(mapSize*2):
+    let dest = pos + dir * len
+    effectLaserWarn(dest.vec2, rot = dir.vec2.angle, life = beatSpacing())
+    capture dest:
+      runDelay:
+        makeLaser(dest, dir)
+
 proc modSize(num: int): int =
   num.mod(mapSize * 2 + 1) - mapSize
 
@@ -195,7 +210,6 @@ template createMaps() =
     )
   )
 
-  #TODO
   map2 = Beatmap(
     songName: "PYC - Stoplight",
     sound: musicStoplight,
@@ -209,11 +223,8 @@ template createMaps() =
 
       patStars(%"b3739a", %"e8c8b2")
 
-      #patTris(%"8b4195")
-
       patClouds(%"653075")
       patBeatAlt(%"bf96eb")
-      #patFft()
     ),
     draw: (proc() =
       patTilesSquare(%"cbb2ff", %"ff2eca")
@@ -221,8 +232,6 @@ template createMaps() =
     update: (proc() =
       if state.newTurn:
         let turn = state.turn
-        #32: "wicked"
-        #beat on odd turns begins here
 
         template sideConveyors =
           let space = 8
@@ -363,15 +372,109 @@ template createMaps() =
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    fadeColor: %"205359",
+    maxHits: 10,
+    fadeColor: %"b291f2",
     drawPixel: (proc() =
-      patBackground(%"205359")
+      #patBackground(%"205359")
+
+      patGradient(
+        %"b23b66",
+        %"9961c6",
+        %"463c8f",
+        %"77a5c9"
+      )
+
+      patBounceSquares((%"463c8f").withA(0.45f))
+
+      patTris(%"a886e9", %"d087f5", 90, seed = 4)
+
+      patVertGradient((%"a886e9").withA(0.5f), (%"a886e9").withA(0f))
     ),
     draw: (proc() =
       patTilesSquare(%"cbb2ff", %"ff2eca")
     ),
     update: (proc() =
-      discard
+      if state.newTurn:
+        let turn = state.turn
+
+        template lasers =
+          let space = 2
+          const order = [0, 2, 4, 1, 3, 5, 0, 6, 1, 3]
+          if turn mod space == 0:
+            for i in signsi():
+              let x = order[(turn div space) mod order.len] * i
+              laser(vec2i(x, -mapSize), vec2i(0, 1))
+        
+        template sideConveyors =
+          let space = 1
+          let ss = 1
+          if turn mod space == 0:
+            let 
+              vec = vec2i(mapSize, ((turn div space) - 1).modSize)
+              rot = ((turn div space) div ss) mod 4
+            
+            let dest = vec.vec2.rotate(rot.float32 * 90f.rad).vec2i
+            makeConveyor(dest, d4i[(rot + 2) mod 4], 5)
+        
+        template sideRouters(offset: int) =
+          let
+            t = turn - offset
+            space = 2
+          if t mod space == 0:
+            let d = (t div space).modSize
+            for i in signsi():
+              makeRouter(vec2i(i * mapSize, d), diag = (t.div(space) mod 2) == 0, length = 3)
+
+        template trackLasers =
+          let space = 2
+          if turn mod space == 0:
+            let si = (turn.div(space) mod 2 == 0).signi
+            laser(vec2i(mapSize * si, state.playerPos.y), vec2i(-si, 0))
+
+        template multiLasers =
+          for x in [0, 2, 4, 6]:
+            for i in signsi():
+              laser(vec2i(x * i, -mapSize), vec2i(0, 1))
+        
+        template swipeBullets(offset: int) =
+          let
+            t = turn - offset
+            space = 1
+          if t mod space == 0:
+            let 
+              x = modSize(t div space)
+              pos = vec2i(-x, 0)
+            
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos, t:
+              runDelay:
+                if (t div space).mod(2) == 0:
+                  for dir in d4():
+                    makeBullet(pos, dir, "bullet-tri")
+                else:
+                  for dir in d4edge():
+                    makeBullet(pos, dir, "bullet-tri")
+            
+        if turn in 0..39:
+          sideConveyors()
+        
+        if turn in 41..90:
+          lasers()
+        
+        if turn == 97 or turn == 130:
+          multiLasers()
+        
+        if turn in 90..140:
+          sideRouters(90)
+        
+        if turn in 148..161:
+          trackLasers()
+        
+        if turn in 161..186:
+          swipeBullets(161)
+        
+        if turn in 186..200:
+          discard
     )
   )
 

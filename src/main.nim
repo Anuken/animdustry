@@ -169,6 +169,7 @@ register(defaultComponentOptions):
     
     Scaled = object
       scl: float32
+      time: float32
     
     DrawBullet = object
       rot: float32
@@ -183,6 +184,9 @@ register(defaultComponentOptions):
     DrawBounce = object
       sprite: string
       rotation: float32
+
+    DrawLaser = object
+      dir: Vec2i
     
     DrawDamageField = object
 
@@ -260,6 +264,10 @@ defineEffects:
       draw(hitFrames[(fin.pow(2f) * hitFrames.len).int.min(hitFrames.high)], pos, color = colorWhite, z = 3000f)
       #fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
   
+  laserShoot(lifetime = 0.6f):
+    particlesLife(e.id, 14, e.pos, e.fin.powout(2f), 25f.px):
+      fillPoly(pos, 4, (3f * fout.powout(3f) + 1f).px, rotation = 45f.rad, color = colorWhite, z = 3002f)
+
   destroy(lifetime = 0.7f):
     particlesLife(e.id, 12, e.pos, e.fin + 0.1f, 19f.px):
       draw(smokeFrames[(fin.pow(1.5f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = (%"ffa747").mix(%"d86a4e", e.fin))
@@ -267,6 +275,15 @@ defineEffects:
   warn:
     poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
     draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
+  
+  laserWarn:
+    for i in signs():
+      let stroke = 4f.px * e.fout + 1f.px
+      lineAngleCenter(e.pos + vec2(0, (15f - 9f * e.fin.powout(2f)) * i.px).rotate(e.rotation), e.rotation, 1f - stroke, stroke = stroke)
+    draw(fau.white, e.pos, size = vec2(1f, 12f.px), rotation = e.rotation, color = colorWhite.withA(e.fin))
+  
+  lancerAppear:
+    draw("lancer2".patchConst, e.pos, rotation = e.rotation - 90f.rad, scl = vec2(state.moveBeat * 0.12f + min(e.fin.powout(3f), e.fout.powout(20f))), z = 3001f)
   
   warnBullet:
     #poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
@@ -314,6 +331,9 @@ onEcsBuilt:
 
   proc makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
     discard newEntityWith(DrawSquish(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
+
+  proc makeLaser(pos: Vec2i, dir: Vec2i) =
+    discard newEntityWith(Scaled(scl: 1f), DrawLaser(dir: dir), Pos(), GridPos(vec: pos), Damage(), Lifetime(turns: 1))
 
   proc makeRouter(pos: Vec2i, length = 2, life = 2, diag = false) =
     discard newEntityWith(DrawSpin(sprite: "router"), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag), Lifetime(turns: life))
@@ -464,6 +484,9 @@ makeSystem("core", []):
       textDisabledColor: rgb(0.6f)
     )
 
+    #not fps based
+    fau.targetFps = 0
+
     when noMusic:
       setGlobalVolume(0f)
     enableSoundVisualization()
@@ -489,11 +512,11 @@ makeSystem("core", []):
       save.scores.setLen(maps.len)
     
     #TODO remove
-    #when defined(debug):
-    #  playMap(map2, 4)
-    #  mode = gmPlaying
+    when defined(debug):
+      playMap(map3, 60.0)
+      mode = gmPlaying
   
-  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
+  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled)
 
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
@@ -710,9 +733,12 @@ makeSystem("lifetime", [Lifetime]):
 
       #fade out, no damage
       if item.lifetime.turns < 0:
-        item.entity.add(Deleting(time: 1f))
-        item.entity.remove(Damage)
-        item.entity.remove(Lifetime)
+        if not item.entity.has(Deleting):
+          item.entity.add(Deleting(time: 1f))
+        if item.entity.has(Damage):
+          item.entity.remove(Damage)
+        if item.entity.has(Lifetime):
+          item.entity.remove(Lifetime)
 
 makeSystem("snek", [Snek, GridPos, Velocity]):
   if state.newTurn:
@@ -773,7 +799,12 @@ makeSystem("turretShoot", [Turret, GridPos]):
 makeSystem("updateMap", []):
   state.map.update()
 
-makeSystem("damagePlayer", [GridPos, Pos, Damage]):
+makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
+  fields:
+    toDelete: seq[EntityRef]
+
+  sys.toDelete.setLen(0)
+
   all:
     #only actually apply damage when:
     #1. player just moved this turn, or
@@ -782,12 +813,19 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage]):
     #TODO maybe item movement should be based on player movement?
     var hit = false
 
+    template deleteCurrent =
+      if item.entity.has(DrawLaser):
+        sys.toDelete.add item.entity
+      else:
+        sys.deleteList.add item.entity
+      effectHit(item.gridPos.vec.vec2)
+      
     #hit player first.
     for other in sysWall.groups:
       let pos = other.gridPos
       if pos.vec == item.gridPos.vec:
-        sys.deleteList.add item.entity
-        effectHit(item.gridPos.vec.vec2)
+        deleteCurrent()
+        
         other.wall.health.dec
         if other.wall.health <= 0 and not other.entity.has(Deleting):
           other.entity.add Deleting(time: 1f)
@@ -801,8 +839,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage]):
         if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
           other.unitDraw.hitTime = 1f
           state.hitTime = 1f
-          sys.deleteList.add item.entity
-          effectHit(item.gridPos.vec.vec2)
+          deleteCurrent()
           soundHit.play()
           addPoints(-5)
 
@@ -810,6 +847,11 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage]):
           if other.input.hitTurn < state.turn - 1:
             state.hits.inc
             other.input.hitTurn = state.turn
+  
+  for i in sys.toDelete:
+    if i.has(Damage):
+      i.remove Damage
+
     
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if state.newTurn:
@@ -907,6 +949,10 @@ makeSystem("drawBackground", []):
 
 makeEffectsSystem()
 
+makeSystem("scaled", [Scaled]):
+  all:
+    item.scaled.time += fau.delta
+
 makeSystem("drawSquish", [Pos, DrawSquish, Velocity, Snek, Scaled]):
   all:
     item.snek.fade += fau.delta / 0.5f
@@ -931,6 +977,13 @@ makeSystem("drawSpin", [Pos, DrawSpin, Scaled]):
 makeSystem("drawBounce", [Pos, DrawBounce, Scaled]):
   all:
     draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item) - 1f.px, rotation = item.drawBounce.rotation, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+
+makeSystem("drawLaser", [Pos, DrawLaser, Scaled]):
+  all:
+    let 
+      fin = (item.scaled.time / 0.3f).clamp
+      fout = 1f - fin
+    draw("laser".patchConst, item.pos.vec, z = zlayer(item) + 1f.px, rotation = item.drawLaser.dir.vec2.angle, scl = vec2(1f, (fout.powout(4f) + fout.pow(3f) * 0.4f) * item.scaled.scl), mixcolor = colorWhite.withA(fout.pow(3f)))
 
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
@@ -1031,7 +1084,7 @@ makeSystem("drawUI", []):
   if mode != gmMenu:
     #draw debug text
     when defined(debug):
-      defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {(getAudioBufferSize() / getAudioSampleRate() * 1000):.2f}ms latency", fau.cam.view, align = daBot)
+      defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {fau.fps} fps", fau.cam.view, align = daBot)
 
     if scoreTime > 0:
       scoreTime -= fau.delta / 0.5f
@@ -1057,9 +1110,9 @@ makeSystem("drawUI", []):
 
       for i, unit in save.units:
         let 
-          pos = screen.xy + vec2(i.float32 * 1f, 0f)
+          pos = screen.xy + vec2(i.float32 * 0.8f, 0f)
           current = player.unitDraw.unit == unit
-        draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear)
+        draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear, scl = vec2(0.75f))
         defaultFont.draw($(i + 1), rect(pos + vec2(4f.px, -2f.px), 1f.vec2), align = daBotLeft, color = if current: colorGray else: colorWhite)
   elif splashUnit.isSome and splashRevealTime > 0f: #draw splash unit reveal animation
     splashRevealTime -= fau.delta / 3f
