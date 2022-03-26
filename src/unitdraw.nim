@@ -283,6 +283,11 @@ template createUnits() =
     drawBloomi(fau.time.absin(0.6f, 0.9f) + 0.2f):
       unit.getTexture("-missiles").draw(basePos + hoverOffset(offset = 3f), scl = scl)
   )
+
+  unitNothing.draw = (proc(unit: Unit, basePos: Vec2) =
+    patSpin(%"23232c", %"49474d")
+    patVertGradient(colorBlack)
+  )
   
   unitAlpha.abilityProc = proc(entity: EntityRef, moves: int) =
     if moves mod 10 == 0:

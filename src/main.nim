@@ -484,9 +484,9 @@ makeSystem("core", []):
       save.scores.setLen(maps.len)
     
     #TODO remove
-    when defined(debug):
-      playMap(map2, 4)
-      mode = gmPlaying
+    #when defined(debug):
+    #  playMap(map2, 4)
+    #  mode = gmPlaying
   
   makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed)
 
@@ -1111,8 +1111,9 @@ makeSystem("drawUI", []):
     )
 
     #draw non-waifu sprite
-    for i in signs():
-      draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f) * 0.9f) * i.float32, screen.top - 0.75f))
+    if fullPatch.exists:
+      for i in signs():
+        draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f) * 0.9f) * i.float32, screen.top - 0.75f))
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
@@ -1203,7 +1204,10 @@ makeSystem("drawUI", []):
         scl = vec2(1f + click * 0.1f, 1f - click * 0.1f)
       )
     
-    
+    #TODO remove
+    when defined(debug):
+      save.copper = 10
+
     #must be after units so shown stuff doesn't disappear
     if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Roll", disabled = save.copper < copperForRoll, style = bstyle):
       save.copper -= copperForRoll

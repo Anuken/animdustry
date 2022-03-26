@@ -83,10 +83,20 @@ let
     subtitle: "",
     ability: "destroys blocks in a diagonal cross every 4 moves",
   )
+  unitNothing* = Unit(
+    name: "nothing",
+    title: "-NOTHING-",
+    subtitle: "you've been scammed",
+    ability: "the gacha game experience"
+  )
 
   allUnits* = [unitBoulder, unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei]
 
 proc rollUnit*(): Unit =
+  #very low chance, as it is annoying
+  if chance(2f / 100f):
+    return unitNothing
+
   #boulder has a much higher chance to be selected, because it's useless
   if chance(0.33f):
     return unitBoulder
