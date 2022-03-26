@@ -117,6 +117,7 @@ var
 
   smokeFrames: array[6, Patch]
   explodeFrames: array[5, Patch]
+  hitFrames: array[5, Patch]
   #currently shown unit in splash screen, null when no unit
   splashUnit: Option[Unit]
   #splash screen fade-in time
@@ -145,6 +146,7 @@ register(defaultComponentOptions):
       lastSwitchTime: float32
       justMoved: bool
       couldMove: bool
+      lastMove: Vec2i
       fails: int
       moves: int
   
@@ -180,6 +182,7 @@ register(defaultComponentOptions):
 
     DrawBounce = object
       sprite: string
+      rotation: float32
     
     DrawDamageField = object
 
@@ -196,6 +199,10 @@ register(defaultComponentOptions):
     
     #can be hit by player attacks
     Destructible = object
+
+    #block attacks for the player
+    Wall = object
+      health: int
 
     Snek = object
       turns: int
@@ -232,7 +239,7 @@ defineEffects:
   explode(lifetime = 0.4f):
     draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = (%"ffb954").mix(%"d86a4e", e.fin))
 
-  explodeHeal(lifetime = 0.42f):
+  explodeHeal(lifetime = 0.4f):
     draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = colorWhite.mix(colorHeal, e.fin.powout(2f)))
 
   walkWave:
@@ -250,7 +257,8 @@ defineEffects:
   
   hit(lifetime = 0.9f):
     particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
-      fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
+      draw(hitFrames[(fin.pow(2f) * hitFrames.len).int.min(hitFrames.high)], pos, color = colorWhite, z = 3000f)
+      #fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
   
   destroy(lifetime = 0.7f):
     particlesLife(e.id, 12, e.pos, e.fin + 0.1f, 19f.px):
@@ -289,7 +297,7 @@ template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
 onEcsBuilt:
   proc makeDelay(delay: int, callback: proc()) =
-    discard newEntityWith(RunDelay(delay: 0, callback: callback))
+    discard newEntityWith(RunDelay(delay: delay, callback: callback))
 
   template runDelay(body: untyped) =
     makeDelay(0, proc() =
@@ -314,7 +322,10 @@ onEcsBuilt:
     discard newEntityWith(DrawSpin(sprite: "sorter"), Scaled(scl: 1f), Destructible(), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
 
   proc makeTurret(pos: Vec2i, face: Vec2i, reloadTime = 4, life = 8, tex = "duo") =
-    discard newEntityWith(DrawBounce(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
+    discard newEntityWith(DrawBounce(sprite: tex, rotation: face.vec2.angle - 90f.rad), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
+
+  proc makeWall(pos: Vec2i, sprite = "wall", life = 10, health = 3) =
+    discard newEntityWith(DrawBounce(sprite: sprite), Scaled(scl: 1f), Wall(health: health), Pos(), GridPos(vec: pos), Lifetime(turns: life))
 
   proc makeUnit(pos: Vec2i, aunit: Unit) =
     discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
@@ -495,6 +506,8 @@ makeSystem("all", [Pos]): discard
 
 makeSystem("destructible", [GridPos, Pos, Destructible]): discard
 
+makeSystem("wall", [GridPos, Wall]): discard
+
 makeSystem("updateMusic", []):
   start:
     if state.voice.valid:
@@ -633,6 +646,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       item.unitDraw.beatScl = 1f
       item.input.moves.inc
+      item.input.lastMove = vec.vec2i
 
       item.gridPos.vec += vec.vec2i
       item.gridpos.vec.clamp(vec2i(-mapSize), vec2i(mapSize))
@@ -757,21 +771,37 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage]):
     #2. ~~player just skipped a turn (was too late)~~ doesn't work, looks really bad
     #3. item has approached player close enough
     #TODO maybe item movement should be based on player movement?
-    for other in sysInput.groups:
+    var hit = false
+
+    #hit player first.
+    for other in sysWall.groups:
       let pos = other.gridPos
-      if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
-        other.unitDraw.hitTime = 1f
-        state.hitTime = 1f
+      if pos.vec == item.gridPos.vec:
         sys.deleteList.add item.entity
         effectHit(item.gridPos.vec.vec2)
-        soundHit.play()
-        addPoints(-5)
+        other.wall.health.dec
+        if other.wall.health <= 0 and not other.entity.has(Deleting):
+          other.entity.add Deleting(time: 1f)
+        
+        #cannot damage player anymore
+        hit = true
 
-        #do not actually deal damage (iframes)
-        if other.input.hitTurn < state.turn - 1:
-          state.hits.inc
-          other.input.hitTurn = state.turn
+    if not hit:
+      for other in sysInput.groups:
+        let pos = other.gridPos
+        if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
+          other.unitDraw.hitTime = 1f
+          state.hitTime = 1f
+          sys.deleteList.add item.entity
+          effectHit(item.gridPos.vec.vec2)
+          soundHit.play()
+          addPoints(-5)
 
+          #do not actually deal damage (iframes)
+          if other.input.hitTurn < state.turn - 1:
+            state.hits.inc
+            other.input.hitTurn = state.turn
+    
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if state.newTurn:
     all:
@@ -838,6 +868,9 @@ makeSystem("draw", []):
 
     for i in 0..<explodeFrames.len:
       explodeFrames[i] = patch("explode" & $i)
+    
+    for i in 0..<hitFrames.len:
+      hitFrames[i] = patch("hit" & $i)
 
   #margin is currently 4, adjust as needed
   let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + 4)))
@@ -886,9 +919,9 @@ makeSystem("drawSpin", [Pos, DrawSpin, Scaled]):
 
     spinSprite(item.drawSpin.sprite.patch, item.pos.vec, vec2(1f + state.moveBeat.pow(3f) * 0.2f) * item.scaled.scl, 90f.rad * state.moveBeat.pow(6f))
 
-makeSystem("drawBounce", [Pos, DrawBounce, Turret, Scaled]):
+makeSystem("drawBounce", [Pos, DrawBounce, Scaled]):
   all:
-    draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item), rotation = item.turret.dir.vec2.angle - 90f.rad, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+    draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item) - 1f.px, rotation = item.drawBounce.rotation, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
 
 makeSystem("drawUnit", [Pos, UnitDraw]):
   all:
@@ -1084,7 +1117,7 @@ makeSystem("drawUI", []):
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
     if unit.ability.len > 0:
-      defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.5f.px)
+      defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.75f.px)
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
@@ -1176,10 +1209,11 @@ makeSystem("drawUI", []):
       save.copper -= copperForRoll
       let unit = rollUnit()
 
-      if save.units.find(unit) == -1:
-        save.units.add unit
-      
-      sortUnits()
+      if unit.unobtainable.not:
+        if save.units.find(unit) == -1:
+          save.units.add unit
+        sortUnits()
+
       saveGame()
 
       splashRevealTime = 1f

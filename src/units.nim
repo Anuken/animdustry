@@ -9,6 +9,7 @@ type Unit* = ref object
   draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
   textures*: Table[string, Texture]
   unmoving*: bool
+  unobtainable*: bool
 
   #UI state (ugh)
   wasOver*: bool
@@ -40,7 +41,7 @@ let
     name: "alpha",
     title: "-ALPHA-",
     subtitle: "first",
-    #ability: "creates a wall every 10 moves",
+    ability: "creates a wall every 10 moves"
   )
   unitMono* = Unit(
     name: "mono",
@@ -61,7 +62,8 @@ let
   unitZenith* = Unit(
     name: "zenith",
     title: "-ZENITH-",
-    subtitle: "gaming"
+    subtitle: "gaming",
+    ability: "destroys the next 4 blocks in a line every 4 moves"
   )
   unitQuad* = Unit(
     name: "quad",
@@ -72,12 +74,14 @@ let
   unitOxynoe* = Unit(
     name: "oxynoe",
     title: "-OXYNOE-",
-    subtitle: ""
+    subtitle: "",
+    ability: "destroys alternating adjacent blocks every other move",
   )
   unitSei* = Unit(
     name: "sei",
     title: "-SEI-",
-    subtitle: ""
+    subtitle: "",
+    ability: "destroys blocks in a diagonal cross every 4 moves",
   )
 
   allUnits* = [unitBoulder, unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei]

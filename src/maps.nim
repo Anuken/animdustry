@@ -201,7 +201,7 @@ template createMaps() =
     sound: musicStoplight,
     bpm: 85f,
     beatOffset: 0f / 1000f,
-    maxHits: 15,
+    maxHits: 12,
     fadeColor: %"985eb9",
     drawPixel: (proc() =
       patBackground(%"2b174d")
@@ -236,7 +236,6 @@ template createMaps() =
           let space = 6
           let bspace = 3
           if turn mod space == 0:
-            let side = (turn.mod(space * 2) == 0).int
             for i in -mapSize..mapSize:
               if (i + turn div space).emod(bspace) == 0:
                 for side in signsi():
@@ -258,7 +257,6 @@ template createMaps() =
         template topDownConveyors =
           let space = 8
           if turn mod space == 0:
-            let side = (turn.mod(space * 2) == 0).int
             for y in signsi():
               for i in -mapSize..mapSize:
                 if (i + (y == 1).int).emod(2) == 0:
@@ -316,7 +314,7 @@ template createMaps() =
           for i in signsi():
             makeBullet(vec2i(i * ((turn - offset).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
             makeBullet(vec2i(i * ((turn - offset + mapSize).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
-            ]#
+        ]#
         
         template sideSorters =
           let spacing = 8

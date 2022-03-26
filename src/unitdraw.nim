@@ -284,6 +284,10 @@ template createUnits() =
       unit.getTexture("-missiles").draw(basePos + hoverOffset(offset = 3f), scl = scl)
   )
   
+  unitAlpha.abilityProc = proc(entity: EntityRef, moves: int) =
+    if moves mod 10 == 0:
+      makeWall(entity.fetch(GridPos).vec, health = 3)
+
   #TODO abilities
   unitMono.abilityProc = proc(entity: EntityRef, moves: int) =
     if moves mod 4 == 0:
@@ -307,4 +311,36 @@ template createUnits() =
       for dir in d8mid():
         effectExplodeHeal((pos + dir).vec2)
         damageBlocks(pos + dir)
+  
+  unitOxynoe.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    const sides = [vec2i(1, 0), vec2i(0, 1)]
+    const signs = [-1, 0, 1]
+    
+    if moves mod 2 == 0:
+      for i in signs:
+        let target = sides[(moves div 2) mod 2] * i + pos
+        effectExplodeHeal(target.vec2)
+        damageBlocks(target)
+  
+  unitZenith.abilityProc = proc(entity: EntityRef, moves: int) =
+    let
+      pos = entity.fetch(GridPos).vec
+      dir = entity.fetch(Input).lastMove
+    if moves mod 4 == 0:
+      for i in 0..<4:
+        let target = pos + dir * i
+        effectExplode(target.vec2)
+        damageBlocks(target)
+  
+  unitSei.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    if moves mod 4 == 0:
+      effectExplode(pos.vec2)
+      damageBlocks(pos)
+      for dir in d4edge():
+        for i in 1..2:
+          effectExplode((pos + dir * i).vec2)
+          damageBlocks(pos + dir * i)
+        
       
