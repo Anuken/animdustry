@@ -479,7 +479,7 @@ makeSystem("core", []):
     
     sortUnits()
 
-    if save.unit == nil or save.unit == unitBoulder:
+    if save.lastUnit == nil or save.lastUnit == unitBoulder:
       save.lastUnit = unitAlpha
 
     #resize scores to hold all maps
