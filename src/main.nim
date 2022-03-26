@@ -91,7 +91,7 @@ const
   fftSize = 50
   copperForRoll = 10
   #copper received for first map completion
-  completionCopper = 20
+  completionCopper = 10
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
   colorUiDark = %"57639a"
@@ -553,13 +553,17 @@ makeSystem("updateMusic", []):
 
     #calculate copper received and add it to inventory
     let 
-      maxCopper = if state.map.copperAmount == 0: 40 else: state.map.copperAmount
+      maxCopper = if state.map.copperAmount == 0: 10 else: state.map.copperAmount
       #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
       perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
+      #percent of damage taken
+      hitsPercent = state.hits / state.map.maxHits
+      #multiplier based on health remaining
+      healthMultiplier = if hitsPercent <= 0.0: 2.0 else: 1.0
       #fraction that was actually obtained
       perfectFraction = (state.points / perfectPoints).min(1f)
       #final amount based on score
-      resultAmount = 1 + (perfectFraction * maxCopper).int + (if state.map.highScore == 0: completionCopper else: 0)
+      resultAmount = 1 + (perfectFraction * maxCopper * healthMultiplier).int + (if state.map.highScore == 0: completionCopper else: 0)
 
     state.copperReceived = resultAmount
     save.copper += resultAmount

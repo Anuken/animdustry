@@ -87,10 +87,11 @@ let
     name: "nothing",
     title: "-NOTHING-",
     subtitle: "you've been scammed",
-    ability: "the gacha game experience"
+    ability: "the gacha game experience",
+    unobtainable: true
   )
 
-  allUnits* = [unitBoulder, unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei]
+  allUnits* = [unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
 
 proc rollUnit*(): Unit =
   #very low chance, as it is annoying

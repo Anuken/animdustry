@@ -38,7 +38,7 @@ template createMaps() =
     bpm: 126f,
     beatOffset: -80f / 1000f,
     maxHits: 20,
-    copperAmount: 25,
+    copperAmount: 10,
     fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
