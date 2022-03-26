@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
@@ -98,7 +98,7 @@ const
   colorHit =  %"ff584c"
   colorHeal = %"84f490"
   #time between character switches
-  switchDelay = 1f
+  switchDelay = 0.5f
   transitionTime = 0.2f
   transitionPow = 1f
 
@@ -434,6 +434,8 @@ proc unlocked(unit: Unit): bool =
 proc sortUnits =
   save.units.sort do (a, b: Unit) -> int:
     cmp(allUnits.find(a), allUnits.find(b))
+  
+  save.units = save.units.deduplicate(true)
 
 include patterns, maps, unitdraw
 
