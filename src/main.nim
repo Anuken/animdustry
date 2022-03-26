@@ -513,10 +513,14 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map3, 60.0)
+      playMap(map3, 105.0)
       mode = gmPlaying
   
-  makePaused(sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled)
+  makePaused(
+    sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled, 
+    sysLifetime, sysSnek, sysSpawnEvery, sysSpawnConveyors, sysTurretFollow, 
+    sysTurretShoot, sysDamagePlayer, sysUpdateVelocity, sysKillOffscreen
+  )
 
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
@@ -976,7 +980,7 @@ makeSystem("drawSpin", [Pos, DrawSpin, Scaled]):
 
 makeSystem("drawBounce", [Pos, DrawBounce, Scaled]):
   all:
-    draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item) - 1f.px, rotation = item.drawBounce.rotation, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
+    draw(item.drawBounce.sprite.patch, item.pos.vec, z = zlayer(item) - 2f.px, rotation = item.drawBounce.rotation, scl = vec2(1f + state.moveBeat.pow(7f) * 0.3f) * item.scaled.scl)
 
 makeSystem("drawLaser", [Pos, DrawLaser, Scaled]):
   all:

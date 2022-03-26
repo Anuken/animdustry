@@ -372,7 +372,7 @@ template createMaps() =
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    maxHits: 10,
+    maxHits: 12,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
       #patBackground(%"205359")
@@ -455,6 +455,32 @@ template createMaps() =
                   for dir in d4edge():
                     makeBullet(pos, dir, "bullet-tri")
             
+        template sideLasers =
+          let space = 1
+          const order = [1, 3, 2, 0, 6, 4, 1, 3, 5, 4, 0]
+          if turn mod space == 0:
+            let i = (turn.div(space).mod(2) == 0).signi
+            let y = order[(turn div space) mod order.len] * i
+            laser(vec2i(-mapSize, y), vec2i(1, 0))
+        
+        template topConveyors =
+          let space = 1
+          const order = [6, 4, 2, 0, 5, 3, 1]
+          if turn mod space == 0:
+            let x = order[(turn div space) mod order.len]
+            for i in signsi():
+              makeConveyor(vec2i(x * i, -mapSize * i), vec2i(0, i), 2)
+        
+        template conveyorWall(dir = 1) =
+          for i in -mapSize..mapSize:
+            makeConveyor(-d4i[dir] * mapSize + d4i[(dir + 1) mod 4] * i, d4i[dir], length = 1)
+        
+        template sideSorters =
+          let space = 4
+          if turn mod space == 0:
+            let side = d4i[(turn div space) mod 4]
+            makeSorter(side * mapSize, -side)
+
         if turn in 0..39:
           sideConveyors()
         
@@ -473,8 +499,30 @@ template createMaps() =
         if turn in 161..186:
           swipeBullets(161)
         
-        if turn in 186..200:
-          discard
+        if turn in 186..210:
+          sideLasers()
+        
+        if turn in 208..245:
+          topConveyors()
+        
+        if turn == 254:
+          conveyorWall(0)
+        
+        if turn == 260:
+          conveyorWall(1)
+
+        if turn == 266:
+          conveyorWall(2)
+        
+        if turn in 265..290:
+          sideSorters()
+        
+        if turn in 297..338:
+          lasers()
+        
+        if turn == 323:
+          conveyorWall(3)
+
     )
   )
 
