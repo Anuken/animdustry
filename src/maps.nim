@@ -535,10 +535,16 @@ template createMaps() =
     maxHits: 15,
     fadeColor: %"7e44e2",
     drawPixel: (proc() =
-      patBackground(%"7e44e2")
+      patBackground(%"0d091d")
+
+      patStars((%"46cdd2").withA(0.4f), (%"50e2b5").withA(1f), 60, 2)
+
+      patSpinShape(%"1e1b36", %"3d3f60")
+      patSpace(%"1e1b36")
     ),
     draw: (proc() =
-      patTilesSquare(%"cbb2ff", %"ff2eca")
+      patTilesSquare(%"b4b2ff", %"50e2b5")
+      
     ),
     update: (proc() =
       discard

@@ -73,6 +73,20 @@ proc patSpin(col1, col2: Color, blades = 10) =
       if i mod 2 == 0: col1 else: col2
     )
 
+proc patSpinShape(col: Color, col2 = col, sides = 4, rad = 3f, turnSpeed = 19f.rad, rads = 6, radsides = 4, radoff = 7f, radrad = 1.3f, radrotscl = 0.25f) =
+  let 
+    radius = rad + state.moveBeat.pow(2f) * 6f.px
+    rc = col.mix(col2, state.moveBeat.pow(3f))
+    rot = turnSpeed * (state.turn + (1f - state.moveBeat).powout(9f))
+  
+  fillPoly(vec2(), sides, radius, color = rc, rotation = rot)
+  poly(vec2(), sides, radius + 1.1f, color = rc, stroke = 0.52f, rotation = rot)
+    
+  for i in 0..<rads:
+    let angle = i / rads * 360f.rad - rot * radrotscl
+
+    fillPoly(vec2l(angle, radoff), radsides, radrad, angle, color = rc)
+
 proc patShapeBack(col1, col2: Color, sides = 4, spacing = 2.5f, angle = 90f.rad) =
   let amount = (fau.cam.size.x.max(fau.cam.size.y) / spacing).int + 1
 
@@ -161,7 +175,7 @@ proc patClouds(col = colorWhite) =
 
     draw(sprite, pos, color = col, scl = scale.vec2)
 
-proc patStars(col = colorWhite, flash = colorWhite) =
+proc patStars(col = colorWhite, flash = colorWhite, amount = 40, seed = 1) =
   var stars {.global.}: array[3, Patch]
 
   once:
@@ -169,12 +183,11 @@ proc patStars(col = colorWhite, flash = colorWhite) =
       stars[i - 1] = ("star" & $i).patch
 
   let 
-    count = 40
     partRange = 30f
   
-  var r = initRand(1)
+  var r = initRand(seed)
   
-  for i in 0..<count:
+  for i in 0..<amount:
     var pos = vec2(r.range(partRange), r.range(partRange))
     let sprite = r.sample(stars)
 
@@ -417,3 +430,83 @@ proc patFadeIn(time: float32) =
     view.topLeft + offset,
     colorUi
   )
+
+var spaceShader: Shader
+
+template patSpace(col: Color) =
+  if spaceShader.isNil:
+    spaceShader = newShader(
+      screenspaceVertex,
+      """
+      const float tau = 6.28318530717958647692;
+
+      // Gamma correction
+      #define GAMMA (2.2)
+
+      varying vec2 v_uv;
+
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      uniform float u_power;
+      uniform vec4 u_color;
+      uniform sampler2D u_texture;
+
+      vec3 ToLinear(vec3 col ){
+        // simulate a monitor, converting colour values into light values
+        return pow(col, vec3(GAMMA));
+      }
+
+      vec3 ToGamma(vec3 col){
+        // convert back into colour values, so the correct light will come out of the monitor
+        return pow(col, vec3(1.0/GAMMA)).rbg;
+      }
+
+      float Noise(vec2 co){
+          return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+      }
+
+      void main(){
+        vec2 coords = v_uv;// + vec2(sin(v_uv.y * 35.0) / 140.0, sin(v_uv.x * 35.0) / 140.0);
+
+        vec3 ray;
+        ray.xy = 2.0*(coords.xy*u_resolution.xy-u_resolution.xy*.5)/u_resolution.x;
+        ray.z = 1.0;
+
+        float offset = u_time*.5;	
+        float speed2 = (.1+1.0)*2.0;
+        float speed = speed2+.1;
+        //offset += sin(offset)*.96;
+        offset *= 2.0;
+        
+        vec3 col = vec3(0.0);//texture2D(u_texture, (vec2(coords.x, 1.0 - coords.y) - vec2(0.5, 0.5)) * (1.0 + u_power) + vec2(0.5, 0.5)).rgb * 0.1;
+        
+        vec3 stp = ray/max(abs(ray.x),abs(ray.y));
+        
+        vec3 pos = 2.0*stp+.5;
+        for( int i=0; i < 20; i++ ){
+          float z = Noise(floor(pos.xy));
+          z = fract(z-offset);
+          float d = 50.0*z-pos.z;
+          float w = pow(max(0.0,1.0-8.0*length(fract(pos.xy)-.5)), 2.0);
+          vec3 c = max(vec3(0),vec3(1.0-abs(d+speed2*.5)/speed,1.0-abs(d)/speed,1.0-abs(d-speed2*.5)/speed));
+          col += 1.5*(1.0-z)*c*w;
+          pos += stp;
+        }
+
+        if(ToGamma(col).r > 0.1){
+          gl_FragColor = u_color;
+        }else{
+          gl_FragColor = vec4(0.0);
+        }
+        
+        //gl_FragColor = vec4(ToGamma(col), 1.0);// + vec4(coords, 1.0, 1.0);
+      }
+      """
+    )
+
+  drawFlush()
+  fau.quad.render(spaceShader, meshParams(buffer = fau.batch.buffer, blend = blendNormal)):
+    resolution = fau.cam.size
+    time = musicTime() / 6f #fau.time / 12f
+    power = 0f
+    color = col#(%"1e1b36")
