@@ -24,8 +24,8 @@ const
   libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets"
 
   builds = [
-   (name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
-    #(name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
+   #(name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
+    (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
   ]
 
 task pack, "Pack textures":
@@ -47,6 +47,7 @@ task web, "Deploy web build":
 
 task deploy, "Build for all platforms":
   #webTask()
+  pack()
 
   for name, os, cpu, args in builds.items:
     let
