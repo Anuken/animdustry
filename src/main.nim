@@ -1,6 +1,7 @@
 import macros, strformat
 
 static:
+  echo getProjectPath()
   echo staticExec(&"faupack -p:{getProjectPath()}/assets-raw/sprites -o:{getProjectPath()}/assets/atlas --max:2048 --outlineFolder=outlined/")
 
 import ecs, fau/presets/[basic, effects], units, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, options, fau/assets, strutils, algorithm, sequtils
