@@ -1,6 +1,7 @@
 import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils
 
-static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
+static:
+  echo staticExec(&"faupack -p:{getProjectPath()}/assets-raw/sprites -o:{getProjectPath()}/assets/atlas --max:2048 --outlineFolder=outlined/")
 
 type Beatmap = ref object
   name: string
@@ -249,6 +250,10 @@ defineEffects:
   walkWave:
     poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
   
+  songShow(lifetime = 4f):
+    if state.map != nil:
+      defaultFont.draw("Music: " & state.map.songName, fau.cam.view - rect(vec2(0f, 0.8f + e.fin.pow(7f)), vec2(0, 0f)), color = colorUi.withA(e.fout.powout(6f)), align = daTopLeft)
+  
   strikeWave:
     #TODO looks bad
     #(%"bc8cff")
@@ -407,18 +412,16 @@ onEcsBuilt:
     state.voice = state.map.sound.play()
     if offset > 0.0:
       state.voice.seek(offset)
+    
+    effectSongShow(vec2())
 
   proc damageBlocks(target: Vec2i) =
     let hitbox = rectCenter(target.vec2, vec2(0.99f))
-    #echo "damagng at ", target
     for item in sysDestructible.groups:
       if item.gridPos.vec == target or rectCenter(item.pos.vec, vec2(1f)).overlaps(hitbox):
         effectDestroy(item.pos.vec)
-        #item.entity.delete
         if not item.entity.has(Deleting):
           item.entity.add(Deleting(time: 1f))
-      #else:
-      #  echo item.gridPos.vec, " != ", target
 
 proc fading(): bool = fadeTarget != nil
 
@@ -513,10 +516,11 @@ makeSystem("core", []):
       save.scores.setLen(maps.len)
     
     #TODO remove
-    #when defined(debug):
-    #  playMap(map3, 80.0)
-    #  mode = gmPlaying
+    when defined(debug):
+      playMap(map4, 0.0)
+      mode = gmPlaying
   
+  #yeah this would probably work much better as a system group
   makePaused(
     sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled, 
     sysLifetime, sysSnek, sysSpawnEvery, sysSpawnConveyors, sysTurretFollow, 

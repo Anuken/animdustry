@@ -532,6 +532,7 @@ template createMaps() =
     sound: musicPinaColada,
     bpm: 125f,
     beatOffset: -240f / 1000f,
+    maxHits: 15,
     fadeColor: %"7e44e2",
     drawPixel: (proc() =
       patBackground(%"7e44e2")
