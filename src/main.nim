@@ -513,7 +513,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map3, 105.0)
+      playMap(map3, 80.0)
       mode = gmPlaying
   
   makePaused(

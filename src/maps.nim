@@ -372,7 +372,7 @@ template createMaps() =
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    maxHits: 12,
+    maxHits: 15,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
       #patBackground(%"205359")
@@ -442,7 +442,7 @@ template createMaps() =
             space = 1
           if t mod space == 0:
             let 
-              x = modSize(t div space)
+              x = (modSize((t div space) * 2))
               pos = vec2i(-x, 0)
             
             effectWarn(pos.vec2, life = beatSpacing())
@@ -476,7 +476,7 @@ template createMaps() =
             makeConveyor(-d4i[dir] * mapSize + d4i[(dir + 1) mod 4] * i, d4i[dir], length = 1)
         
         template sideSorters =
-          let space = 4
+          let space = 6
           if turn mod space == 0:
             let side = d4i[(turn div space) mod 4]
             makeSorter(side * mapSize, -side)
