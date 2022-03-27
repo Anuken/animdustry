@@ -190,6 +190,12 @@ register(defaultComponentOptions):
     
     DrawDamageField = object
 
+    Bounce = object
+      count: int
+    
+    LeaveBullet = object
+      life: int
+
     Turret = object
       dir: Vec2i
       reload: int
@@ -333,6 +339,9 @@ onEcsBuilt:
   proc makeBullet(pos: Vec2i, dir: Vec2i, tex = "bullet") =
     discard newEntityWith(DrawBullet(sprite: tex), Scaled(scl: 1f), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage())
 
+  proc makeTimedBullet(pos: Vec2i, dir: Vec2i, tex = "bullet", life = 3) =
+    discard newEntityWith(DrawBullet(sprite: tex), Scaled(scl: 1f), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Lifetime(turns: life))
+
   proc makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
     discard newEntityWith(DrawSquish(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
 
@@ -345,8 +354,11 @@ onEcsBuilt:
   proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
     discard newEntityWith(DrawSpin(sprite: "sorter"), Scaled(scl: 1f), Destructible(), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
 
-  proc makeTurret(pos: Vec2i, face: Vec2i, reloadTime = 4, life = 8, tex = "duo") =
-    discard newEntityWith(DrawBounce(sprite: tex, rotation: face.vec2.angle - 90f.rad), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reloadTime, dir: face), Lifetime(turns: life))
+  proc makeTurret(pos: Vec2i, face: Vec2i, reload = 4, life = 8, tex = "duo") =
+    discard newEntityWith(DrawBounce(sprite: tex, rotation: face.vec2.angle - 90f.rad), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reload, dir: face), Lifetime(turns: life))
+
+  proc makeArc(pos: Vec2i, dir: Vec2i, tex = "arc", bounces = 1, life = 3) =
+    discard newEntityWith(DrawBounce(sprite: tex, rotation: dir.vec2.angle), LeaveBullet(life: life), Velocity(vec: dir), Bounce(count: bounces), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos))
 
   proc makeWall(pos: Vec2i, sprite = "wall", life = 10, health = 3) =
     discard newEntityWith(DrawBounce(sprite: sprite), Scaled(scl: 1f), Wall(health: health), Pos(), GridPos(vec: pos), Lifetime(turns: life))
@@ -413,6 +425,12 @@ onEcsBuilt:
       state.voice.seek(offset)
     
     effectSongShow(vec2())
+  
+  proc addPoints(amount = 1) =
+    state.points += amount
+    state.points = state.points.max(1)
+    scoreTime = 1f
+    scorePositive = amount >= 0
 
   proc damageBlocks(target: Vec2i) =
     let hitbox = rectCenter(target.vec2, vec2(0.99f))
@@ -421,6 +439,9 @@ onEcsBuilt:
         effectDestroy(item.pos.vec)
         if not item.entity.has(Deleting):
           item.entity.add(Deleting(time: 1f))
+
+          #block destruction -> extra points
+          addPoints(1)
 
 proc fading(): bool = fadeTarget != nil
 
@@ -443,12 +464,6 @@ proc unlocked(map: Beatmap): bool =
 
 proc health(): int = 
   if state.map.isNil: 1 else: state.map.maxHits.max(1) - state.hits
-
-proc addPoints(amount = 1) =
-  state.points += amount
-  state.points = state.points.max(1)
-  scoreTime = 1f
-  scorePositive = amount >= 0
 
 proc unlocked(unit: Unit): bool =
   for u in save.units:
@@ -516,14 +531,15 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map4, 0.0)
+      playMap(map4, 115.0)
       mode = gmPlaying
   
   #yeah this would probably work much better as a system group
   makePaused(
     sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled, 
     sysLifetime, sysSnek, sysSpawnEvery, sysSpawnConveyors, sysTurretFollow, 
-    sysTurretShoot, sysDamagePlayer, sysUpdateVelocity, sysKillOffscreen
+    sysTurretShoot, sysDamagePlayer, sysUpdateVelocity, sysKillOffscreen,
+    sysUpdateBounce, sysLeaveBullet
   )
 
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
@@ -860,7 +876,30 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
     if i.has(Damage):
       i.remove Damage
 
-    
+makeSystem("updateBounce", [GridPos, Velocity, Bounce]):
+  if state.newTurn:
+    all:
+      if item.bounce.count > 0:
+        let next = item.gridPos.vec + item.velocity.vec
+        var bounced = false
+
+        if next.x.abs > mapSize:
+          item.velocity.vec.x *= -1
+          bounced = true
+        if next.y.abs > mapSize:
+          item.velocity.vec.y *= -1
+          bounced = true
+
+        if bounced:
+          item.bounce.count.dec
+          if item.bounce.count <= 0:
+            item.entity.remove(Bounce)
+
+makeSystem("leaveBullet", [GridPos, LeaveBullet]):
+  if state.newTurn:
+    all:
+      makeTimedBullet(item.gridPos.vec, vec2i(), "mine", life = item.leaveBullet.life)
+
 makeSystem("updateVelocity", [GridPos, Velocity]):
   if state.newTurn:
     all:
@@ -960,6 +999,11 @@ makeEffectsSystem()
 makeSystem("scaled", [Scaled]):
   all:
     item.scaled.time += fau.delta
+
+makeSystem("bounceVelocity", [Velocity, DrawBounce]):
+  all:
+    if item.velocity.vec != vec2i():
+      item.drawBounce.rotation = item.drawBounce.rotation.alerp(item.velocity.vec.angle, 10f * fau.delta)
 
 makeSystem("drawSquish", [Pos, DrawSquish, Velocity, Snek, Scaled]):
   all:

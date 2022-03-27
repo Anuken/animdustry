@@ -483,7 +483,8 @@ template patSpace(col: Color) =
         vec3 stp = ray/max(abs(ray.x),abs(ray.y));
         
         vec3 pos = 2.0*stp+.5;
-        for( int i=0; i < 20; i++ ){
+        //used to be 20
+        for(int i= 0; i < 15; i++){
           float z = Noise(floor(pos.xy));
           z = fract(z-offset);
           float d = 50.0*z-pos.z;
@@ -507,6 +508,6 @@ template patSpace(col: Color) =
   drawFlush()
   fau.quad.render(spaceShader, meshParams(buffer = fau.batch.buffer, blend = blendNormal)):
     resolution = fau.cam.size
-    time = musicTime() / 6f #fau.time / 12f
+    time = musicTime() / 6f
     power = 0f
-    color = col#(%"1e1b36")
+    color = col

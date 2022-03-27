@@ -372,7 +372,7 @@ template createMaps() =
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    maxHits: 15,
+    maxHits: 18,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
       #patBackground(%"205359")
@@ -526,28 +526,169 @@ template createMaps() =
     )
   )
 
-  #TODO
   map4 = Beatmap(
     songName: "Aritus - Pina Colada II",
     sound: musicPinaColada,
     bpm: 125f,
     beatOffset: -240f / 1000f,
     maxHits: 15,
-    fadeColor: %"7e44e2",
+    fadeColor: %"b4b2ff",
     drawPixel: (proc() =
       patBackground(%"0d091d")
 
-      patStars((%"46cdd2").withA(0.4f), (%"50e2b5").withA(1f), 60, 2)
+      patStars((%"46cdd2").withA(0.4f), (%"50e2b5").withA(1f), 70, 2)
 
-      patSpinShape(%"1e1b36", %"3d3f60")
+      patSpinShape(%"1e1b36", %"393b5c")
       patSpace(%"1e1b36")
     ),
     draw: (proc() =
       patTilesSquare(%"b4b2ff", %"50e2b5")
-      
     ),
     update: (proc() =
-      discard
+      if state.newTurn:
+        let turn = state.turn
+
+        template arcs =
+          let space = 4
+          if turn mod space == 0:
+            let side = ((turn div space) mod 2) == 0
+            makeArc(vec2i(mapSize, (turn div space).modSize), vec2i(-1, 1 * side.signi), bounces = 3, life = 4)
+        
+        template diagConveyors(offset: int) =
+          let 
+            space = 4
+            t = turn - offset
+          if t mod space == 0:
+            let x = mapSize - ((t div space) * 2).mod(mapSize * 2)
+            for i in signsi():
+              if i == 1 or x != mapSize:
+                if i == 1:
+                  makeConveyor(vec2i(x, mapSize), vec2i(-1, -1), 3)
+                else:
+                  makeConveyor(vec2i(mapSize, x), vec2i(-1, -1), 3)
+
+        #proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
+        template botSorters =
+          let space = 6
+          if turn mod space == 0:
+            makeSorter(vec2i(0, -mapSize), vec2i(0, 1), 1, 2, 2)
+        
+        template topBounce = 
+          for i in [2, 4]:
+            for x in signsi():
+              makeArc(vec2i(i * x, mapSize), vec2i(0, -1), bounces = 4)
+
+        template sideBounce = 
+          for i in [2, 4]:
+            for y in signsi():
+              makeArc(vec2i(mapSize, y * i), vec2i(-1, 0), bounces = 4)
+        
+        template sideDuos =
+          for x in signsi():
+            makeTurret(vec2i(mapSize * x, 0), vec2i(-x, 0), life = 25)
+
+        template topDuos =
+          for y in signsi():
+            makeTurret(vec2i(0, mapSize * y), vec2i(0, -y), life = 25)
+        
+        template botConveyors =
+          for x in -mapSize..mapSize:
+            if x.mod(2) == 0:
+              makeConveyor(vec2i(x, -mapSize), vec2i(0, 1), 1)
+        
+        template topWall =
+          let space = 8
+          if (turn - 1) mod space == 0:
+            for x in -mapSize..mapSize:
+              if x.mod(2) != 0:
+                makeConveyor(vec2i(x, mapSize), vec2i(0, -1), 1)
+
+        template sideLasers(offset: int) = 
+          let 
+            space = 4
+            t = turn - offset
+          if t mod space == 0:
+            laser(vec2i(mapSize, (((t div space) - mapSize div 2) * 2)), vec2i(-1, 0))
+        
+        template followRouters =
+          let space = 4
+          if turn mod space == 0:
+            let 
+              pos = state.playerPos
+              diagonal = ((turn div space).mod 2) == 0
+            effectWarn(pos.vec2, life = beatSpacing() * 3)
+            capture pos:
+              runDelayi 2:
+                makeRouter(pos.vec2i, 3, diag = diagonal)
+
+        template waveConveyors =
+          for x in -mapSize..mapSize:
+            makeConveyor(vec2i(x, mapSize), vec2i(0, -1), 2)
+        
+        template targetArcs =
+          let space = 6
+          if turn mod space == 0:
+            let pos = vec2i(state.playerPos.x, -mapSize)
+            effectWarn(pos.vec2, life = beatSpacing() * 2)
+            capture pos:
+              runDelayi 1:
+                makeArc(pos, vec2i(0, 1), bounces = 0)
+
+        template diagonalRouters(offset: int) =
+          let 
+            t = turn - offset
+            space = 2
+          
+          if t mod space == 0:
+            let 
+              pos = vec2i(t div space) - vec2i(mapSize)
+              dia = (t div space) mod 2 == 0
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos, dia:
+              runDelay:
+                makeRouter(pos, diag = dia, length = 4)
+           
+        if turn in 2..52:
+          arcs()
+        
+        if turn in 52..80:
+          diagConveyors(52)
+        
+        if turn in 80..100:
+          botSorters()
+        
+        if turn == 101:
+          topBounce()
+        
+        if turn == 105:
+          sideDuos()
+        
+        if turn == 113:
+          sideBounce()
+        
+        if turn == 122:
+          topDuos()
+
+        if turn in 155..200:
+          botConveyors()
+        
+        if turn in 162..200:
+          topWall()
+        
+        if turn in 170..197:
+          sideLasers(170)
+        
+        if turn in 204..235:
+          followRouters()
+        
+        if turn == 234 or turn == 245:
+          waveConveyors()
+        
+        if turn in 238..274:
+          targetArcs()
+        
+        if turn in 270..294:
+          diagonalRouters(270)
     )
   )
 
