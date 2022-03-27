@@ -409,9 +409,10 @@ onEcsBuilt:
       state.voice.seek(offset)
 
   proc damageBlocks(target: Vec2i) =
+    let hitbox = rectCenter(target.vec2, vec2(0.99f))
     #echo "damagng at ", target
     for item in sysDestructible.groups:
-      if item.gridPos.vec == target:
+      if item.gridPos.vec == target or rectCenter(item.pos.vec, vec2(1f)).overlaps(hitbox):
         effectDestroy(item.pos.vec)
         #item.entity.delete
         if not item.entity.has(Deleting):
@@ -512,9 +513,9 @@ makeSystem("core", []):
       save.scores.setLen(maps.len)
     
     #TODO remove
-    when defined(debug):
-      playMap(map3, 80.0)
-      mode = gmPlaying
+    #when defined(debug):
+    #  playMap(map3, 80.0)
+    #  mode = gmPlaying
   
   makePaused(
     sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled, 
