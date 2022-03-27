@@ -1,10 +1,6 @@
-import macros, strformat
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils
 
-static:
-  echo getProjectPath()
-  echo staticExec(&"faupack -p:{getProjectPath()}/assets-raw/sprites -o:{getProjectPath()}/assets/atlas --max:2048 --outlineFolder=outlined/")
-
-import ecs, fau/presets/[basic, effects], units, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, options, fau/assets, strutils, algorithm, sequtils
+static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
 type Beatmap = ref object
   name: string
