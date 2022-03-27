@@ -1,4 +1,4 @@
-import tables, core, random, polymorph
+import tables, core, random, polymorph, times
 
 type Unit* = ref object
   name*: string
@@ -24,9 +24,11 @@ proc clearTextures*(unit: Unit) = unit.textures.clear()
 proc getTexture*(unit: Unit, name: string = ""): Texture =
   ## Loads a unit texture from the textures/ folder. Result is cached. Crashes if the texture isn't found!
   if not unit.textures.hasKey(name):
+    let time = cpuTime()
     let tex = loadTextureAsset("textures/" & unit.name & name & ".png")
     tex.filter = tfLinear
     unit.textures[name] = tex
+    echo "Time taken for ", unit.name, name, ": ", cpuTime() - time
     return tex
   return unit.textures[name]
 
