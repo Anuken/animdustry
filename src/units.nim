@@ -5,6 +5,7 @@ type Unit* = ref object
   title*: string
   subtitle*: string
   ability*: string
+  abilityReload*: int
   abilityProc*: proc(unit: EntityRef, moves: int)
   draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
   textures*: Table[string, Texture]
@@ -41,47 +42,57 @@ let
     name: "alpha",
     title: "-ALPHA-",
     subtitle: "first",
-    ability: "creates a wall every 10 moves"
+    ability: "creates a wall every 10 moves",
+    abilityReload: 10
   )
   unitMono* = Unit(
     name: "mono",
     title: "-MONO-",
     subtitle: "the gatherer",
-    ability: "earns one extra point every 4 moves"
+    ability: "earns one extra point every 4 moves",
+    #unimportant
+    #abilityReload: 4
   )
   unitCrawler* = Unit(
     name: "crawler",
     title: "-CRAWLER-",
-    ability: "destroys 4 adjacent blocks every 4 moves"
+    ability: "destroys 4 adjacent blocks every 4 moves",
+    abilityReload: 4
   )
   unitOct* = Unit(
     name: "oct",
     title: "-OCT-",
-    ability: "regenerates 1 health every 20 moves"
+    ability: "regenerates 1 health every 20 moves",
+    #too long, not important
+    #abilityReload: 20
   )
   unitZenith* = Unit(
     name: "zenith",
     title: "-ZENITH-",
     subtitle: "gaming",
-    ability: "destroys the next 4 blocks in a line every 4 moves"
+    ability: "destroys the next 4 blocks in a line every 4 moves",
+    abilityReload: 4
   )
   unitQuad* = Unit(
     name: "quad",
     title: "-QUAD-",
     subtitle: "the \"support\" has arrived",
-    ability: "destroys 8 adjacent blocks every 6 moves"
+    ability: "destroys 8 adjacent blocks every 6 moves",
+    abilityReload: 6
   )
   unitOxynoe* = Unit(
     name: "oxynoe",
     title: "-OXYNOE-",
     subtitle: "",
     ability: "destroys alternating adjacent blocks every other move",
+    abilityReload: 2
   )
   unitSei* = Unit(
     name: "sei",
     title: "-SEI-",
     subtitle: "",
     ability: "destroys blocks in a diagonal cross every 4 moves",
+    abilityReload: 4
   )
   unitNothing* = Unit(
     name: "nothing",

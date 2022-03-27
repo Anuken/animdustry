@@ -989,9 +989,10 @@ makeSystem("drawLaser", [Pos, DrawLaser, Scaled]):
       fout = 1f - fin
     draw("laser".patchConst, item.pos.vec, z = zlayer(item) + 1f.px, rotation = item.drawLaser.dir.vec2.angle, scl = vec2(1f, (fout.powout(4f) + fout.pow(3f) * 0.4f) * item.scaled.scl), mixcolor = colorWhite.withA(fout.pow(3f)))
 
-makeSystem("drawUnit", [Pos, UnitDraw]):
+makeSystem("drawUnit", [Pos, UnitDraw, Input]):
   all:
 
+    let unit = item.unitDraw.unit
     let suffix = 
       if item.unitDraw.hitTime > 0: "-hit"
       elif item.unitDraw.failTime > 0 and (&"unit-{item.unitDraw.unit.name}-angery").patch.exists: "-angery"
@@ -1005,6 +1006,12 @@ makeSystem("drawUnit", [Pos, UnitDraw]):
       mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)).mix(colorAccent, item.unitDraw.switchTime.max(0f)),
       z = zlayer(item)
     )
+
+    if unit.abilityReload > 0:
+      draw(fau.white, item.pos.vec - vec2(0f, 3f.px), size = vec2(unit.abilityReload.float32.px + 2f.px, 3f.px), color = colorBlack, z = 6000f)
+      for i in 0..<unit.abilityReload:
+        let show = (item.input.moves mod unit.abilityReload) >= i
+        draw("reload".patchConst, item.pos.vec + vec2((i.float32 - ((unit.abilityReload - 1f) / 2f)) * 1f.px, -3f.px), color = if show: %"fe8e54" else: rgb(0.4f), z = 6000f)
 
 makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
   all:
