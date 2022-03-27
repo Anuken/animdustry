@@ -558,7 +558,13 @@ makeSystem("all", [Pos]): discard
 
 makeSystem("destructible", [GridPos, Pos, Destructible]): discard
 
-makeSystem("wall", [GridPos, Wall]): discard
+makeSystem("wall", [GridPos, Wall]):
+  all:
+    #this can't be part of the components as it causes concurrent modification issues
+    
+    if state.playerPos == item.gridPos.vec and not item.entity.has(Deleting):
+      effectHit(item.gridPos.vec.vec2)
+      item.entity.add(Deleting(time: 1f))
 
 makeSystem("updateMusic", []):
   start:
@@ -669,9 +675,6 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
           item.input.lastInputTime = musicTime() + beatSpacing()
 
       vec = vec2()
-    
-    #yes, this is broken with many characters, but good enough
-    state.playerPos = item.gridPos.vec
 
     item.unitDraw.scl = item.unitDraw.scl.lerp(1f, 12f * fau.delta)
 
@@ -719,6 +722,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       
       if item.unitDraw.unit.abilityProc != nil:
         item.unitDraw.unit.abilityProc(item.entity, item.input.moves)
+
+    #yes, this is broken with many characters, but good enough
+    state.playerPos = item.gridPos.vec
 
     if moved:
       #check if was late

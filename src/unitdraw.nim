@@ -291,7 +291,7 @@ template createUnits() =
   
   unitAlpha.abilityProc = proc(entity: EntityRef, moves: int) =
     if moves mod 10 == 0:
-      makeWall(entity.fetch(GridPos).vec, health = 3)
+      makeWall(entity.fetch(GridPos).vec - entity.fetch(Input).lastMove, health = 3)
 
   unitMono.abilityProc = proc(entity: EntityRef, moves: int) =
     if moves mod 4 == 0:

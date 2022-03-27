@@ -372,7 +372,7 @@ template createMaps() =
     sound: musicBright79,
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    maxHits: 18,
+    maxHits: 15,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
       #patBackground(%"205359")
