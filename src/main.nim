@@ -1,4 +1,4 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils
+import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils, tables
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
@@ -81,6 +81,8 @@ type SaveState = object
   scores: seq[int]
   #last unit switched to - can be nil!
   lastUnit: Unit
+  #duplicate count by unit name
+  duplicates: Table[string, int]
 
 #TODO better viewport
 const
@@ -263,7 +265,7 @@ defineEffects:
   strikeWave:
     #TODO looks bad
     #(%"bc8cff")
-    let col = colorWhite.mix(colorAccent, e.fout.pow(4f)).withA(e.fout.pow(1.4f) * 0.9f)
+    let col = (%"c69eff").mix(colorAccent, e.fout.pow(4f)).withA(e.fout.pow(1.4f) * 0.9f)
     draw(patch(&"wave{e.rotation.int}"), e.pos, color = col)
 
     #let size = (4f - e.rotation)
@@ -532,7 +534,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map1, 60.0 * 3.0 + 20.0)
+      playMap(map5, 0.0)
       mode = gmPlaying
   
   #yeah this would probably work much better as a system group
@@ -609,7 +611,7 @@ makeSystem("updateMusic", []):
 
     #calculate copper received and add it to inventory
     let 
-      maxCopper = if state.map.copperAmount == 0: 10 else: state.map.copperAmount
+      maxCopper = if state.map.copperAmount == 0: 9 else: state.map.copperAmount
       #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
       perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
       #multiplier based on hits taken
@@ -654,7 +656,12 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     var 
       moved = false
       failed = false
-      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, KeyCode.keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+    
+    #prevent going out of bounds as counting as a move
+    let newPos = item.gridPos.vec + vec.vec2i
+    if newPos.x.abs > mapSize or newPos.y.abs > mapSize:
+      vec = vec2()
 
     if vec.zero.not:
       vec = vec.lim(1)
@@ -1223,6 +1230,9 @@ makeSystem("drawUI", []):
     if not unit.draw.isNil:
       unit.draw(unit, pos)
     
+    #draw count
+    defaultFont.draw("x" & $(1 + save.duplicates.getOrDefault(unit.name, 0)), screen.grow(vec2(-3f.px, 0f)), scale = 0.75f.px, color = colorAccent, align = daTopRight)
+    
     #draw title and other UI
     titleFont.draw(
       unit.title, 
@@ -1344,6 +1354,12 @@ makeSystem("drawUI", []):
       if unit.unobtainable.not:
         if save.units.find(unit) == -1:
           save.units.add unit
+        else:
+          let key = unit.name
+          if not save.duplicates.hasKey(key):
+            save.duplicates[key] = 1
+          else:
+            save.duplicates[key].inc
         sortUnits()
 
       saveGame()
