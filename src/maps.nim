@@ -29,18 +29,18 @@ template bulletCircle(pos: Vec2i, tex = "") =
     makeBullet(pos, dir, tex)
 
 template laser(pos, dir: Vec2i) =
-  effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 2f, rot = dir.vec2.angle)
+  effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 3f, rot = dir.vec2.angle)
   
   let p = pos
   capture p:
-    runDelay:
+    runDelayi 1:
       effectLaserShoot(p.vec2)
   
   for len in 0..(mapSize*2):
     let dest = pos + dir * len
-    effectLaserWarn(dest.vec2, rot = dir.vec2.angle, life = beatSpacing())
+    effectLaserWarn(dest.vec2, rot = dir.vec2.angle, life = beatSpacing() * 2)
     capture dest:
-      runDelay:
+      runDelayi 1:
         makeLaser(dest, dir)
 
 proc modSize(num: int): int =
@@ -366,7 +366,6 @@ template createMaps() =
     )
   )
 
-  #TODO
   map3 = Beatmap(
     songName: "Keptor's Room - Bright 79", # (from Topaze Club)?
     sound: musicBright79,
@@ -375,8 +374,6 @@ template createMaps() =
     maxHits: 15,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
-      #patBackground(%"205359")
-
       patGradient(
         %"b23b66",
         %"9961c6",
@@ -698,6 +695,7 @@ template createMaps() =
     sound: musicPeachBeach,
     bpm: 121f,
     beatOffset: 0f / 1000f,
+    maxHits: 15,
     fadeColor: %"e586cb",
     drawPixel: (proc() =
       patBackground(%"e586cb")

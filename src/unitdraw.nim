@@ -298,7 +298,7 @@ template createUnits() =
       addPoints(1)
 
   unitOct.abilityProc = proc(entity: EntityRef, moves: int) =
-    if moves mod 20 == 0 and state.hits > 0:
+    if moves mod 30 == 0 and state.hits > 0:
       state.hits.dec
       state.healTime = 1f
   

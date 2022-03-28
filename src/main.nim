@@ -65,6 +65,7 @@ type GameState = object
   turn: int
   copperReceived: int
   hits: int
+  totalHits: int
   misses: int
   beatStats: string
 
@@ -293,7 +294,7 @@ defineEffects:
     draw(fau.white, e.pos, size = vec2(1f, 12f.px), rotation = e.rotation, color = colorWhite.withA(e.fin))
   
   lancerAppear:
-    draw("lancer2".patchConst, e.pos, rotation = e.rotation - 90f.rad, scl = vec2(state.moveBeat * 0.12f + min(e.fin.powout(3f), e.fout.powout(20f))), z = 3001f)
+    draw("lancer2".patchConst, e.pos, rotation = e.rotation - 90f.rad, scl = vec2(state.moveBeat * 0.16f + min(e.fin.powout(3f), e.fout.powout(20f))), z = 3001f)
   
   warnBullet:
     #poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
@@ -531,7 +532,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map4, 115.0)
+      playMap(map1, 60.0 * 3.0 + 20.0)
       mode = gmPlaying
   
   #yeah this would probably work much better as a system group
@@ -611,10 +612,8 @@ makeSystem("updateMusic", []):
       maxCopper = if state.map.copperAmount == 0: 10 else: state.map.copperAmount
       #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
       perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
-      #percent of damage taken
-      hitsPercent = state.hits / state.map.maxHits
-      #multiplier based on health remaining
-      healthMultiplier = if hitsPercent <= 0.0: 2.0 else: 1.0
+      #multiplier based on hits taken
+      healthMultiplier = if state.totalHits == 0: 2.0 else: 1.0
       #fraction that was actually obtained
       perfectFraction = (state.points / perfectPoints).min(1f)
       #final amount based on score
@@ -876,6 +875,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           #do not actually deal damage (iframes)
           if other.input.hitTurn < state.turn - 1:
             state.hits.inc
+            state.totalHits.inc
             other.input.hitTurn = state.turn
   
   for i in sys.toDelete:
@@ -1115,7 +1115,8 @@ makeSystem("drawUI", []):
     if mode == gmPaused:
       defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fontSize)
     elif mode == gmFinished:
-      defaultFont.draw(&"[ level complete! ]\nfinal score: {state.points}", vec2(0f, 0.75f), scale = fontSize, color = colorUi)
+      let hitText = if state.totalHits == 0: "\nno hits! (200% reward)" else: ""
+      defaultFont.draw(&"[ level complete! ]\nfinal score: {state.points}{hitText}", vec2(0f, if state.totalHits == 0: 1.25f else: 0.75f), scale = fontSize, color = colorUi)
 
       draw("copper".patchConst, vec2(-0.6f, -0.4f), scl = vec2(fontSize / fau.pixelScl), mixcolor = colorWhite.withA(1f - pauseTime))
       defaultFont.draw(&" +{state.copperReceived}", vec2(0f, -0.35f), align = daLeft, scale = fontSize, color = %"d99d73")
