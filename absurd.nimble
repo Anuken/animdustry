@@ -54,7 +54,7 @@ task deploy, "Build for all platforms":
     if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
       continue
     
-    if (os == "mac") != defined(macosx):
+    if (os == "macosx") != defined(macosx):
       continue
 
     let
@@ -115,7 +115,7 @@ task libs, "Create libraries for all platforms":
     if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
         continue
     
-    if (os == "mac") != defined(macosx):
+    if (os == "macosx") != defined(macosx):
       continue
     
     let
