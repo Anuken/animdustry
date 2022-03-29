@@ -151,6 +151,7 @@ register(defaultComponentOptions):
       justMoved: bool
       couldMove: bool
       lastMove: Vec2i
+      shielded: bool
       fails: int
       moves: int
   
@@ -161,6 +162,7 @@ register(defaultComponentOptions):
       unit: Unit
       side: bool
       beatScl: float32
+      shieldTime: float32
       scl: float32
       switchTime: float32
       hitTime: float32
@@ -699,6 +701,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       if item.unitDraw.walkTime < 0f:
         item.unitDraw.walkTime = 0f
 
+    item.unitDraw.shieldTime = item.unitDraw.shieldTime.lerp(item.input.shielded.float32, 10f * fau.delta)
+
     item.unitDraw.beatScl -= fau.delta / beatSpacing()
     item.unitDraw.beatScl = max(0f, item.unitDraw.beatScl)
 
@@ -880,17 +884,22 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
         let pos = other.gridPos
         if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
           other.unitDraw.hitTime = 1f
-          state.hitTime = 1f
-          deleteCurrent()
           soundHit.play()
-          addPoints(-7)
+          deleteCurrent()
 
-          #do not actually deal damage (iframes)
-          if other.input.hitTurn < state.turn - 1:
-            state.hits.inc
-            state.totalHits.inc
-            other.input.hitTurn = state.turn
-  
+          #damage shields instead
+          if not other.input.shielded:
+            state.hitTime = 1f
+            addPoints(-10)
+
+            #do not actually deal damage (iframes)
+            if other.input.hitTurn < state.turn - 1:
+              state.hits.inc
+              state.totalHits.inc
+              other.input.hitTurn = state.turn
+          else:
+            other.input.shielded = false
+    
   for i in sys.toDelete:
     if i.has(Damage):
       i.remove Damage
@@ -1064,13 +1073,16 @@ makeSystem("drawUnit", [Pos, UnitDraw, Input]):
       if item.unitDraw.hitTime > 0: "-hit"
       elif item.unitDraw.failTime > 0 and (&"unit-{item.unitDraw.unit.name}-angery").patch.exists: "-angery"
       else: ""
+    
+    if item.unitDraw.shieldTime > 0.001f:
+      draw("shield".patchConst, item.pos.vec, z = zlayer(item) - 1f, scl = vec2(item.unitDraw.shieldTime), mixColor = colorWhite.withA(item.unitDraw.hitTime.clamp))
 
     draw(
       (&"unit-{item.unitDraw.unit.name}{suffix}").patch,
       item.pos.vec + vec2(0f, (item.unitDraw.walkTime.powout(2f).slope * 5f - 1f).px),
       scl = vec2(-item.unitDraw.side.sign * (1f + (1f - item.unitDraw.scl)), item.unitDraw.scl - (item.unitDraw.beatScl) * 0.16f), 
       align = daBot,
-      mixColor = colorWhite.withA(clamp(item.unitDraw.hitTime - 0.6f)).mix(colorAccent, item.unitDraw.switchTime.max(0f)),
+      mixColor = colorWhite.withA(if item.unitDraw.shieldTime > 0.001f: 0f else: clamp(item.unitDraw.hitTime - 0.6f)).mix(colorAccent, item.unitDraw.switchTime.max(0f)),
       z = zlayer(item)
     )
 

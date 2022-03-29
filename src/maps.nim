@@ -3,15 +3,6 @@ import sugar
 var
   map1, map2, map3, map4, map5: Beatmap
 
-template bulletsCorners() =
-  let spacing = 2
-
-  if turn mod spacing == 0:
-    let corner = d4iedge[(turn div spacing) mod 4] * mapSize
-
-    for dir in d8():
-      makeBullet(corner, dir)
-
 template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
   let 
     p = pos
@@ -694,6 +685,8 @@ template createMaps() =
         %"33256f",
         %"fa874c"
       )
+
+      #patFft(vec2(0f, 1.5f), 62f.px, color = %"fea955")
 
       draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
 

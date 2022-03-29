@@ -298,9 +298,8 @@ template createUnits() =
       addPoints(1)
 
   unitOct.abilityProc = proc(entity: EntityRef, moves: int) =
-    if moves mod 30 == 0 and state.hits > 0:
-      state.hits.dec
-      state.healTime = 1f
+    if moves mod 30 == 0:
+      entity.fetch(Input).shielded = true
   
   unitCrawler.abilityProc = proc(entity: EntityRef, moves: int) =
     let pos = entity.fetch(GridPos).vec

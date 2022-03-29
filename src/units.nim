@@ -53,18 +53,18 @@ let
     #unimportant
     #abilityReload: 4
   )
+  unitOct* = Unit(
+    name: "oct",
+    title: "-OCT-",
+    ability: "creates a shield every 30 moves",
+    #too long, not important
+    #abilityReload: 30
+  )
   unitCrawler* = Unit(
     name: "crawler",
     title: "-CRAWLER-",
     ability: "destroys 4 adjacent blocks every 4 moves",
     abilityReload: 4
-  )
-  unitOct* = Unit(
-    name: "oct",
-    title: "-OCT-",
-    ability: "regenerates 1 health every 30 moves",
-    #too long, not important
-    #abilityReload: 30
   )
   unitZenith* = Unit(
     name: "zenith",
@@ -102,7 +102,7 @@ let
     unobtainable: true
   )
 
-  allUnits* = [unitAlpha, unitMono, unitCrawler, unitOct, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
+  allUnits* = [unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
 
 proc rollUnit*(): Unit =
   #very low chance, as it is annoying

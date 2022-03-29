@@ -1,12 +1,11 @@
-proc patFft() =
+
+proc patFft(pos: Vec2, radius = 90f.px, length = 8f, color = colorWhite) =
   let 
     w = 20.px
-    radius = 90f.px
-    length = 8f
   
   for i in 0..<fftSize:
     let rot = i / fftSize.float32 * pi2
-    draw(fau.white, vec2l(rot, radius), size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = colorPink.mix(colorWhite, 0.5f))
+    draw(fau.white, vec2l(rot, radius) + pos, size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = color)
 
 proc patTiles() =
   for x in -mapSize..mapSize:
