@@ -890,7 +890,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           #damage shields instead
           if not other.input.shielded:
             state.hitTime = 1f
-            addPoints(-10)
+            addPoints(-15)
 
             #do not actually deal damage (iframes)
             if other.input.hitTurn < state.turn - 1:
