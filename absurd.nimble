@@ -26,6 +26,7 @@ const
   builds = [
     (name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
+    (name: "mac64", os: "mac", cpu: "amd64", args: "")
   ]
 
 task pack, "Pack textures":
@@ -51,6 +52,9 @@ task deploy, "Build for all platforms":
 
   for name, os, cpu, args in builds.items:
     if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
+      continue
+    
+    if (os == "mac") != defined(macosx):
       continue
 
     let
@@ -110,6 +114,10 @@ task libs, "Create libraries for all platforms":
   for name, os, cpu, args in builds.items:
     if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
         continue
+    
+    if (os == "mac") != defined(macosx):
+      continue
+    
     let
       prefix = if os == "windows": "" else: "lib"
       exeName = prefix & "absurd64"

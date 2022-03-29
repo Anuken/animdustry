@@ -688,7 +688,7 @@ template createMaps() =
     )
   )
 
-  map5 = Beatmap(
+  map5 = Beatmap(#
     songName: "ADRIANWAVE - Peach Beach",
     sound: musicPeachBeach,
     bpm: 121f,
