@@ -95,7 +95,7 @@ const
   copperForRoll = 10
   #copper received for first map completion
   completionCopper = 10
-  defaultMapReward = 9
+  defaultMapReward = 8
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
   colorUiDark = %"57639a"
@@ -883,7 +883,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           state.hitTime = 1f
           deleteCurrent()
           soundHit.play()
-          addPoints(-6)
+          addPoints(-7)
 
           #do not actually deal damage (iframes)
           if other.input.hitTurn < state.turn - 1:

@@ -65,7 +65,8 @@ task deploy, "Build for all platforms":
 
     mkDir dir
     shell &"nim --cpu:{cpu} --os:{os} --app:gui -f {args} -d:danger -o:{bin} c src/{app}"
-    #shell &"strip -s {bin}"
+    if not defined(macosx):
+      shell &"strip -s {bin}"
     #shell &"upx-ucl --best {bin}"
 
   #cd "build"

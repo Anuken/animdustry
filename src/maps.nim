@@ -316,14 +316,6 @@ template createMaps() =
               makeRouter(corner * mapSize + vec2l(i * 90f.rad + 180f.rad, cor).vec2i, length = 3)
               i.inc
         
-        #TODO bad pattern
-        #[
-        template sineBullets(offset: int) =
-          for i in signsi():
-            makeBullet(vec2i(i * ((turn - offset).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
-            makeBullet(vec2i(i * ((turn - offset + mapSize).mod(mapSize * 2 + 1) - mapSize), -mapSize), vec2i(0, 1))
-        ]#
-        
         template sideSorters =
           let spacing = 8
           if turn mod spacing == 0:
@@ -510,7 +502,7 @@ template createMaps() =
         if turn == 266:
           conveyorWall(2)
         
-        if turn in 265..290:
+        if turn in 265..300:
           sideSorters()
         
         if turn in 297..338:
@@ -527,7 +519,7 @@ template createMaps() =
     sound: musicPinaColada,
     bpm: 125f,
     beatOffset: -240f / 1000f,
-    maxHits: 15,
+    maxHits: 12,
     fadeColor: %"b4b2ff",
     drawPixel: (proc() =
       patBackground(%"0d091d")
@@ -548,7 +540,7 @@ template createMaps() =
           let space = 4
           if turn mod space == 0:
             let side = ((turn div space) mod 2) == 0
-            makeArc(vec2i(mapSize, (turn div space).modSize), vec2i(-1, 1 * side.signi), bounces = 3, life = 4)
+            makeArc(vec2i(mapSize, (turn div space).modSize), vec2i(-1, 1 * side.signi), bounces = 3, life = 5)
         
         template diagConveyors(offset: int) =
           let 
@@ -563,11 +555,10 @@ template createMaps() =
                 else:
                   makeConveyor(vec2i(mapSize, x), vec2i(-1, -1), 3)
 
-        #proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
         template botSorters =
           let space = 6
           if turn mod space == 0:
-            makeSorter(vec2i(0, -mapSize), vec2i(0, 1), 1, 2, 2)
+            makeSorter(vec2i(0, -mapSize), vec2i(0, 1), 1, 2, 3)
         
         template topBounce = 
           for i in [2, 4]:
@@ -693,7 +684,7 @@ template createMaps() =
     sound: musicPeachBeach,
     bpm: 121f,
     beatOffset: 0f / 1000f,
-    maxHits: 14,
+    maxHits: 10,
     fadeColor: %"e586cb",
     drawPixel: (proc() =
       #TODO better background, with beats
@@ -844,7 +835,7 @@ template createMaps() =
             rot.inc
 
         template timeStrikes =
-          let space = 4
+          let space = 3
 
           if turn mod space == 0:
             let pos = state.playerPos
@@ -863,7 +854,7 @@ template createMaps() =
             for i in signsi():
               let pos = vec2i(xs[(turn div space) mod xs.len] * i, -mapSize * ((turn div space).mod(2) == 0).signi)
               if pos.x == 0 and i != 1: continue
-              makeConveyor(pos, vec2i(0, -pos.y.sign), 7)
+              makeConveyor(pos, vec2i(0, -pos.y.sign), 8)
         
         template bouncespam =
           let space = 4
@@ -970,10 +961,5 @@ template createMaps() =
         
         if turn in 300..340:
           botRouters(300)
-        #17: beat
-        #34: extra
-        #64: fade in to vocals
-        #95: vocal fade in done
-        #93: drums before vocal fade in
     )
   )
