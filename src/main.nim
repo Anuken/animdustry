@@ -227,6 +227,8 @@ register(defaultComponentOptions):
     SpawnConveyors = object
       len: int
       diagonal: bool
+      #TODO merge with diagonal
+      alldir: bool
       dir: Vec2i
     
     SpawnEvery = object
@@ -351,8 +353,8 @@ onEcsBuilt:
   proc makeLaser(pos: Vec2i, dir: Vec2i) =
     discard newEntityWith(Scaled(scl: 1f), DrawLaser(dir: dir), Pos(), GridPos(vec: pos), Damage(), Lifetime(turns: 1))
 
-  proc makeRouter(pos: Vec2i, length = 2, life = 2, diag = false) =
-    discard newEntityWith(DrawSpin(sprite: "router"), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag), Lifetime(turns: life))
+  proc makeRouter(pos: Vec2i, length = 2, life = 2, diag = false, sprite = "router", alldir = false) =
+    discard newEntityWith(DrawSpin(sprite: sprite), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag, alldir: alldir), Lifetime(turns: life))
 
   proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
     discard newEntityWith(DrawSpin(sprite: "sorter"), Scaled(scl: 1f), Destructible(), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
@@ -534,7 +536,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map5, 0.0)
+      playMap(map5, 107.0)
       mode = gmPlaying
   
   #yeah this would probably work much better as a system group
@@ -804,7 +806,10 @@ makeSystem("spawnConveyors", [GridPos, SpawnConveyors]):
 
   if state.newTurn:
     all:
-      if item.spawnConveyors.diagonal.not:
+      if item.spawnConveyors.alldir:
+        for dir in d8():
+          spawn(dir, item.spawnConveyors.len)
+      elif item.spawnConveyors.diagonal.not:
         for dir in d4():
           spawn(dir, item.spawnConveyors.len)
       else:

@@ -73,6 +73,22 @@ proc patSpin(col1, col2: Color, blades = 10) =
       if i mod 2 == 0: col1 else: col2
     )
 
+proc patSpinGradient(pos: Vec2, col1, col2: Color, len = 5f, blades = 10, spacing = 2) =
+  let 
+    space = 360f.rad / blades
+
+  for i in 0..<blades:
+    if i mod spacing == 0:
+      fillTri(
+        pos,
+        pos + vec2l(i * space, len),
+        pos + vec2l((i + 1) * space, len),
+        col1,
+        col2,
+        col2
+        #if i mod 2 == 0: col1 else: col2
+      )
+
 proc patSpinShape(col: Color, col2 = col, sides = 4, rad = 3f, turnSpeed = 19f.rad, rads = 6, radsides = 4, radoff = 7f, radrad = 1.3f, radrotscl = 0.25f) =
   let 
     radius = rad + state.moveBeat.pow(2f) * 6f.px
@@ -107,21 +123,20 @@ proc patFadeShapes(col: Color) =
   for i in 0..<fadeCount:
     drawFade((i - (state.turn + (1f - state.moveBeat).powout(6f)) * fscl).emod(fadeCount))
 
-proc patRain() =
+proc patRain(amount = 80) =
   let 
-    parts = 70
-    partRange = 13f
+    partRange = 30f
     move = vec2(-0.5f, -0.5f)
     col = colorPink.mix(colorWhite, 0.4f)
     size = (5f + state.moveBeat.pow(2f) * 4f).px
   
   var r = initRand(1)
   
-  for i in 0..<parts:
+  for i in 0..<amount:
     var pos = vec2(r.range(partRange), r.range(partRange))
 
     pos += move * (state.turn + (1f - state.moveBeat).powout(30f))
-    pos = (pos + partRange).emod(vec2(partRange * 2)) - partRange
+    pos = fau.cam.view.wrap(pos, 2f)
 
     fillPoly(pos, 4, size, color = col)
     fillPoly(pos - move*0.5f, 4, size/2f, color = col)

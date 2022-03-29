@@ -41,7 +41,7 @@ let
   unitAlpha* = Unit(
     name: "alpha",
     title: "-ALPHA-",
-    subtitle: "first",
+    subtitle: "the first of many",
     ability: "creates a wall every 10 moves",
     abilityReload: 10
   )
@@ -64,7 +64,7 @@ let
     title: "-OCT-",
     ability: "regenerates 1 health every 30 moves",
     #too long, not important
-    #abilityReload: 20
+    #abilityReload: 30
   )
   unitZenith* = Unit(
     name: "zenith",

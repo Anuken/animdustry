@@ -697,12 +697,274 @@ template createMaps() =
     maxHits: 15,
     fadeColor: %"e586cb",
     drawPixel: (proc() =
-      patBackground(%"e586cb")
+      patBackground(%"b25aab")
+      patVertGradient(
+        %"33256f",
+        %"fa874c"
+      )
+
+      patSpinGradient(vec2(0f, 4f), %"fea956", (%"fea956").withA(0f), 6f, 14, spacing = 1)
+
+      #fillPoly(vec2(0f, 4f), 30, 3.3f, color = %"ff7157")
+      #fillPoly(vec2(0f, 4f), 30, 3f, color = %"ffa95a")
+      draw("sun".patchConst, vec2(0f, 4f))
+
+      patClouds(%"5d59a6")
+
+      #patRain()
     ),
     draw: (proc() =
       patTilesSquare(%"cbb2ff", %"ff2eca")
     ),
     update: (proc() =
-      discard
+      if state.newTurn or (state.turn == 0 and sysSnek.groups.len == 0):
+        let turn = state.turn
+
+        template botLeftConvey(offset = 0) = 
+          let
+            t = turn - offset
+            space = 8
+          if t mod space == 0:
+            for i in 0..4:
+              makeConveyor(vec2i(-mapSize + i, -mapSize), vec2i(0, 1), 3)
+        
+        template topRightConvey(offset = 4) = 
+          let
+            t = turn - offset
+            space = 8
+          if t mod space == 0:
+            for i in 0..4:
+              makeConveyor(vec2i(mapSize - i, mapSize), vec2i(0, -1), 3)
+        
+        template botLeftSideConvey(offset = 0) = 
+          let
+            t = turn - offset
+            space = 8
+          if t mod space == 0:
+            for i in 0..4:
+              makeConveyor(vec2i(-mapSize, -mapSize + i), vec2i(1, 0), 3)
+
+        template topRightSideConvey(offset = 4) = 
+          let
+            t = turn - offset
+            space = 8
+          if t mod space == 0:
+            for i in 0..4:
+              makeConveyor(vec2i(mapSize, mapSize - i), vec2i(-1, 0), 3)
+        
+        template botTrackLaser =
+          let space = 2
+          if (turn - 1) mod space == 0:
+            laser(vec2i(state.playerPos.x, -mapSize), vec2i(0, 1))
+
+        template sideBursts =
+          let space = 4
+          if turn mod space == 0:
+            let 
+              d = (turn div space) mod 4
+              pos = d8i[d] * 5
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos:
+              runDelay:
+                bulletCircle(pos, "bullet-pink")
+
+        template trackConveyors =
+          let space = 2
+          if turn mod space == 0:
+            let pos = vec2i(state.playerPos.x, -mapSize)
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos:
+              runDelay:
+                makeConveyor(pos, vec2i(0, 1), 3)
+
+        template midOverflow(offset: int) =
+          if (turn - offset) mod 8 == 0:
+            effectWarn(vec2(), life = beatSpacing())
+            runDelay:
+              makeRouter(vec2i(), alldir = true, sprite = "overflow-gate", length = 3)
+
+        template sideBullets(offset: int) =
+          if turn == offset:
+            var rot = 0
+            for dir in d4():
+              for i in -1..1:
+                let pos = dir + vec2i(mapSize, i).rotate(rot)
+                delayBulletWarn(pos, -dir, "bullet-pink")
+              rot.inc
+        
+        template diagBullets(offset: int) =
+          if (turn - offset) mod 8 == 0:
+            for dir in d8():
+              let pos = dir * mapSize
+              effectWarn(pos.vec2, life = beatSpacing())
+              capture pos:
+                runDelay:
+                  bulletCircle(pos, "bullet-pink")
+        
+        template trackConveyorTop =
+          let space = 4
+          if turn mod space == 0:
+            let pos = vec2i(state.playerPos.x, mapSize)
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos:
+              runDelay:
+                makeConveyor(pos, vec2i(0, -1), 1)
+        
+        template diagOverflows(offset: int) =
+          if (turn - offset) mod 8 == 0:
+            var rot = 0
+            let t = (turn - offset) div 8
+            for dir in d4edge():
+              let pos = dir * (mapSize - 1) + (vec2i(-1, 0).rotate(rot) * (t + 1))
+              rot.inc
+              effectWarn(pos.vec2, life = beatSpacing())
+              capture pos:
+                runDelay:
+                  makeRouter(pos, alldir = true, sprite = "overflow-gate", length = 2)
+
+        template diagArcs =
+          var rot = 0
+          for dir in d4():
+            let 
+              pos = dir * mapSize
+              dir = vec2i(-1, 1).rotate(rot)
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos, dir:
+              runDelay:
+                makeArc(pos, dir, bounces = 3)
+            rot.inc
+
+        template timeStrikes =
+          let space = 4
+
+          if turn mod space == 0:
+            let pos = state.playerPos
+            for i in 0..3:
+              capture i, pos:
+                runDelayi(i):
+                  effectStrikeWave(pos.vec2, rot = i.float32, life = beatSpacing())
+                  if i == 3:
+                    bulletCircle(pos, "bullet-pink")
+
+        template randomConveyors =
+          const xs = [0, 1, 3, 5, 2, 4, 6, 0, 2, 4]
+          let space = 2
+
+          if turn mod space == 0:
+            for i in signsi():
+              let pos = vec2i(xs[(turn div space) mod xs.len] * i, -mapSize * ((turn div space).mod(2) == 0).signi)
+              if pos.x == 0 and i != 1: continue
+              makeConveyor(pos, vec2i(0, -pos.y.sign), 7)
+        
+        template bouncespam =
+          let space = 4
+          if turn mod space == 0:
+            let y = ((turn div space) * 2).modSize
+            for i in signsi():
+              makeArc(vec2i(i * mapSize, y), vec2i(-1 * i, 1), bounces = 4, life = 2)
+        
+        template moreDiagBullets =
+          if turn mod 4 == 0:
+            for dir in d8():
+              let pos = dir * mapSize
+              effectWarn(pos.vec2, life = beatSpacing())
+              capture pos:
+                runDelay:
+                  for dir in d4():
+                    makeBullet(pos, dir, "bullet-pink")
+
+        template diagSorters =
+          for i in signsi():
+            makeSorter(vec2i(-mapSize * i, -mapSize), vec2i(i, 1))
+        
+        template passageLasers =
+          let space = 4
+          if turn mod space == 0:
+            for i in -mapSize..mapSize:
+              if ((turn div space) mod 2) == i.emod(2):
+                laser(vec2i(i, -mapSize), vec2i(0, 1))
+        
+        template botRouters(offset: int) =
+          var t = (turn - offset - mapSize)
+          if t > mapSize:
+            t -= (mapSize * 2 + 1);
+
+          if t <= mapSize:
+            let pos = vec2i(0, t)
+            effectWarn(pos.vec2, life = beatSpacing())
+            capture pos:
+              runDelay:
+                makeRouter(pos, length = 1)
+
+        if turn in 0..62:
+          botLeftConvey()
+          topRightConvey()
+        
+        if turn in 15..62:
+          botTrackLaser()
+        
+        if turn == 34 or turn == 34 + mapSize*2 + 1:
+          makeArc(vec2i(mapSize, 0), vec2i(-1, 0), bounces = 2)
+        
+        if turn in 64..95:
+          sideBursts()
+        
+        if turn in 68..91:
+          trackConveyors()
+        
+        if turn in 94..124:
+          midOverflow(94)
+          sideBullets(94)
+        
+        if turn in 98..124:
+          trackConveyorTop()
+        
+        if turn in 97..124:
+          diagBullets(97)
+        
+        #130 = again
+        if turn in 127..159:
+          diagOverflows(127)
+          if turn == 127:
+            diagArcs()
+        
+        #156: alternating top/bot left conveyors
+        if turn in 156..186:
+          botLeftSideConvey()
+          topRightSideConvey()
+
+        if turn in 168..188:
+          timeStrikes()
+        
+        #breakdown
+        if turn in 188..220:
+          randomConveyors()
+          
+        if turn in 220..242:
+          bounceSpam()
+
+        if turn in 220..246:
+          moreDiagBullets()
+      
+        if turn == 248:
+          diagSorters()
+        
+        if turn == 252:
+          for i in signsi():
+            makeTurret(vec2i(mapSize * i, 0), vec2i(-i, 0), life = 20, reload = 3)
+        
+        if turn in 272..284:
+          passageLasers()
+        
+        if turn in 280..310:
+          randomConveyors()
+        
+        if turn in 300..340:
+          botRouters(300)
+        #17: beat
+        #34: extra
+        #64: fade in to vocals
+        #95: vocal fade in done
+        #93: drums before vocal fade in
     )
   )
