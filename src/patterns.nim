@@ -190,6 +190,32 @@ proc patClouds(col = colorWhite) =
 
     draw(sprite, pos, color = col, scl = scale.vec2)
 
+proc patLongClouds(col = colorWhite) =
+  var clouds {.global.}: array[5, Patch]
+
+  once:
+    for i in 1..clouds.len:
+      clouds[i - 1] = ("longcloud" & $i).patch
+
+  let 
+    count = 25
+    partRange = 18f
+    move = vec2(0.5f, 0f)
+  
+  var r = initRand(3)
+  
+  for i in 0..<count:
+    var pos = vec2(r.range(partRange), r.rand(1.4f..8f))
+    let
+      speed = r.rand(1f..2f)
+      scale = r.rand(0.5f..1f)
+      sprite = r.sample(clouds)
+
+    pos += move * state.time * speed * 0.6f
+    pos = fau.cam.viewport.wrap(pos, 110f.px)
+
+    draw(sprite, pos, color = col, scl = scale.vec2)
+
 proc patStars(col = colorWhite, flash = colorWhite, amount = 40, seed = 1) =
   var stars {.global.}: array[3, Patch]
 

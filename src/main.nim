@@ -95,6 +95,7 @@ const
   copperForRoll = 10
   #copper received for first map completion
   completionCopper = 10
+  defaultMapReward = 9
   colorAccent = %"ffd37f"
   colorUi = %"bfecf3"
   colorUiDark = %"57639a"
@@ -536,7 +537,7 @@ makeSystem("core", []):
     
     #TODO remove
     when defined(debug):
-      playMap(map5, 107.0)
+      playMap(map5, 0.0)
       mode = gmPlaying
   
   #yeah this would probably work much better as a system group
@@ -613,7 +614,7 @@ makeSystem("updateMusic", []):
 
     #calculate copper received and add it to inventory
     let 
-      maxCopper = if state.map.copperAmount == 0: 9 else: state.map.copperAmount
+      maxCopper = if state.map.copperAmount == 0: defaultMapReward else: state.map.copperAmount
       #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
       perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
       #multiplier based on hits taken
@@ -882,7 +883,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           state.hitTime = 1f
           deleteCurrent()
           soundHit.play()
-          addPoints(-5)
+          addPoints(-6)
 
           #do not actually deal damage (iframes)
           if other.input.hitTurn < state.turn - 1:

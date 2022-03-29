@@ -688,28 +688,37 @@ template createMaps() =
     )
   )
 
-  #TODO
   map5 = Beatmap(
     songName: "ADRIANWAVE - Peach Beach",
     sound: musicPeachBeach,
     bpm: 121f,
     beatOffset: 0f / 1000f,
-    maxHits: 15,
+    maxHits: 14,
     fadeColor: %"e586cb",
     drawPixel: (proc() =
+      #TODO better background, with beats
       patBackground(%"b25aab")
+
       patVertGradient(
         %"33256f",
         %"fa874c"
       )
 
-      patSpinGradient(vec2(0f, 4f), %"fea956", (%"fea956").withA(0f), 6f, 14, spacing = 1)
+      draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
+
+      patVertGradient(
+        (%"33256f").withA(0.5f),
+        (%"fa874c").withA(0.5f)
+      )
+
+      draw("sun".patchConst, vec2(0f, 1.5f))
+
+      patSpinGradient(vec2(0f, 4f), %"ffb65f", (%"fea956").withA(0f), 12f, 14, spacing = 1)
 
       #fillPoly(vec2(0f, 4f), 30, 3.3f, color = %"ff7157")
       #fillPoly(vec2(0f, 4f), 30, 3f, color = %"ffa95a")
-      draw("sun".patchConst, vec2(0f, 4f))
-
-      patClouds(%"5d59a6")
+      
+      patLongClouds(%"5d59a6")
 
       #patRain()
     ),

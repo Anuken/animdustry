@@ -83,7 +83,7 @@ let
   unitOxynoe* = Unit(
     name: "oxynoe",
     title: "-OXYNOE-",
-    subtitle: "",
+    subtitle: "at long last",
     ability: "destroys alternating adjacent blocks every other move",
     abilityReload: 2
   )

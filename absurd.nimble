@@ -108,6 +108,8 @@ task libs, "Create libraries for all platforms":
   mkDir "build"
 
   for name, os, cpu, args in builds.items:
+    if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
+        continue
     let
       prefix = if os == "windows": "" else: "lib"
       exeName = prefix & "absurd64"
