@@ -26,7 +26,7 @@ const
   builds = [
     (name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
-    (name: "mac64", os: "mac", cpu: "amd64", args: "")
+    (name: "mac64", os: "macosx", cpu: "amd64", args: "")
   ]
 
 task pack, "Pack textures":
