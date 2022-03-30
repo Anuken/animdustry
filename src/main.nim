@@ -469,6 +469,14 @@ proc fading(): bool = fadeTarget != nil
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
 proc musicTime(): float = state.secs
 
+proc calcPitch(note: int): float32 =
+  const indices = [0, 4, 7]
+  let 
+    octave = note.euclDiv 3
+    index = note.euclMod 3
+  let a = pow(2.0, 1.0 / 12.0)
+  return pow(a, indices[index].float + octave.float * 12f).float32
+
 proc highScore(map: Beatmap): int =
   let index = maps.find(map)
   return save.scores[index]
@@ -1137,9 +1145,11 @@ makeSystem("drawUI", []):
     #epic hardcoded array size (it really doesn't get any better than this)
     levelFade: array[32, float32]
     unitFade: array[32, float32]
+    hoverLevel: int
     glowPatch: Patch9
   init:
     sys.glowPatch = "glow".patch9
+    sys.hoverLevel = -1
 
   drawFlush()
 
@@ -1389,6 +1399,7 @@ makeSystem("drawUI", []):
 
       if over and not unit.wasOver:
         unit.jumping = true
+        soundJump.play(pitch = calcPitch(i))
       
       unit.wasOver = over
 
@@ -1399,6 +1410,8 @@ makeSystem("drawUI", []):
         unit.clickTime = 1f
         if unit == unitBoulder:
           soundVineboom.play()
+        else:
+          soundPat.play(pitch = calcPitch((i mod 2)))
       
       if over and keyMouseLeft.tapped:
         showSplashUnit(unit)
@@ -1460,6 +1473,8 @@ makeSystem("drawUI", []):
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
 
+    var anyHover = false
+
     #draw map select
     for i in countdown(maps.len - 1, 0):
       let 
@@ -1473,6 +1488,12 @@ makeSystem("drawUI", []):
         over = r.contains(mouse)
 
       sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
+
+      if over:
+        anyHover = true
+        if sys.hoverLevel != i:
+          soundSelect.play(pitch = calcPitch(i))
+        sys.hoverLevel = i
       
       #only expands after bounds check to prevent weird input
       if i != maps.len - 1 and unlocked: #do not expand last map, no space for it
@@ -1513,6 +1534,9 @@ makeSystem("drawUI", []):
           safeTransition:
             playMap(map)
             mode = gmPlaying
+    
+    if not anyHover:
+      sys.hoverLevel = -1
   
   drawFlush()
 
