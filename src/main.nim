@@ -1511,4 +1511,4 @@ makeSystem("drawUI", []):
     patFadeIn(fadeTime.pow(transitionPow))
     fadeTime -= fau.delta / transitionTime
 
-launchFau(initParams(title = "absurd"))
+launchFau(initParams(title = "it's finally here"))
