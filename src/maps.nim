@@ -44,6 +44,7 @@ template createMaps() =
     bpm: 126f,
     beatOffset: -80f / 1000f,
     maxHits: 20,
+    copperAmount: 4,
     fadeColor: colorPink.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
@@ -206,6 +207,7 @@ template createMaps() =
     bpm: 85f,
     beatOffset: 0f / 1000f,
     maxHits: 12,
+    copperAmount: 5,
     fadeColor: %"985eb9",
     drawPixel: (proc() =
       patBackground(%"2b174d")
@@ -354,6 +356,7 @@ template createMaps() =
     bpm: 127f,
     beatOffset: -80f / 1000f,
     maxHits: 15,
+    copperAmount: 7,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
       patGradient(
@@ -511,6 +514,7 @@ template createMaps() =
     bpm: 125f,
     beatOffset: -240f / 1000f,
     maxHits: 12,
+    copperAmount: 8,
     fadeColor: %"b4b2ff",
     drawPixel: (proc() =
       patBackground(%"0d091d")
@@ -670,13 +674,14 @@ template createMaps() =
     )
   )
 
-  map5 = Beatmap(#
+  map5 = Beatmap(
     songName: "ADRIANWAVE - Peach Beach",
     sound: musicPeachBeach,
     bpm: 121f,
     beatOffset: 0f / 1000f,
     maxHits: 10,
-    fadeColor: %"e586cb",
+    copperAmount: 9,
+    fadeColor: %"33256f",
     drawPixel: (proc() =
       #TODO better background, with beats
       patBackground(%"b25aab")
@@ -688,7 +693,9 @@ template createMaps() =
 
       #patFft(vec2(0f, 1.5f), 62f.px, color = %"fea955")
 
-      draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
+     # draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
+
+      patLongClouds(%"5d59a6")
 
       patVertGradient(
         (%"33256f").withA(0.5f),
@@ -697,17 +704,15 @@ template createMaps() =
 
       draw("sun".patchConst, vec2(0f, 1.5f))
 
-      patSpinGradient(vec2(0f, 4f), %"ffb65f", (%"fea956").withA(0f), 12f, 14, spacing = 1)
+      patSpinGradient(vec2(0f, 4f), (%"ffb65f").withA(0.7f), (%"fea956").withA(0f), 18f, 14, spacing = 1)
 
       #fillPoly(vec2(0f, 4f), 30, 3.3f, color = %"ff7157")
       #fillPoly(vec2(0f, 4f), 30, 3f, color = %"ffa95a")
       
-      patLongClouds(%"5d59a6")
-
       #patRain()
     ),
     draw: (proc() =
-      patTilesSquare(%"cbb2ff", %"ff2eca")
+      patTilesSquare(%"cbb2ff", %"fa874c")
     ),
     update: (proc() =
       if state.newTurn or (state.turn == 0 and sysSnek.groups.len == 0):

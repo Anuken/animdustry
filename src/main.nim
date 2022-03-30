@@ -27,6 +27,7 @@ type Beatmap = ref object
   copperAmount: int
 
 type Gamemode = enum
+  gmIntro
   gmMenu,
   #currently in track
   gmPlaying,
@@ -71,6 +72,8 @@ type GameState = object
 
 #Persistent user data.
 type SaveState = object
+  #true if intro is complete
+  introDone: bool
   #all units that the player has collected (should be unique)
   units: seq[Unit]
   #"gambling tokens"
@@ -124,6 +127,9 @@ var
   hitFrames: array[5, Patch]
   #currently shown unit in splash screen, null when no unit
   splashUnit: Option[Unit]
+  inIntro: bool
+  #fade time for first game launch
+  introTime: float32
   #splash screen fade-in time
   splashTime: float32
   #when >0, the splash screen is in "reveal" mode
@@ -267,6 +273,13 @@ defineEffects:
     if state.map != nil:
       defaultFont.draw("Music: " & state.map.songName, fau.cam.view - rect(vec2(0f, 0.8f + e.fin.pow(7f)), vec2(0, 0f)), color = colorUi.withA(e.fout.powout(6f)), align = daTopLeft)
   
+  tutorial(lifetime = 9f):
+    let 
+      offset = rect(vec2(0f, 0.8f + e.fin.pow(7f) + 1f), vec2(0, 0f))
+      col = colorUi.withA(e.fout.powout(6f))
+    
+    defaultFont.draw("[ WASD or arrow keys to move]\nyes this is a rhythm game\n\nI refuse to explain further", fau.cam.view - offset, color = col)
+
   strikeWave:
     #TODO looks bad
     #(%"bc8cff")
@@ -537,10 +550,18 @@ makeSystem("core", []):
     if save.scores.len < maps.len:
       save.scores.setLen(maps.len)
     
+    if not save.introDone and save.units.len < 2:
+      mode = gmIntro
+      save.introDone = true
+      saveGame()
+
     #TODO remove
     when defined(debug):
-      playMap(map5, 0.0)
-      mode = gmPlaying
+      mode = gmIntro
+    
+    #when defined(debug):
+    #  playMap(map5, 0.0)
+    #  mode = gmPlaying
   
   #yeah this would probably work much better as a system group
   makePaused(
@@ -617,8 +638,8 @@ makeSystem("updateMusic", []):
     #calculate copper received and add it to inventory
     let 
       maxCopper = if state.map.copperAmount == 0: defaultMapReward else: state.map.copperAmount
-      #perfect amount of copper received if the player always moved and never missed / got hit; it is assumed they miss at least 2 at the start/end
-      perfectPoints = state.map.sound.length * 60f / state.map.bpm - 2
+      #perfect amount of copper received if the player always moved and never missed / got hit
+      perfectPoints = state.map.sound.length * 60f / state.map.bpm
       #multiplier based on hits taken
       healthMultiplier = if state.totalHits == 0: 2.0 else: 1.0
       #fraction that was actually obtained
@@ -890,7 +911,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           #damage shields instead
           if not other.input.shielded:
             state.hitTime = 1f
-            addPoints(-15)
+            addPoints(-20)
 
             #do not actually deal damage (iframes)
             if other.input.hitTurn < state.turn - 1:
@@ -1010,7 +1031,11 @@ makeSystem("draw", []):
   updateMapPreviews()
 
 makeSystem("drawBackground", []):
-  if mode != gmMenu:
+  if mode == gmIntro:
+    drawPixel:
+      patSpin(%"23232c", %"49474d")
+      patVertGradient(colorBlack)
+  elif mode != gmMenu:
     if state.map.drawPixel != nil:
       drawPixel:
         state.map.drawPixel()
@@ -1032,6 +1057,12 @@ makeSystem("bounceVelocity", [Velocity, DrawBounce]):
   all:
     if item.velocity.vec != vec2i():
       item.drawBounce.rotation = item.drawBounce.rotation.alerp(item.velocity.vec.angle, 10f * fau.delta)
+
+#make sure lasers (usually) don't hit after their visual is mostly done
+makeSystem("removeLaserDamage", [Pos, DrawLaser, Scaled, Damage]):
+  all:
+    if item.scaled.time / 0.3f > 0.5f:
+      item.entity.remove Damage
 
 makeSystem("drawSquish", [Pos, DrawSquish, Velocity, Snek, Scaled]):
   all:
@@ -1119,7 +1150,7 @@ makeSystem("drawUI", []):
     state.healTime -= fau.delta / 0.4f
     state.healTime = state.healTime.max(0f)
 
-  if mode != gmPlaying and mode != gmMenu:
+  if mode != gmPlaying and mode != gmMenu and mode != gmIntro:
     let transitionTime = if mode == gmPaused: 0.5f else: 2.3f
     
     pauseTime += fau.delta / transitionTime
@@ -1155,7 +1186,6 @@ makeSystem("drawUI", []):
         let map = state.map
         capture map:
           safeTransition:
-            reset()
             playMap(map)
             mode = gmPlaying
 
@@ -1172,7 +1202,23 @@ makeSystem("drawUI", []):
       draw(fau.white, fau.cam.pos, size = fau.cam.size, color = colorHit.withA((1f - pauseTime).pow(4f)))
       poly(vec2(), 4, midrad + (1f - pauseTime).pow(4f) * 5f, stroke = (1f - pauseTime) * 9.px, color = colorHit)
 
-  if mode != gmMenu:
+  if mode == gmIntro:
+    introTime += fau.delta * 0.5f
+    introTime = introTime.clamp
+    draw("headphones".patchConst, vec2())
+
+    titleFont.draw("SOUND REQUIRED", vec2(0f, 2.5f))
+    defaultFont.draw("(yes, you really need it)", vec2(0f, -2f))
+
+    defaultFont.draw("[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
+
+    if keySpace.tapped or keyEscape.tapped:
+      mode = gmMenu
+      inIntro = true
+      showSplashUnit(unitAlpha)
+
+    draw(fau.white, vec2(), size = fau.cam.size, color = colorBlack.withA(1f - introTime))
+  elif mode != gmMenu:
     #draw debug text
     when defined(debug):
       defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {fau.fps} fps", fau.cam.view, align = daBot)
@@ -1232,7 +1278,8 @@ makeSystem("drawUI", []):
     #inv flash
     draw(fau.white, vec2(), size = fau.cam.size, color = rgba(1f, 1f, 1f, inv.pow(13f)))
   elif splashUnit.isSome: #draw splash unit
-    splashTime += fau.delta / 4f
+    #slower in intro for dramatic effect
+    splashTime += fau.delta / (if inIntro: 11f else: 4f)
     splashTime = min(splashTime, 1f)
 
     let
@@ -1276,7 +1323,7 @@ makeSystem("drawUI", []):
     if unit.ability.len > 0:
       defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.75f.px)
 
-    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
+    if not inIntro and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
@@ -1284,6 +1331,14 @@ makeSystem("drawUI", []):
     
     #flash
     draw(fau.white, fau.cam.pos, size = fau.cam.size, color = rgba(1f, 1f, 1f, 1f - splashTime.powout(6f)))
+  
+    if splashTime >= 0.3f and inIntro:
+      inIntro = false
+      safeTransition:
+        splashUnit = none[Unit]()
+        mode = gmPlaying
+        playMap(map1)
+        effectTutorial(vec2())
   else:
     #draw menu
 
