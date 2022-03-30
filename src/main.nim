@@ -550,18 +550,15 @@ makeSystem("core", []):
     if save.scores.len < maps.len:
       save.scores.setLen(maps.len)
     
-    if not save.introDone and save.units.len < 2:
+    #play the intro once
+    if not save.introDone:
       mode = gmIntro
       save.introDone = true
       saveGame()
 
     #TODO remove
-    #when defined(debug):
-    #  mode = gmIntro
-    
     when defined(debug):
-      playMap(map5, 0.0)
-      mode = gmPlaying
+      mode = gmIntro
   
   #yeah this would probably work much better as a system group
   makePaused(
@@ -573,6 +570,10 @@ makeSystem("core", []):
 
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
+    if mode == gmPlaying:
+      soundUnpause.play()
+    else:
+      soundPause.play()
   
   #trigger game over
   if mode == gmPlaying and health() <= 0:
@@ -1193,6 +1194,7 @@ makeSystem("drawUI", []):
       safeTransition:
         reset()
         mode = gmMenu
+        soundBack.play()
     
     #flash screen animation after winning
     if mode == gmFinished:
@@ -1215,6 +1217,7 @@ makeSystem("drawUI", []):
     if keySpace.tapped or keyEscape.tapped:
       mode = gmMenu
       inIntro = true
+      soundIntro.play()
       showSplashUnit(unitAlpha)
 
     draw(fau.white, vec2(), size = fau.cam.size, color = colorBlack.withA(1f - introTime))
@@ -1259,6 +1262,14 @@ makeSystem("drawUI", []):
       unit = splashUnit.get
       baseScl = inv.pow(14f)
       scl = vec2(0.17f) * baseScl
+    
+    if splashRevealTime < 0f:
+      if unit == unitBoulder:
+        soundVineBoom.play()
+      elif unit == unitNothing:
+        soundWind3.play()
+      else:
+        soundGet.play()
     
     draw(fau.white, vec2(), size = fau.cam.size, color = colorUiDark)
     patZoom(colorUi, inv.pow(2f), 10, sides = 4)
@@ -1327,12 +1338,13 @@ makeSystem("drawUI", []):
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
+        soundBack.play()
         splashTime = 0f
     
     #flash
     draw(fau.white, fau.cam.pos, size = fau.cam.size, color = rgba(1f, 1f, 1f, 1f - splashTime.powout(6f)))
   
-    if splashTime >= 0.3f and inIntro:
+    if splashTime >= 0.34f and inIntro:
       inIntro = false
       safeTransition:
         splashUnit = none[Unit]()
@@ -1438,6 +1450,7 @@ makeSystem("drawUI", []):
       saveGame()
 
       splashRevealTime = 1f
+      musicReveal.play()
       showSplashUnit(unit)
     
     #outline around everything
