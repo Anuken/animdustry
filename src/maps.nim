@@ -681,7 +681,7 @@ template createMaps() =
     beatOffset: 0f / 1000f,
     maxHits: 10,
     copperAmount: 9,
-    fadeColor: %"33256f",
+    fadeColor: %"fa874c",
     drawPixel: (proc() =
       #TODO better background, with beats
       patBackground(%"b25aab")
