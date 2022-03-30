@@ -706,7 +706,7 @@ template createMaps() =
 
       draw("sun".patchConst, vec2(0f, 1.5f))
 
-      patSpinGradient(vec2(0f, 4f), (%"ffb65f").withA(0.7f), (%"fea956").withA(0f), 18f, 14, spacing = 1)
+      patSpinGradient(vec2(0f, 4f), (%"ffb65f").withA(0.7f), (%"fea956").withA(0f), 20f, 14, spacing = 1)
 
       #fillPoly(vec2(0f, 4f), 30, 3.3f, color = %"ff7157")
       #fillPoly(vec2(0f, 4f), 30, 3f, color = %"ffa95a")
