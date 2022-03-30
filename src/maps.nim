@@ -693,7 +693,7 @@ template createMaps() =
 
       #patFft(vec2(0f, 1.5f), 62f.px, color = %"fea955")
 
-     # draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
+      draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
 
       patCircles((%"d47ddd").mix(%"ffaa55", state.moveBeat * 0.8f), size = 1.5f..8f, amount = 120, seed = 10, moveSpeed = 0.1f)
 
