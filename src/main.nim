@@ -912,7 +912,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
           #damage shields instead
           if not other.input.shielded:
             state.hitTime = 1f
-            addPoints(-20)
+            addPoints(-15)
 
             #do not actually deal damage (iframes)
             if other.input.hitTurn < state.turn - 1:
@@ -1400,9 +1400,13 @@ makeSystem("drawUI", []):
         if unit == unitBoulder:
           soundVineboom.play()
       
-      #TODO
       if over and keyMouseLeft.tapped:
         showSplashUnit(unit)
+
+        if unit == unitBoulder:
+          soundVineBoom.play()
+        else:
+          soundView.play()
 
       if unit.jumping:
         unit.jump += fau.delta / 0.21f
