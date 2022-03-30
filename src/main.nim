@@ -557,8 +557,8 @@ makeSystem("core", []):
       saveGame()
 
     #TODO remove
-    when defined(debug):
-      mode = gmIntro
+    #when defined(debug):
+    #  mode = gmIntro
   
   #yeah this would probably work much better as a system group
   makePaused(
