@@ -556,12 +556,12 @@ makeSystem("core", []):
       saveGame()
 
     #TODO remove
-    when defined(debug):
-      mode = gmIntro
-    
     #when defined(debug):
-    #  playMap(map5, 0.0)
-    #  mode = gmPlaying
+    #  mode = gmIntro
+    
+    when defined(debug):
+      playMap(map5, 0.0)
+      mode = gmPlaying
   
   #yeah this would probably work much better as a system group
   makePaused(

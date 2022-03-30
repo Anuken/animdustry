@@ -268,7 +268,7 @@ proc patBounceSquares(col = colorWhite) =
 
       fillPoly(vec2(x.float32, y.float32) * size, 4, size / 2f * (1f - res.lerp(inv, state.moveBeat.pow(15f)) * 0.5f + state.moveBeat.pow(5f) * 0.3f), color = col)
 
-proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
+proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1, size = 2f..7f, moveSpeed = 0.2f) =
   let partRange = 18f 
   
   var r = initRand(seed)
@@ -276,9 +276,9 @@ proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   for i in 0..<amount:
     var pos = vec2(r.range(partRange), r.range(partRange))
     let
-      speed = r.rand(0.8f..2f) * 0.2f
+      speed = r.rand(0.8f..2f) * moveSpeed
       rot = r.range(180f.rad)
-      size = r.rand(2f..7f).px
+      size = r.rand(size).px
 
     pos += vec2l(rot, speed) * time * speed
     pos = fau.cam.viewport.wrap(pos, 1f)
