@@ -64,7 +64,7 @@ let
   unitCrawler* = Unit(
     name: "crawler",
     title: "-CRAWLER-",
-    subtitle: "",
+    subtitle: "boom",
     ability: "destroys 4 adjacent blocks every 4 moves",
     abilityReload: 4
   )
@@ -92,7 +92,7 @@ let
   unitSei* = Unit(
     name: "sei",
     title: "-SEI-",
-    subtitle: "",
+    subtitle: "crossed out",
     ability: "destroys blocks in a diagonal cross every 4 moves",
     abilityReload: 4
   )
