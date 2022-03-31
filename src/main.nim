@@ -27,7 +27,11 @@ type Beatmap = ref object
   copperAmount: int
 
 type Gamemode = enum
+  #in game intro headphones screen
   gmIntro
+  #credits screen off of the menu
+  gmCredits,
+  #is in the main menu
   gmMenu,
   #currently in track
   gmPlaying,
@@ -91,6 +95,7 @@ type SaveState = object
 const
   #pixels
   tileSize = 20f
+
   hitDuration = 0.6f
   noMusic = false
   mapSize = 6
@@ -108,6 +113,7 @@ const
   switchDelay = 0.5f
   transitionTime = 0.2f
   transitionPow = 1f
+  ingameModes = {gmPaused, gmPlaying, gmDead, gmFinished}
 
 var
   audioLatency = 0.0
@@ -138,6 +144,8 @@ var
   pauseTime: float32
   #1 when score changes
   scoreTime: float32
+  #increments while credits are shown
+  creditsPan: float32
   #if true, score change was positive
   scorePositive: bool
   
@@ -160,6 +168,7 @@ register(defaultComponentOptions):
       shielded: bool
       fails: int
       moves: int
+      shieldCharge: int
   
     GridPos = object
       vec: Vec2i
@@ -563,10 +572,6 @@ makeSystem("core", []):
       mode = gmIntro
       save.introDone = true
       saveGame()
-
-    #TODO remove
-    #when defined(debug):
-    #  mode = gmIntro
   
   #yeah this would probably work much better as a system group
   makePaused(
@@ -654,7 +659,7 @@ makeSystem("updateMusic", []):
       #fraction that was actually obtained
       perfectFraction = (state.points / perfectPoints).min(1f)
       #final amount based on score
-      resultAmount = 1 + (perfectFraction * maxCopper * healthMultiplier).int + (if state.map.highScore == 0: completionCopper else: 0)
+      resultAmount = max((perfectFraction * maxCopper * healthMultiplier).int + (if state.map.highScore == 0: completionCopper else: 0), 1)
 
     state.copperReceived = resultAmount
     save.copper += resultAmount
@@ -1044,13 +1049,21 @@ makeSystem("drawBackground", []):
     drawPixel:
       patSpin(%"23232c", %"49474d")
       patVertGradient(colorBlack)
-  elif mode != gmMenu:
+  elif mode in ingameModes:
     if state.map.drawPixel != nil:
       drawPixel:
         state.map.drawPixel()
 
     if state.map.draw != nil:
       state.map.draw()
+  elif mode == gmCredits:
+    drawPixel:
+      patStripes(%"332d4f", %"130d24")
+      patVertGradient(%"130d24")
+    
+    patSkats()
+
+
   elif splashUnit.isNone: 
     #draw menu background
     drawPixel:
@@ -1161,7 +1174,7 @@ makeSystem("drawUI", []):
     state.healTime -= fau.delta / 0.4f
     state.healTime = state.healTime.max(0f)
 
-  if mode != gmPlaying and mode != gmMenu and mode != gmIntro:
+  if mode != gmPlaying and mode in ingameModes:
     let transitionTime = if mode == gmPaused: 0.5f else: 2.3f
     
     pauseTime += fau.delta / transitionTime
@@ -1231,7 +1244,7 @@ makeSystem("drawUI", []):
       showSplashUnit(unitAlpha)
 
     draw(fau.white, vec2(), size = fau.cam.size, color = colorBlack.withA(1f - introTime))
-  elif mode != gmMenu:
+  elif mode in ingameModes:
     #draw debug text
     when defined(debug):
       defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {fau.fps} fps", fau.cam.view, align = daBot)
@@ -1361,7 +1374,7 @@ makeSystem("drawUI", []):
         mode = gmPlaying
         playMap(map1)
         effectTutorial(vec2())
-  else:
+  elif mode == gmMenu:
     #draw menu
 
     let
@@ -1441,14 +1454,15 @@ makeSystem("drawUI", []):
       draw(patch, vec2(x, y + jumpScl * 6f.px), 
         align = daBot, 
         mixColor = if unlock.not: rgb(0.26f) else: rgba(1f, 1f, 1f, unit.fade * 0.2f), 
-        scl = vec2(1f + click * 0.1f, 1f - click * 0.1f)
+        scl = vec2(1f + click * 0.1f, 1f - click * 0.1f),
+        z = 1f
       )
     
     #TODO remove
     when defined(debug):
       save.copper = 10
 
-    #must be after units so shown stuff doesn't disappear
+    #must be after units so the unlocked unit does not appear right before rendering
     if button(rectCenter(statsBounds.centerX, buttonY, 3f, 1f), "Roll", disabled = save.copper < copperForRoll, style = bstyle):
       save.copper -= copperForRoll
       let unit = rollUnit()
@@ -1472,6 +1486,11 @@ makeSystem("drawUI", []):
     
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
+
+    if button(rectCenter(screen.topRight - vec2(0.5f), 1f, 1f), icon = "info".patchConst):
+      safeTransition:
+        creditsPan = 0f
+        mode = gmCredits
 
     var anyHover = false
 
@@ -1537,6 +1556,24 @@ makeSystem("drawUI", []):
     
     if not anyHover:
       sys.hoverLevel = -1
+
+  elif mode == gmCredits:
+    let screen = fau.cam.view
+
+    creditsPan -= fau.delta * 1.3f
+
+    if keyMouseLeft.down or keySpace.down:
+      creditsPan -= fau.delta * 3f
+
+    let offset = creditsPan * 0.4f + screen.h - 1f
+
+    #TODO
+    defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
+
+    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
+      safeTransition:
+        soundBack.play()
+        mode = gmMenu
   
   drawFlush()
 

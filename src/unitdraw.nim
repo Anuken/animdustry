@@ -300,8 +300,15 @@ template createUnits() =
       addPoints(1)
 
   unitOct.abilityProc = proc(entity: EntityRef, moves: int) =
-    if moves mod 30 == 0:
-      entity.fetch(Input).shielded = true
+    var input = entity.fetch(Input)
+    if input.shielded:
+      input.shieldCharge = 0
+    else:
+      input.shieldCharge.inc
+
+      if input.shieldCharge >= 30:
+        input.shielded = true
+        input.shieldCharge = 0
   
   unitCrawler.abilityProc = proc(entity: EntityRef, moves: int) =
     let pos = entity.fetch(GridPos).vec

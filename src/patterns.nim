@@ -163,6 +163,27 @@ proc patPetals() =
 
     draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
+proc patSkats() =
+  let 
+    amount = 50
+    partRange = 18f
+    move = vec2(-0.5f, 0.5f)
+  
+  var r = initRand(1)
+  
+  for i in 0..<amount:
+    var pos = vec2(r.range(partRange), r.range(partRange))
+    let
+      speed = r.rand(1f..2f)
+      rot = 135f.rad#r.range(180f.rad)
+      rotSpeed = r.range(0.6f)
+      scale = r.rand(0.5f..1f)
+
+    pos += move * fau.time * speed * 0.8f
+    pos = fau.cam.viewport.wrap(pos, 2f)
+
+    draw("skat".patchConst, pos, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
+
 proc patClouds(col = colorWhite) =
   var clouds {.global.}: array[4, Patch]
 
@@ -551,3 +572,143 @@ template patSpace(col: Color) =
     time = musicTime() / 6f
     power = 0f
     color = col
+
+const creditsText = """
+- C R E D I T S - 
+
+Art: Anuke
+(yes yes, I still need a lot of practice)
+
+Character Designs: Anuke
+
+SFX: Anuke
+(basically just some Sytrus presets)
+
+Testing & Feedback: Hai Yo, Epowerj
+
+Art Advice: Hai Yo
+
+Music:
+
+(All tracks are under Creative Commons - thank you for permissively licensing your work!)
+
+1. Aritus - For You
+soundcloud.com/aritusmusic/4you
+
+2. PYC - Stoplight
+soundcloud.com/pycmusic/stoplight
+
+3. Keptor's Room - Bright 79
+soundcloud.com/topazeclub/bright-79
+
+4. Aritus - Pina Colada II
+soundcloud.com/aritusmusic/pina-colada-ii-final
+
+5. ADRIANWAVE - Peach Beach
+soundcloud.com/adrianwave/peach-beach
+
+
+This game was written entirely in the Nim programming language!
+(I will be releasing the source after I clean it up a bit)
+
+Thank you @treeform and @rlipsc on Github for their excellent Nim libraries!
+
+
+------
+
+THANK YOU FOR PLAYING!
+
+More v7 previews and development coming soon. Yes, I basically haven't worked on it for a month due to this event.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(there is nothing else here go away)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(really)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.
+"""

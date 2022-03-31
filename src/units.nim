@@ -56,6 +56,7 @@ let
   unitOct* = Unit(
     name: "oct",
     title: "-OCT-",
+    subtitle: "the protector",
     ability: "creates a shield every 30 moves",
     #too long, not important
     #abilityReload: 30
@@ -63,6 +64,7 @@ let
   unitCrawler* = Unit(
     name: "crawler",
     title: "-CRAWLER-",
+    subtitle: "",
     ability: "destroys 4 adjacent blocks every 4 moves",
     abilityReload: 4
   )
@@ -83,7 +85,7 @@ let
   unitOxynoe* = Unit(
     name: "oxynoe",
     title: "-OXYNOE-",
-    subtitle: "at long last",
+    subtitle: "as was foretold",
     ability: "destroys alternating adjacent blocks every other move",
     abilityReload: 2
   )
