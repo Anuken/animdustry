@@ -618,7 +618,7 @@ Thank you @treeform and @rlipsc on Github for their excellent Nim libraries!
 
 THANK YOU FOR PLAYING!
 
-More v7 previews and development coming soon. Yes, I basically haven't worked on it for a month due to this event.
+More v7 previews and development coming soon.
 
 
 
