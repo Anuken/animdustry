@@ -112,7 +112,8 @@ proc rollUnit*(): Unit =
     return unitNothing
 
   #boulder has a much higher chance to be selected, because it's useless
-  if chance(0.42f):
+  if chance(0.4f):
     return unitBoulder
 
-  return sample(allUnits)
+  #not all units; alpha and boulder are excluded
+  return sample([unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei])

@@ -680,7 +680,7 @@ template createMaps() =
     bpm: 121f,
     beatOffset: 0f / 1000f,
     maxHits: 10,
-    copperAmount: 9,
+    copperAmount: 8,
     fadeColor: %"fa874c",
     drawPixel: (proc() =
       #TODO better background, with beats

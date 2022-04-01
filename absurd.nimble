@@ -35,11 +35,11 @@ task pack, "Pack textures":
 task debug, "Debug build":
   shell &"nim r -d:debug src/{app}"
 
+task debugBin, "Create debug build file":
+  shell &"nim -d:debug -o:build/{app} --debugger:native src/{app}"
+
 task release, "Release build":
   shell &"nim r -d:release -d:danger -o:build/{app} src/{app}"
-
-task lib, "Create library for testing":
-  shell &"nim c -f -d:danger {libArgs} -o:build/libabsurd.so src/{app}"
 
 task web, "Deploy web build":
   mkDir "build/web"
@@ -107,25 +107,3 @@ task android, "Build android version of lib":
     cd "../../../"
   
   shell "cp -r android/build/libs/* build/lib"
-
-task libs, "Create libraries for all platforms":
-  rmDir "build/libs"
-  mkDir "build"
-
-  for name, os, cpu, args in builds.items:
-    if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
-        continue
-    
-    if (os == "macosx") != defined(macosx):
-      continue
-    
-    let
-      prefix = if os == "windows": "" else: "lib"
-      exeName = prefix & "absurd64"
-      libExt = if os == "windows": ".dll" else: ".so"
-      bin = "build/lib/" / exeName & libExt
-
-    shell &"nim --cpu:{cpu} --os:{os} {libArgs} -f {args} -d:danger -o:{bin} c src/{app}"
-    shell &"strip -s {bin}"
-  
-  androidTask()
