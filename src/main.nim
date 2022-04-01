@@ -92,13 +92,6 @@ onEcsBuilt:
           #block destruction -> extra points
           addPoints(1)
 
-#All passed systems will be paused when game state is not playing
-macro makePaused(systems: varargs[untyped]): untyped =
-  result = newStmtList()
-  for sys in systems:
-    result.add quote do:
-      `sys`.paused = (mode != gmPlaying)
-
 template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
 template transition(body: untyped) =
@@ -256,6 +249,13 @@ makeSystem("core", []):
       save.introDone = true
       saveGame()
   
+  #All passed systems will be paused when game state is not playing
+  macro makePaused(systems: varargs[untyped]): untyped =
+    result = newStmtList()
+    for sys in systems:
+      result.add quote do:
+        `sys`.paused = (mode != gmPlaying)
+
   #yeah this would probably work much better as a system group
   makePaused(
     sysUpdateMusic, sysDeleting, sysUpdateMap, sysPosLerp, sysInput, sysTimed, sysScaled, 
@@ -1186,7 +1186,7 @@ makeSystem("drawUI", []):
 
       var
         offset = sys.levelFade[i]
-        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
+        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced - 0.01f, bounds.h)
         over = r.contains(mouse)
 
       sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
