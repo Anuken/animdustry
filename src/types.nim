@@ -1,4 +1,4 @@
-import ecs, options, tables
+import ecs, tables
 
 type Beatmap* = ref object
   name*: string
@@ -18,11 +18,37 @@ type Beatmap* = ref object
   #in seconds
   beatOffset*: float
   #max hits taken in this map before game over
-  maxHits: int
+  maxHits*: int
   #can be null! this is pixelated
   preview*: Framebuffer
   #amount of copper that you get on completing this map with perfect score (0 = default)
   copperAmount*: int
+
+type Unit* = ref object
+  name*: string
+  title*: string
+  subtitle*: string
+  #displayed in bottom right info
+  ability*: string
+  #number to display in reload bar
+  abilityReload*: int
+  #called every move (optional)
+  abilityProc*: proc(unit: EntityRef, moves: int)
+  #draw the unit in the splash screen
+  draw*: proc(unit: Unit, pos: Vec2) {.nimcall.}
+  #cached textures
+  textures*: Table[string, Texture]
+  #true for boulder
+  unmoving*: bool
+  #true for "nothing"
+  unobtainable*: bool
+
+  #UI state (ugh)
+  wasOver*: bool
+  fade*: float32
+  jump*: float32
+  jumping*: bool
+  clickTime*: float32
 
 type Gamemode* = enum
   #in game intro headphones screen

@@ -1,9 +1,9 @@
-import sugar
+import sugar, vars, core, types, math
 
 var
-  map1, map2, map3, map4, map5: Beatmap
+  map1*, map2*, map3*, map4*, map5*: Beatmap
 
-template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
+template delayBullet*(pos: Vec2i, dir: Vec2i, tex = "") =
   let 
     p = pos
     d = dir
@@ -11,15 +11,15 @@ template delayBullet(pos: Vec2i, dir: Vec2i, tex = "") =
     runDelay:
       makeBullet(p, d, tex)
 
-template delayBulletWarn(pos: Vec2i, dir: Vec2i, tex = "") =
+template delayBulletWarn*(pos: Vec2i, dir: Vec2i, tex = "") =
   delayBullet(pos, dir, tex)
   effectWarnBullet(pos.vec2, rot = dir.vec2.angle, life = beatSpacing())
 
-template bulletCircle(pos: Vec2i, tex = "") =
+template bulletCircle*(pos: Vec2i, tex = "") =
   for dir in d8():
     makeBullet(pos, dir, tex)
 
-template laser(pos, dir: Vec2i) =
+template laser*(pos, dir: Vec2i) =
   effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 3f, rot = dir.vec2.angle)
   
   let p = pos
@@ -34,10 +34,10 @@ template laser(pos, dir: Vec2i) =
       runDelayi 1:
         makeLaser(dest, dir)
 
-proc modSize(num: int): int =
+proc modSize*(num: int): int =
   num.mod(mapSize * 2 + 1) - mapSize
 
-template createMaps() =
+template createMaps* =
   map1 = BeatMap(
     songName: "Aritus - For You",
     sound: musicAritusForYou,

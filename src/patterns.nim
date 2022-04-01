@@ -1,5 +1,7 @@
 
-proc patFft(pos: Vec2, radius = 90f.px, length = 8f, color = colorWhite) =
+import vars, core, math, random
+
+proc patFft*(pos: Vec2, radius = 90f.px, length = 8f, color = colorWhite) =
   let 
     w = 20.px
   
@@ -7,7 +9,7 @@ proc patFft(pos: Vec2, radius = 90f.px, length = 8f, color = colorWhite) =
     let rot = i / fftSize.float32 * pi2
     draw(fau.white, vec2l(rot, radius) + pos, size = vec2(fftValues[i].px * length, w), rotation = rot, align = daLeft, origin = vec2(0f, w / 2f), color = color)
 
-proc patTiles() =
+proc patTiles*() =
   for x in -mapSize..mapSize:
     for y in -mapSize..mapSize:
       let 
@@ -15,7 +17,7 @@ proc patTiles() =
         strength = (absed == 0).float32 * state.moveBeat
       draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
-proc patTilesFft() =
+proc patTilesFft*() =
   for x in -mapSize..mapSize:
     for y in -mapSize..mapSize:
       let 
@@ -24,7 +26,7 @@ proc patTilesFft() =
         strength = (scaled < fftValues[val] / 13f).float32
       draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
-proc patTilesSquare(col = colorWhite, col2 = colorBlue) =
+proc patTilesSquare*(col = colorWhite, col2 = colorBlue) =
   for x in -mapSize..mapSize:
     for y in -mapSize..mapSize:
       let 
@@ -32,11 +34,11 @@ proc patTilesSquare(col = colorWhite, col2 = colorBlue) =
         strength = (absed == 0).float32 * state.moveBeat
       draw("tile".patchConst, vec2(x, y), color = col.mix(col2, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
-proc patBackground(col: Color) =
+proc patBackground*(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
 
 #moving stripes
-proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle = 135f.rad) =
+proc patStripes*(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle = 135f.rad) =
   patBackground(col1)
   
   let 
@@ -49,17 +51,17 @@ proc patStripes(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle 
         pos = vec2l(angle, swidth) * (frac * amount)
       draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = angle, color = col2)
 
-proc patBeatSquare(col = colorPink.mix(colorWhite, 0.7f)) =
+proc patBeatSquare*(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
 
-proc patBeatAlt(col: Color) =
+proc patBeatAlt*(col: Color) =
   poly(vec2(), 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
 
-proc patTriSquare(pos: Vec2, col: Color, len = 4f, rad = 2f, offset = 45f.rad, amount = 4, sides = 3, shapeOffset = 0f.rad) =
+proc patTriSquare*(pos: Vec2, col: Color, len = 4f, rad = 2f, offset = 45f.rad, amount = 4, sides = 3, shapeOffset = 0f.rad) =
   for i in 0..<amount:
     fillPoly(vec2l(i * (360f.rad / amount) + offset, len) + pos, sides, rad, color = col, rotation = i * (360f.rad / amount) + offset + shapeOffset)
 
-proc patSpin(col1, col2: Color, blades = 10) =
+proc patSpin*(col1, col2: Color, blades = 10) =
   let 
     len = max(fau.cam.size.x, fau.cam.size.y)
     space = 360f.rad / blades
@@ -72,7 +74,7 @@ proc patSpin(col1, col2: Color, blades = 10) =
       if i mod 2 == 0: col1 else: col2
     )
 
-proc patSpinGradient(pos: Vec2, col1, col2: Color, len = 5f, blades = 10, spacing = 2) =
+proc patSpinGradient*(pos: Vec2, col1, col2: Color, len = 5f, blades = 10, spacing = 2) =
   let 
     space = 360f.rad / blades
 
@@ -88,7 +90,7 @@ proc patSpinGradient(pos: Vec2, col1, col2: Color, len = 5f, blades = 10, spacin
         #if i mod 2 == 0: col1 else: col2
       )
 
-proc patSpinShape(col: Color, col2 = col, sides = 4, rad = 3f, turnSpeed = 19f.rad, rads = 6, radsides = 4, radoff = 7f, radrad = 1.3f, radrotscl = 0.25f) =
+proc patSpinShape*(col: Color, col2 = col, sides = 4, rad = 3f, turnSpeed = 19f.rad, rads = 6, radsides = 4, radoff = 7f, radrad = 1.3f, radrotscl = 0.25f) =
   let 
     radius = rad + state.moveBeat.pow(2f) * 6f.px
     rc = col.mix(col2, state.moveBeat.pow(3f))
@@ -102,14 +104,14 @@ proc patSpinShape(col: Color, col2 = col, sides = 4, rad = 3f, turnSpeed = 19f.r
 
     fillPoly(vec2l(angle, radoff), radsides, radrad, angle, color = rc)
 
-proc patShapeBack(col1, col2: Color, sides = 4, spacing = 2.5f, angle = 90f.rad) =
+proc patShapeBack*(col1, col2: Color, sides = 4, spacing = 2.5f, angle = 90f.rad) =
   let amount = (fau.cam.size.x.max(fau.cam.size.y) / spacing).int + 1
 
   fillPoly(vec2(), sides, spacing, color = col1, rotation = angle)
   for i in 1..amount:
     poly(vec2(), sides, (i + 0.5f) * spacing, rotation = angle, stroke = spacing, color = if (i and 1) == 0: col1 else: col2)
 
-proc patFadeShapes(col: Color) =
+proc patFadeShapes*(col: Color) =
   const 
     fadeSides = 4
     fadeCount = 10
@@ -122,7 +124,7 @@ proc patFadeShapes(col: Color) =
   for i in 0..<fadeCount:
     drawFade((i - (state.turn + (1f - state.moveBeat).powout(6f)) * fscl).emod(fadeCount))
 
-proc patRain(amount = 80) =
+proc patRain*(amount = 80) =
   let 
     partRange = 30f
     move = vec2(-0.5f, -0.5f)
@@ -141,7 +143,7 @@ proc patRain(amount = 80) =
     fillPoly(pos - move*0.5f, 4, size/2f, color = col)
     fillPoly(pos - move*0.9f, 4, size/4f, color = col)
 
-proc patPetals() =
+proc patPetals*() =
   let 
     parts = 50
     partRange = 18f
@@ -163,7 +165,7 @@ proc patPetals() =
 
     draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
-proc patSkats() =
+proc patSkats*() =
   let 
     amount = 50
     partRange = 18f
@@ -184,7 +186,7 @@ proc patSkats() =
 
     draw("skat".patchConst, pos, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
-proc patClouds(col = colorWhite) =
+proc patClouds*(col = colorWhite) =
   var clouds {.global.}: array[4, Patch]
 
   once:
@@ -210,7 +212,7 @@ proc patClouds(col = colorWhite) =
 
     draw(sprite, pos, color = col, scl = scale.vec2)
 
-proc patLongClouds(col = colorWhite) =
+proc patLongClouds*(col = colorWhite) =
   var clouds {.global.}: array[5, Patch]
 
   once:
@@ -236,7 +238,7 @@ proc patLongClouds(col = colorWhite) =
 
     draw(sprite, pos, color = col, scl = scale.vec2)
 
-proc patStars(col = colorWhite, flash = colorWhite, amount = 40, seed = 1) =
+proc patStars*(col = colorWhite, flash = colorWhite, amount = 40, seed = 1) =
   var stars {.global.}: array[3, Patch]
 
   once:
@@ -256,7 +258,7 @@ proc patStars(col = colorWhite, flash = colorWhite, amount = 40, seed = 1) =
 
     draw(sprite, pos.round(1f / tileSize), color = col.mix(flash, state.moveBeat))
 
-proc patTris(col1 = colorWhite, col2 = colorWhite, amount = 50, seed = 1) =
+proc patTris*(col1 = colorWhite, col2 = colorWhite, amount = 50, seed = 1) =
   let 
     partRange = 18f
     move = vec2(-0.3f, -0.5f)
@@ -276,7 +278,7 @@ proc patTris(col1 = colorWhite, col2 = colorWhite, amount = 50, seed = 1) =
 
     fillPoly(pos, 3, scale * 14f.px, color = col1.mix(col2, state.moveBeat), rotation = rot + state.time * rotSpeed)
 
-proc patBounceSquares(col = colorWhite) =
+proc patBounceSquares*(col = colorWhite) =
   let 
     size = 2f
     bounds = (fau.cam.size / 2f / size).vec2i
@@ -289,7 +291,7 @@ proc patBounceSquares(col = colorWhite) =
 
       fillPoly(vec2(x.float32, y.float32) * size, 4, size / 2f * (1f - res.lerp(inv, state.moveBeat.pow(15f)) * 0.5f + state.moveBeat.pow(5f) * 0.3f), color = col)
 
-proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1, size = 2f..7f, moveSpeed = 0.2f) =
+proc patCircles*(col = colorWhite, time = state.time, amount = 50, seed = 1, size = 2f..7f, moveSpeed = 0.2f) =
   let partRange = 18f 
   
   var r = initRand(seed)
@@ -306,7 +308,7 @@ proc patCircles(col = colorWhite, time = state.time, amount = 50, seed = 1, size
 
     fillCircle(pos, size, color = col)
 
-proc patRadTris(col = colorWhite, time = state.time, amount = 50, seed = 1) =
+proc patRadTris*(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   let partRange = 18f 
   
   var r = initRand(seed)
@@ -323,7 +325,7 @@ proc patRadTris(col = colorWhite, time = state.time, amount = 50, seed = 1) =
 
     fillPoly(pos, 3, size, color = col, rotation = pos.angle)
 
-proc patMissiles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
+proc patMissiles*(col = colorWhite, time = state.time, amount = 50, seed = 1) =
   let partRange = 18f 
   
   var r = initRand(seed)
@@ -341,7 +343,7 @@ proc patMissiles(col = colorWhite, time = state.time, amount = 50, seed = 1) =
     for index, scl in [1f, 0.75f, 0.5f, 0.25f]:
       fillCircle(pos - vec2l(45f.rad, index.float32 * 0.5f) * 1.1f, size * scl, color = col)
 
-proc patFallSquares(col = colorWhite, col2 = colorWhite, time = state.time, amount = 50) =
+proc patFallSquares*(col = colorWhite, col2 = colorWhite, time = state.time, amount = 50) =
   let partRange = fau.cam.size.x / 2f 
   
   var r = initRand(1)
@@ -357,7 +359,7 @@ proc patFallSquares(col = colorWhite, col2 = colorWhite, time = state.time, amou
 
     draw(fau.white, pos, size = size.vec2, color = col.mix(col2, life), rotation = rot)
 
-proc patFlame(col = colorWhite, col2 = colorWhite, time = state.time, amount = 80) =
+proc patFlame*(col = colorWhite, col2 = colorWhite, time = state.time, amount = 80) =
   let partRange = fau.cam.size.x / 2f 
   
   var r = initRand(1)
@@ -374,7 +376,7 @@ proc patFlame(col = colorWhite, col2 = colorWhite, time = state.time, amount = 8
 
     fillCircle(pos, size / 2f, color = col.mix(col2, life))
 
-proc patSquares(col = colorWhite, time = state.time, amount = 50, seed = 2) =
+proc patSquares*(col = colorWhite, time = state.time, amount = 50, seed = 2) =
   let partRange = 18f 
   
   var r = initRand(seed)
@@ -392,12 +394,12 @@ proc patSquares(col = colorWhite, time = state.time, amount = 50, seed = 2) =
 
     draw(fau.white, pos, size = size.vec2 * 2f, color = col, rotation = 45f.rad)
 
-proc roundLine(pos: Vec2, angle: float32, len: float32, color = colorWhite, stroke = 1f) =
+proc roundLine*(pos: Vec2, angle: float32, len: float32, color = colorWhite, stroke = 1f) =
   lineAngleCenter(pos, angle, len, color = color, stroke = stroke)
   for i in signs():
     fillCircle(vec2l(angle, len/2f + stroke/2f) * i.float32 + pos, stroke / 2f, color = color)
 
-proc patLines(col = colorWhite, seed = 1, amount = 30, angle = 45f.rad) =
+proc patLines*(col = colorWhite, seed = 1, amount = 30, angle = 45f.rad) =
   let 
     spread = 13.5f
     stroke = 0.25f
@@ -414,7 +416,7 @@ proc patLines(col = colorWhite, seed = 1, amount = 30, angle = 45f.rad) =
     
     roundLine(pos, angle, len, col, stroke)
 
-proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f, posScl = 1f, lenScl = 1f) =
+proc patRadLines*(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f, posScl = 1f, lenScl = 1f) =
   var r = initRand(seed)
   
   for i in 0..<amount:
@@ -428,7 +430,7 @@ proc patRadLines(col = colorWhite, seed = 6, amount = 40, stroke = 0.25f, posScl
     
     roundLine(pos, angle, len, col, stroke)
 
-proc patRadCircles(col = colorWhite, seed = 7, amount = 40, fin = 0.5f) =
+proc patRadCircles*(col = colorWhite, seed = 7, amount = 40, fin = 0.5f) =
   var r = initRand(seed)
   
   for i in 0..<amount:
@@ -440,12 +442,12 @@ proc patRadCircles(col = colorWhite, seed = 7, amount = 40, fin = 0.5f) =
     
     fillCircle(pos, rad, color = col)
 
-proc patSpikes(pos: Vec2, col = colorWhite, amount = 10, offset = 8f, len = 3f, angleOffset = 0f) =
+proc patSpikes*(pos: Vec2, col = colorWhite, amount = 10, offset = 8f, len = 3f, angleOffset = 0f) =
   for i in 0..<amount:
     let angle = i.float32 / amount * 360f.rad + angleOffset
     roundLine(pos + vec2l(angle, offset), angle, len, col, 0.25f)
 
-proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 = colorClear) =
+proc patGradient*(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 = colorClear) =
   let r = fau.cam.viewport
 
   let uv = fau.white.uv
@@ -456,15 +458,15 @@ proc patGradient(col1 = colorClear, col2 = colorClear, col3 = colorClear, col4 =
     vert2(r.topLeft, uv, col4, colorClear),
   ])
 
-proc patVertGradient(col1 = colorClear, col2 = colorClear) =
+proc patVertGradient*(col1 = colorClear, col2 = colorClear) =
   patGradient(col1, col1, col2, col2)
 
-proc patZoom(col = colorWhite, offset = 0f, amount = 10, sides = 4) =
+proc patZoom*(col = colorWhite, offset = 0f, amount = 10, sides = 4) =
   for i in 0..<amount:
     let frac = (i / amount + offset).mod(1f)
     poly(vec2(), sides, 1f + frac.pow(1.3f) * 44f, stroke = frac * 5f, color = col)
 
-proc patFadeOut(time: float32) =
+proc patFadeOut*(time: float32) =
   let 
     view = fau.cam.viewport
     shiftLen = view.w + view.h
@@ -478,7 +480,7 @@ proc patFadeOut(time: float32) =
     colorUi
   )
 
-proc patFadeIn(time: float32) =
+proc patFadeIn*(time: float32) =
   let 
     view = fau.cam.viewport
     shiftLen = view.w + view.h
@@ -492,9 +494,9 @@ proc patFadeIn(time: float32) =
     colorUi
   )
 
-var spaceShader: Shader
+var spaceShader*: Shader
 
-template patSpace(col: Color) =
+template patSpace*(col: Color) =
   if spaceShader.isNil:
     spaceShader = newShader(
       screenspaceVertex,
@@ -573,7 +575,7 @@ template patSpace(col: Color) =
     power = 0f
     color = col
 
-const creditsText = """
+const creditsText* = """
 - C R E D I T S - 
 
 Art: Anuke

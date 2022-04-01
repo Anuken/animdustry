@@ -1,4 +1,4 @@
-import jsony, zippy, os
+import jsony, zippy, os, vars, types, strformat
 
 #TODO: android support???
 let 
@@ -23,7 +23,7 @@ proc dumpHook*(s: var string, u: Unit) =
   s.add if u == nil: "nil" else: u.name
   s.add '"'
 
-proc saveGame =
+proc saveGame* =
   ## Saves game data to deflated JSON.
   let data = save.toJson()
   let comp = compress(data, dataFormat = dfDeflate)
@@ -35,7 +35,7 @@ proc saveGame =
   except IOError:
     echo "Error: Failed to write save data: {getCurrentExceptionMsg()}"
 
-proc loadGame =
+proc loadGame* =
   ## Loads game data from the save file. Does nothing if there is no data.
   if fileExists(dataFile):
     try:

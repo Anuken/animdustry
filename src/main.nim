@@ -1,159 +1,8 @@
-import ecs, fau/presets/[basic, effects], units, strformat, math, random, fau/g2/font, fau/g2/ui, fau/g2/bloom, macros, options, fau/assets, strutils, algorithm, sequtils, tables
+import ecs, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
+import std/[tables, sequtils, algorithm, macros, options, random, math, strformat]
+import types, vars, saveio, patterns, maps, sugar, units
 
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
-
-type Beatmap = ref object
-  name: string
-  songName: string
-  #draws backgrounds with the pixelation buffer
-  drawPixel: proc()
-  #draws non-pixelated background (tiles)
-  draw: proc()
-  #creates patterns
-  update: proc()
-  #used for conveyors and other objects fading in
-  fadeColor: Color
-  #music track to use
-  sound: Sound
-  #bpm for the music track
-  bpm: float
-  #in seconds
-  beatOffset: float
-  #max hits taken in this map before game over
-  maxHits: int
-  #can be null! this is pixelated
-  preview: Framebuffer
-  #amount of copper that you get on completing this map with perfect score (0 = default)
-  copperAmount: int
-
-type Gamemode = enum
-  #in game intro headphones screen
-  gmIntro
-  #credits screen off of the menu
-  gmCredits,
-  #is in the main menu
-  gmMenu,
-  #currently in track
-  gmPlaying,
-  #temporarily paused with space/esc
-  gmPaused,
-  #ran out of health
-  gmDead,
-  #finished track, diisplaying stats
-  gmFinished
-
-type GameState = object
-  map: Beatmap
-  #currently playing voice ID
-  voice: Voice
-  #smoothed position of the music track in seconds
-  secs: float
-  #last "discrete" music track position, internally used
-  lastSecs: float
-  #smooth game time, may not necessarily match seconds. visuals only!
-  time: float32
-  #last known player position
-  playerPos: Vec2i
-  #Raw beat calculated based on music position
-  rawBeat: float
-  #Beat calculated as countdown after a music beat happens. Smoother, but less precise.
-  moveBeat: float32
-  #if true, a new turn was just fired this rame
-  newTurn: bool
-  #snaps to 1 when player is hit for health animation
-  hitTime: float32
-  #snaps to 1 when player is healed
-  healTime: float32
-  #points awarded based on various events
-  points: int
-  #beats that have passed total
-  turn: int
-  copperReceived: int
-  hits: int
-  totalHits: int
-  misses: int
-  beatStats: string
-
-#Persistent user data.
-type SaveState = object
-  #true if intro is complete
-  introDone: bool
-  #all units that the player has collected (should be unique)
-  units: seq[Unit]
-  #"gambling tokens"
-  copper: int
-  #how many times the player has gambled
-  rolls: int
-  #map high scores by map index (0 = no completion)
-  scores: seq[int]
-  #last unit switched to - can be nil!
-  lastUnit: Unit
-  #duplicate count by unit name
-  duplicates: Table[string, int]
-
-#TODO better viewport
-const
-  #pixels
-  tileSize = 20f
-
-  hitDuration = 0.6f
-  noMusic = false
-  mapSize = 6
-  fftSize = 50
-  copperForRoll = 10
-  #copper received for first map completion
-  completionCopper = 10
-  defaultMapReward = 8
-  colorAccent = %"ffd37f"
-  colorUi = %"bfecf3"
-  colorUiDark = %"57639a"
-  colorHit =  %"ff584c"
-  colorHeal = %"84f490"
-  #time between character switches
-  switchDelay = 0.5f
-  transitionTime = 0.2f
-  transitionPow = 1f
-  ingameModes = {gmPaused, gmPlaying, gmDead, gmFinished}
-
-var
-  audioLatency = 0.0
-  maps: seq[Beatmap]
-  #Per-map state. Resets between games.
-  state = GameState()
-  #Persistent save state.
-  save = SaveState()
-  mode = gmMenu
-  fftValues: array[fftSize, float32]
-  titleFont: Font
-
-  #UI state section
-
-  smokeFrames: array[6, Patch]
-  explodeFrames: array[5, Patch]
-  hitFrames: array[5, Patch]
-  #currently shown unit in splash screen, null when no unit
-  splashUnit: Option[Unit]
-  inIntro: bool
-  #fade time for first game launch
-  introTime: float32
-  #splash screen fade-in time
-  splashTime: float32
-  #when >0, the splash screen is in "reveal" mode
-  splashRevealTime: float32
-  #increments when paused
-  pauseTime: float32
-  #1 when score changes
-  scoreTime: float32
-  #increments while credits are shown
-  creditsPan: float32
-  #if true, score change was positive
-  scorePositive: bool
-  
-  #transition time for fading between scenes
-  #when fading out, this will reach 1, call fadeTarget, and the fade back from 1 to 0
-  fadeTime: float32
-  #proc that will handle the fade-in when it happens - can be nil!
-  fadeTarget: proc()
 
 register(defaultComponentOptions):
   type 
@@ -341,8 +190,6 @@ GridPos.onAdd:
 #unit textures dynamically loaded
 preloadFolder("textures")
 
-include saveio
-
 #All passed systems will be paused when game state is not playing
 macro makePaused(systems: varargs[untyped]): untyped =
   result = newStmtList()
@@ -429,6 +276,29 @@ proc showSplashUnit(unit: Unit) =
   splashUnit = unit.some
   splashTime = 0f
 
+proc clearTextures*(unit: Unit) = unit.textures.clear()
+
+proc getTexture*(unit: Unit, name: string = ""): Texture =
+  ## Loads a unit texture from the textures/ folder. Result is cached. Crashes if the texture isn't found!
+  if not unit.textures.hasKey(name):
+    let tex = loadTextureAsset("textures/" & unit.name & name & ".png")
+    tex.filter = tfLinear
+    unit.textures[name] = tex
+    return tex
+  return unit.textures[name]
+
+proc rollUnit*(): Unit =
+  #very low chance, as it is annoying
+  if chance(2f / 100f):
+    return unitNothing
+
+  #boulder has a much higher chance to be selected, because it's useless
+  if chance(0.4f):
+    return unitBoulder
+
+  #not all units; alpha and boulder are excluded
+  return sample([unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei])
+
 onEcsBuilt:
   proc reset() =
     sysAll.clear()
@@ -487,17 +357,17 @@ proc calcPitch(note: int): float32 =
   return pow(a, indices[index].float + octave.float * 12f).float32
 
 proc highScore(map: Beatmap): int =
-  let index = maps.find(map)
+  let index = allMaps.find(map)
   return save.scores[index]
 
 proc `highScore=`(map: Beatmap, value: int) =
-  let index = maps.find(map)
+  let index = allMaps.find(map)
   if save.scores[index] != value:
     save.scores[index] = value
     saveGame()
 
 proc unlocked(map: Beatmap): bool =
-  let index = maps.find(map)
+  let index = allMaps.find(map)
   return index <= 0 or save.scores[index - 1] > 0 or save.scores[index] > 0
 
 proc health(): int = 
@@ -512,8 +382,6 @@ proc sortUnits =
     cmp(allUnits.find(a), allUnits.find(b))
   
   save.units = save.units.deduplicate(true)
-
-include patterns, maps, unitdraw
 
 makeSystem("core", []):
   init:
@@ -548,7 +416,7 @@ makeSystem("core", []):
     enableSoundVisualization()
 
     createMaps()
-    maps = @[map1, map2, map3, map4, map5]
+    allMaps = @[map1, map2, map3, map4, map5]
 
     createUnits()
 
@@ -564,8 +432,8 @@ makeSystem("core", []):
       save.lastUnit = unitAlpha
 
     #resize scores to hold all maps
-    if save.scores.len < maps.len:
-      save.scores.setLen(maps.len)
+    if save.scores.len < allMaps.len:
+      save.scores.setLen(allMaps.len)
     
     #play the intro once
     if not save.introDone:
@@ -1004,7 +872,7 @@ makeSystem("posLerp", [Pos, GridPos]):
 
 template updateMapPreviews =
   let size = sysDraw.buffer.size
-  for map in maps:
+  for map in allMaps:
     if map.preview.isNil or map.preview.size != size:
       if map.preview.isNil:
         map.preview = newFramebuffer(size)
@@ -1384,7 +1252,7 @@ makeSystem("drawUI", []):
       statsBounds = rect(screen.xy + vec2(0f, screen.h - statsh), screen.w, statsh)
       #bounds of level select buttons
       bounds = rect(screen.x, screen.y, screen.w, screen.h - statsh)
-      sliced = bounds.w / maps.len
+      sliced = bounds.w / allMaps.len
       mouse = fau.mouseWorld
       vertLen = 0.8f
       fadeCol = colorBlack.withA(0.7f)
@@ -1495,9 +1363,9 @@ makeSystem("drawUI", []):
     var anyHover = false
 
     #draw map select
-    for i in countdown(maps.len - 1, 0):
+    for i in countdown(allMaps.len - 1, 0):
       let 
-        map = maps[i]
+        map = allMaps[i]
         unlocked = map.unlocked
       assert map.preview != nil
 
@@ -1515,7 +1383,7 @@ makeSystem("drawUI", []):
         sys.hoverLevel = i
       
       #only expands after bounds check to prevent weird input
-      if i != maps.len - 1 and unlocked: #do not expand last map, no space for it
+      if i != allMaps.len - 1 and unlocked: #do not expand last map, no space for it
         r.w += offset * panMove
 
       var region = initPatch(map.preview.texture, (r.xy - screen.xy) / screen.wh, (r.topRight - screen.xy) / screen.wh)
