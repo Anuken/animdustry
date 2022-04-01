@@ -1,6 +1,6 @@
 version       = "0.0.1"
 author        = "Anuken"
-description   = "3D test"
+description   = "Animedustry"
 license       = "GPL-3.0"
 srcDir        = "src"
 bin           = @["main"]
@@ -45,7 +45,6 @@ task web, "Deploy web build":
   writeFile("build/web/index.html", readFile("build/web/index.html").replace("$title$", capitalizeAscii(app)))
 
 task deploy, "Build for all platforms":
-  #webTask()
   packTask()
 
   for name, os, cpu, args in builds.items:
@@ -65,44 +64,7 @@ task deploy, "Build for all platforms":
     shell &"nim --cpu:{cpu} --os:{os} --app:gui -f {args} -d:danger -o:{bin} c src/{app}"
     if not defined(macosx):
       shell &"strip -s {bin}"
-    #shell &"upx-ucl --best {bin}"
 
+  #webTask()
   #cd "build"
   #shell &"zip -9r {app}-web.zip web/*"
-
-#TODO
-task android, "Build android version of lib":
-  let cmakeText = "android/Android_template".readFile()
-  let appText = "android/Application_template".readFile()
-
-  for arch in ["32", "64"]:
-    rmDir "android/build/jni"
-    mkDir "android/build/jni"
-
-    #specify architectures used, copy over file 1
-    writeFile("android/build/jni/Application.mk", appText.replace("${ABIS}", if arch == "32": "x86 armeabi-v7a" else: "x86_64 arm64-v8a"))
-
-    let cpu = if arch == "32": "" else: "64"
-
-    shell &"nim c -d:danger --compileOnly --cpu:arm{cpu} --os:android -c --noMain:on -d:localAssets --nimcache:android/build/jni/{arch} src/{app}.nim"
-
-    let includes = @[
-      "/home/anuke/.choosenim/toolchains/nim-1.6.2/lib",
-      "/home/anuke/Projects/soloud/include"
-    ]
-    var sources: seq[string]
-
-    let compData = parseJson(readFile(&"android/build/jni/{arch}/{app}.json"))
-    let compList = compData["compile"]
-    for arr in compList.items:
-      sources.add(arr[0].getStr)
-
-    writeFile("android/build/jni/Android.mk", cmakeText
-    .replace("${NIM_SOURCES}", sources.join("\\\n  "))
-    .replace("${NIM_INCLUDES}", includes.mapIt(it.replace("#", "\\#")).join("\\\n  ")))
-
-    cd "android/build/jni"
-    shell "/home/anuke/Android/Ndk/ndk-build"
-    cd "../../../"
-  
-  shell "cp -r android/build/libs/* build/lib"
