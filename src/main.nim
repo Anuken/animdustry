@@ -442,12 +442,12 @@ onEcsBuilt:
     state = GameState(
       map: map1
     )
-    
-    #start with first unit
-    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
-
+  
   proc playMap(next: Beatmap, offset = 0.0) =
     reset()
+
+    #start with first unit
+    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
     state.map = next
     state.voice = state.map.sound.play()

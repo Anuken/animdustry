@@ -20,11 +20,9 @@ template shell(args: string) =
 
 const
   app = "main"
-  #signal handler needs to be disabled, https://github.com/yglukhov/jnim/issues/23#issuecomment-274284251
-  libArgs = "--app:lib --noMain:on -d:noSignalHandler -d:javaBackend -d:localAssets"
   
   builds = [
-    (name: "linux64", os: "linux", cpu: "amd64", args: ""), #doesn't really work due to glibc
+    (name: "linux64", os: "linux", cpu: "amd64", args: ""),
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
     (name: "mac64", os: "macosx", cpu: "amd64", args: "")
   ]
@@ -72,6 +70,7 @@ task deploy, "Build for all platforms":
   #cd "build"
   #shell &"zip -9r {app}-web.zip web/*"
 
+#TODO
 task android, "Build android version of lib":
   let cmakeText = "android/Android_template".readFile()
   let appText = "android/Application_template".readFile()
@@ -85,7 +84,7 @@ task android, "Build android version of lib":
 
     let cpu = if arch == "32": "" else: "64"
 
-    shell &"nim c -d:danger --compileOnly --cpu:arm{cpu} --os:android -c --noMain:on -d:javaBackend -d:localAssets --nimcache:android/build/jni/{arch} src/{app}.nim"
+    shell &"nim c -d:danger --compileOnly --cpu:arm{cpu} --os:android -c --noMain:on -d:localAssets --nimcache:android/build/jni/{arch} src/{app}.nim"
 
     let includes = @[
       "/home/anuke/.choosenim/toolchains/nim-1.6.2/lib",
