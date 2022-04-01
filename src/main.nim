@@ -2,202 +2,8 @@ import ecs, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
 import std/[tables, sequtils, algorithm, macros, options, random, math, strformat]
 import types, vars, saveio, patterns, maps, sugar, units
 
-static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
-
-register(defaultComponentOptions):
-  type 
-    Input = object
-      hitTurn: int
-      nextBeat: int
-      lastInputTime: float32
-      lastSwitchTime: float32
-      justMoved: bool
-      couldMove: bool
-      lastMove: Vec2i
-      shielded: bool
-      fails: int
-      moves: int
-      shieldCharge: int
-  
-    GridPos = object
-      vec: Vec2i
-    
-    UnitDraw = object
-      unit: Unit
-      side: bool
-      beatScl: float32
-      shieldTime: float32
-      scl: float32
-      switchTime: float32
-      hitTime: float32
-      walkTime: float32
-      failTime: float32
-    
-    Velocity = object
-      vec: Vec2i
-      space: int
-    
-    Scaled = object
-      scl: float32
-      time: float32
-    
-    DrawBullet = object
-      rot: float32
-      sprite: string
-    
-    DrawSpin = object
-      sprite: string
-
-    DrawSquish = object
-      sprite: string
-
-    DrawBounce = object
-      sprite: string
-      rotation: float32
-
-    DrawLaser = object
-      dir: Vec2i
-    
-    DrawDamageField = object
-
-    Bounce = object
-      count: int
-    
-    LeaveBullet = object
-      life: int
-
-    Turret = object
-      dir: Vec2i
-      reload: int
-      reloadCounter: int
-
-    Lifetime = object
-      turns: int
-    
-    Deleting = object
-      time: float32
-    
-    #can be hit by player attacks
-    Destructible = object
-
-    #block attacks for the player
-    Wall = object
-      health: int
-
-    Snek = object
-      turns: int
-      produced: bool
-      gen: int
-      fade: float32
-      len: int
-    
-    SpawnConveyors = object
-      len: int
-      diagonal: bool
-      #TODO merge with diagonal
-      alldir: bool
-      dir: Vec2i
-    
-    SpawnEvery = object
-      space: int
-      offset: int
-      spawn: SpawnConveyors
-    
-    Damage = object
-
-    RunDelay = object
-      delay: int
-      callback: proc()
-
-defineEffects:
-  walk(lifetime = 0.8f):
-    particlesLife(e.id, 10, e.pos, e.fin, 13f.px):
-      draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = %"a6a7b6")
-  
-  charSwitch(lifetime = 1f):
-    particlesLife(e.id, 13, e.pos, e.fin + 0.2f, 20f.px):
-      draw(smokeFrames[(fin.pow(2f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = colorAccent, z = 3000f)
-  
-  explode(lifetime = 0.4f):
-    draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = (%"ffb954").mix(%"d86a4e", e.fin))
-
-  explodeHeal(lifetime = 0.4f):
-    draw(explodeFrames[(e.fin * explodeFrames.len).int.min(explodeFrames.high)], e.pos, color = colorWhite.mix(colorHeal, e.fin.powout(2f)))
-
-  walkWave:
-    poly(e.pos, 4, e.fin.powout(6f) * 1f + 4f.px, stroke = 5f.px, color = colorWhite.withA(e.fout * 0.8f), rotation = 45f.rad)
-  
-  songShow(lifetime = 4f):
-    if state.map != nil:
-      defaultFont.draw("Music: " & state.map.songName, fau.cam.view - rect(vec2(0f, 0.8f + e.fin.pow(7f)), vec2(0, 0f)), color = colorUi.withA(e.fout.powout(6f)), align = daTopLeft)
-  
-  tutorial(lifetime = 9f):
-    let 
-      offset = rect(vec2(0f, 0.8f + e.fin.pow(7f) + 1f), vec2(0, 0f))
-      col = colorUi.withA(e.fout.powout(6f))
-    
-    defaultFont.draw("[ WASD or arrow keys to move]\nyes this is a rhythm game\n\nI refuse to explain further", fau.cam.view - offset, color = col)
-
-  strikeWave:
-    #TODO looks bad
-    #(%"bc8cff")
-    let col = (%"c69eff").mix(colorAccent, e.fout.pow(4f)).withA(e.fout.pow(1.4f) * 0.9f)
-    draw(patch(&"wave{e.rotation.int}"), e.pos, color = col)
-
-    #let size = (4f - e.rotation)
-    #poly(e.pos, 4, size * 5f.px + 4f.px, stroke = 5f.px, color = col, rotation = 45f.rad)
-    #spikes(e.pos, 8, size * 5f.px + 10f.px, 4f.px, stroke = 3f.px, color = col)
-  
-  hit(lifetime = 0.9f):
-    particlesLife(e.id, 10, e.pos, e.fin, 19f.px):
-      draw(hitFrames[(fin.pow(2f) * hitFrames.len).int.min(hitFrames.high)], pos, color = colorWhite, z = 3000f)
-      #fillPoly(pos + vec2(0f, 2f.px), 4, (2.5f * fout.powout(3f)).px, color = colorWhite, z = 3000f)
-  
-  laserShoot(lifetime = 0.6f):
-    particlesLife(e.id, 14, e.pos, e.fin.powout(2f), 25f.px):
-      fillPoly(pos, 4, (3f * fout.powout(3f) + 1f).px, rotation = 45f.rad, color = colorWhite, z = 3002f)
-
-  destroy(lifetime = 0.7f):
-    particlesLife(e.id, 12, e.pos, e.fin + 0.1f, 19f.px):
-      draw(smokeFrames[(fin.pow(1.5f) * smokeFrames.len).int.min(smokeFrames.high)], pos, color = (%"ffa747").mix(%"d86a4e", e.fin))
-  
-  warn:
-    poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
-    draw(fau.white, e.pos, size = vec2(16f.px), color = colorWhite.withA(e.fin))
-  
-  laserWarn:
-    for i in signs():
-      let stroke = 4f.px * e.fout + 1f.px
-      lineAngleCenter(e.pos + vec2(0, (15f - 9f * e.fin.powout(2f)) * i.px).rotate(e.rotation), e.rotation, 1f - stroke, stroke = stroke)
-    draw(fau.white, e.pos, size = vec2(1f, 12f.px), rotation = e.rotation, color = colorWhite.withA(e.fin))
-  
-  lancerAppear:
-    draw("lancer2".patchConst, e.pos, rotation = e.rotation - 90f.rad, scl = vec2(state.moveBeat * 0.16f + min(e.fin.powout(3f), e.fout.powout(20f))), z = 3001f)
-  
-  warnBullet:
-    #poly(e.pos, 4, e.fout.pow(2f) * 0.6f + 0.5f, stroke = 4f.px * e.fout + 2f.px, color = colorWhite, rotation = 45f.rad)
-    draw("bullet".patchConst, e.pos, rotation = e.rotation, size = vec2(16f.px), mixColor = colorWhite, color = colorWhite.withA(e.fin))
-  
-  fail:
-    draw("fail".patchConst, e.pos, color = colorWhite.withA(e.fout), scl = vec2(1f) + e.fout.pow(4f) * 0.6f)
-
-#snap position to grid position
-GridPos.onAdd:
-  let pos = entity.fetch(Pos)
-  if pos.valid:
-    pos.vec = curComponent.vec.vec2
-
-#unit textures dynamically loaded
-preloadFolder("textures")
-
-#All passed systems will be paused when game state is not playing
-macro makePaused(systems: varargs[untyped]): untyped =
-  result = newStmtList()
-  for sys in systems:
-    result.add quote do:
-      `sys`.paused = (mode != gmPlaying)
-
-template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
+include components
+include fx
 
 onEcsBuilt:
   proc makeDelay(delay: int, callback: proc()) =
@@ -242,6 +48,58 @@ onEcsBuilt:
 
   proc makeUnit(pos: Vec2i, aunit: Unit) =
     discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
+
+  proc reset() =
+    sysAll.clear()
+    sysRunDelay.clear()
+
+    #stop old music
+    if state.voice.int != 0:
+      state.voice.stop()
+
+    #make default map
+    state = GameState(
+      map: map1
+    )
+  
+  proc playMap(next: Beatmap, offset = 0.0) =
+    reset()
+
+    #start with first unit
+    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
+
+    state.map = next
+    state.voice = state.map.sound.play()
+    if offset > 0.0:
+      state.voice.seek(offset)
+    
+    effectSongShow(vec2())
+  
+  proc addPoints(amount = 1) =
+    state.points += amount
+    state.points = state.points.max(1)
+    scoreTime = 1f
+    scorePositive = amount >= 0
+
+  proc damageBlocks(target: Vec2i) =
+    let hitbox = rectCenter(target.vec2, vec2(0.99f))
+    for item in sysDestructible.groups:
+      if item.gridPos.vec == target or rectCenter(item.pos.vec, vec2(1f)).overlaps(hitbox):
+        effectDestroy(item.pos.vec)
+        if not item.entity.has(Deleting):
+          item.entity.add(Deleting(time: 1f))
+
+          #block destruction -> extra points
+          addPoints(1)
+
+#All passed systems will be paused when game state is not playing
+macro makePaused(systems: varargs[untyped]): untyped =
+  result = newStmtList()
+  for sys in systems:
+    result.add quote do:
+      `sys`.paused = (mode != gmPlaying)
+
+template zlayer(entity: untyped): float32 = 1000f - entity.pos.vec.y
 
 template transition(body: untyped) =
   fadeTime = 0f
@@ -299,53 +157,10 @@ proc rollUnit*(): Unit =
   #not all units; alpha and boulder are excluded
   return sample([unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei])
 
-onEcsBuilt:
-  proc reset() =
-    sysAll.clear()
-    sysRunDelay.clear()
-
-    #stop old music
-    if state.voice.int != 0:
-      state.voice.stop()
-
-    #make default map
-    state = GameState(
-      map: map1
-    )
-  
-  proc playMap(next: Beatmap, offset = 0.0) =
-    reset()
-
-    #start with first unit
-    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
-
-    state.map = next
-    state.voice = state.map.sound.play()
-    if offset > 0.0:
-      state.voice.seek(offset)
-    
-    effectSongShow(vec2())
-  
-  proc addPoints(amount = 1) =
-    state.points += amount
-    state.points = state.points.max(1)
-    scoreTime = 1f
-    scorePositive = amount >= 0
-
-  proc damageBlocks(target: Vec2i) =
-    let hitbox = rectCenter(target.vec2, vec2(0.99f))
-    for item in sysDestructible.groups:
-      if item.gridPos.vec == target or rectCenter(item.pos.vec, vec2(1f)).overlaps(hitbox):
-        effectDestroy(item.pos.vec)
-        if not item.entity.has(Deleting):
-          item.entity.add(Deleting(time: 1f))
-
-          #block destruction -> extra points
-          addPoints(1)
-
 proc fading(): bool = fadeTarget != nil
 
 proc beatSpacing(): float = 1.0 / (state.map.bpm / 60.0)
+
 proc musicTime(): float = state.secs
 
 proc calcPitch(note: int): float32 =
@@ -1435,7 +1250,6 @@ makeSystem("drawUI", []):
 
     let offset = creditsPan * 0.4f + screen.h - 1f
 
-    #TODO
     defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
@@ -1456,5 +1270,11 @@ makeSystem("drawUI", []):
   elif fadeTime > 0:
     patFadeIn(fadeTime.pow(transitionPow))
     fadeTime -= fau.delta / transitionTime
+
+#pack every compile
+static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
+
+#unit textures dynamically loaded
+preloadFolder("textures")
 
 launchFau(initParams(title = "it's finally here"))
