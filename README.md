@@ -1,3 +1,5 @@
+![](assets-raw/icon.png)
+
 # animdustry
 
 the anime gacha rhythm game mindustry event
