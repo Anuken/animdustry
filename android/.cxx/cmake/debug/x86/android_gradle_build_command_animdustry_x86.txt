@@ -1,7 +1,0 @@
-Executable : /home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
-arguments : 
--C
-/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86
-animdustry
-jvmArgs : 
-
