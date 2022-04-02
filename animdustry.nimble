@@ -68,3 +68,41 @@ task deploy, "Build for all platforms":
   #webTask()
   #cd "build"
   #shell &"zip -9r {app}-web.zip web/*"
+
+task androidBuild, "Android build":
+  var cmakeText = "android/CMakeLists.txt".readFile()
+
+  shell "cp android/CMakeLists.txt android/src"
+
+  for arch in ["32", "64"]:
+    rmDir &"android/src/c{arch}"
+    let cpu = if arch == "32": "" else: "64"
+
+    shell &"nim c -f --compileOnly --cpu:arm{cpu} --os:android -d:danger -c --noMain:on --nimcache:android/src/c{arch} src/{app}.nim"
+    let includes = @[
+      "/home/anuke/.choosenim/toolchains/nim-1.6.4/lib",
+      "/home/anuke/Projects/glfm/glfm/include",
+      "/home/anuke/Projects/glfm/glfm/src",
+      "/home/anuke/Projects/glfm/glfm/example/src",
+      "/home/anuke/Projects/soloud/include"
+    ]
+    var sources: seq[string]
+
+    let compData = parseJson(readFile(&"android/src/c{arch}/{app}.json"))
+    let compList = compData["compile"]
+    for arr in compList.items:
+      sources.add($arr[0])
+
+    sources.add("\"/home/anuke/Projects/glfm/glfm/src/glfm_platform_android.c\"")
+    sources.add("\"/home/anuke/Projects/glfm/glfm/src/glfm_platform.h\"")
+
+    cmakeText = cmakeText
+    .replace("${NIM_SOURCES_" & arch & "}", sources.join("\n"))
+    .replace("${NIM_INCLUDE_DIR}", includes.mapIt("\"" & it & "\"").join("\n"))
+
+  writeFile("android/src/CMakeLists.txt", cmakeText)
+
+task android, "Android Run":
+  androidBuildTask()
+  cd "android"
+  shell "./gradlew run"

@@ -39,6 +39,10 @@ var
 
   #UI state section
 
+  #D-pad for mobile state
+  mobilePad*: Vec2
+  mobileUnitSwitch*: int
+
   #frames for effects (bad)
   smokeFrames*: array[6, Patch]
   explodeFrames*: array[5, Patch]

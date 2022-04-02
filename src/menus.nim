@@ -12,6 +12,8 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
+  let rawScaling = -(fau.cam.size.y / fau.size.y)
+
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
     state.hitTime = state.hitTime.max(0f)
@@ -85,9 +87,9 @@ makeSystem("drawUI", []):
     titleFont.draw("SOUND REQUIRED", vec2(0f, 2.5f))
     defaultFont.draw("(yes, you really need it)", vec2(0f, -2f))
 
-    defaultFont.draw("[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
+    defaultFont.draw(when defined(Android): "[ tap to continue ]" else: "[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
 
-    if keySpace.tapped or keyEscape.tapped:
+    if (keySpace.tapped or keyEscape.tapped) or (defined(Android) and keyMouseLeft.tapped):
       mode = gmMenu
       inIntro = true
       soundIntro.play()
@@ -117,16 +119,37 @@ makeSystem("drawUI", []):
     draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
     defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
 
-    let screen = fau.cam.viewport
+    mobileUnitSwitch = -1
+
+    let 
+      screen = fau.cam.viewport
+      mouseWorld = fau.mouseWorld
+
     if sysInput.groups.len > 0:
       let player = sysInput.groups[0]
 
       for i, unit in save.units:
         let 
-          pos = screen.xy + vec2(i.float32 * 0.8f, 0f)
+          pos = screen.xy + vec2(i.float32 * 0.8f, fau.insets[2] * rawScaling)
           current = player.unitDraw.unit == unit
+          bounds = rect(pos, vec2(23f.px, 32f.px))
         draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear, scl = vec2(0.75f))
         defaultFont.draw($(i + 1), rect(pos + vec2(4f.px, -2f.px), 1f.vec2), align = daBotLeft, color = if current: colorGray else: colorWhite)
+
+        if keyMouseLeft.tapped and bounds.contains(mouseWorld):
+          mobileUnitSwitch = i
+  
+    when defined(Android):
+      mobilePad = vec2()
+      let 
+        padSize = 2.5f
+        padPos = fau.cam.view.botRight + vec2(-4f, 4f + fau.insets[2] * rawScaling)
+      
+      for i, pos in d4f:
+        let dp = padPos + pos * 2.5f
+        if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patchConst, rotation = i.float32 * 90f.rad) and keyMouseLeft.tapped:
+          mobilePad = pos
+
   elif splashUnit.isSome and splashRevealTime > 0f: #draw splash unit reveal animation
     splashRevealTime -= fau.delta / 3f
 
@@ -207,7 +230,7 @@ makeSystem("drawUI", []):
     if unit.ability.len > 0:
       defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.75f.px)
 
-    if not inIntro and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
+    if not inIntro and ((not defined(Android) and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped):
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
@@ -432,7 +455,7 @@ makeSystem("drawUI", []):
 
     defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
 
-    if button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back") or keyEscape.tapped:
+    if (not defined(Android) and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped:
       safeTransition:
         soundBack.play()
         mode = gmMenu

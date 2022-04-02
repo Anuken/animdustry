@@ -2,7 +2,7 @@ import jsony, zippy, os, vars, types, strformat
 
 #TODO: android support???
 let 
-  dataDir = when defined(Android): "" else: getConfigDir() / "absurd"
+  dataDir = when defined(Android): "/data/data/io.anuke.animdustry" else: getConfigDir() / "absurd"
   dataFile = dataDir / "data.bin"
 
 proc parseHook*(s: string, i: var int, u: var Unit) =
@@ -33,7 +33,7 @@ proc saveGame* =
   try:
     dataFile.writeFile(comp)
   except IOError:
-    echo "Error: Failed to write save data: {getCurrentExceptionMsg()}"
+    echo &"Error: Failed to write save data: {getCurrentExceptionMsg()}"
 
 proc loadGame* =
   ## Loads game data from the save file. Does nothing if there is no data.

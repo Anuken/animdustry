@@ -1,0 +1,597 @@
+{
+  "cacheVersion": "D20210525T193831",
+  "outputFile": "/home/anuke/Projects/absurd/src/main",
+  "compile": [
+    [
+      "/home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/read.c.o /home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/backend/opensles/soloud_opensles.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_opensles.cpp.o /home/anuke/Projects/soloud/src/backend/opensles/soloud_opensles.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/c_api/soloud_c.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_c.cpp.o /home/anuke/Projects/soloud/src/c_api/soloud_c.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud.cpp.o /home/anuke/Projects/soloud/src/core/soloud.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_audiosource.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_audiosource.cpp.o /home/anuke/Projects/soloud/src/core/soloud_audiosource.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_bus.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_bus.cpp.o /home/anuke/Projects/soloud/src/core/soloud_bus.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_3d.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_3d.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_3d.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_basicops.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_basicops.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_basicops.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_faderops.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_faderops.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_faderops.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_filterops.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_filterops.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_filterops.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_getters.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_getters.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_getters.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_setters.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_setters.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_setters.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_voicegroup.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_voicegroup.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_voicegroup.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_core_voiceops.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_core_voiceops.cpp.o /home/anuke/Projects/soloud/src/core/soloud_core_voiceops.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_fader.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_fader.cpp.o /home/anuke/Projects/soloud/src/core/soloud_fader.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_fft.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_fft.cpp.o /home/anuke/Projects/soloud/src/core/soloud_fft.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_fft_lut.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_fft_lut.cpp.o /home/anuke/Projects/soloud/src/core/soloud_fft_lut.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_file.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_file.cpp.o /home/anuke/Projects/soloud/src/core/soloud_file.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_filter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_filter.cpp.o /home/anuke/Projects/soloud/src/core/soloud_filter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_misc.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_misc.cpp.o /home/anuke/Projects/soloud/src/core/soloud_misc.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_queue.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_queue.cpp.o /home/anuke/Projects/soloud/src/core/soloud_queue.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/core/soloud_thread.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_thread.cpp.o /home/anuke/Projects/soloud/src/core/soloud_thread.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wav_ogg.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_wav_ogg.cpp.o /home/anuke/Projects/soloud/src/audiosource/wav/soloud_wav_ogg.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_wavstream_ogg.cpp.o /home/anuke/Projects/soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/audiosource/wav/stb_vorbis.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stb_vorbis.c.o /home/anuke/Projects/soloud/src/audiosource/wav/stb_vorbis.c"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_bassboostfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_bassboostfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_bassboostfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_biquadresonantfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_biquadresonantfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_biquadresonantfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_dcremovalfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_dcremovalfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_dcremovalfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_echofilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_echofilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_echofilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_fftfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_fftfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_fftfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_flangerfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_flangerfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_flangerfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_freeverbfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_freeverbfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_freeverbfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_lofifilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_lofifilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_lofifilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_robotizefilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_robotizefilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_robotizefilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/soloud/src/filter/soloud_waveshaperfilter.cpp",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/soloud_waveshaperfilter.cpp.o /home/anuke/Projects/soloud/src/filter/soloud_waveshaperfilter.cpp"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c"
+    ],
+    [
+      "/home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c",
+      "clang -c  -w -ferror-limit=3 -I/home/anuke/Projects/soloud/include -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -DSTBI_ONLY_PNG -flto -O3   -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/absurd/src -o /home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c"
+    ]
+  ],
+  "link": [
+    "/home/anuke/Projects/absurd/android/src/c64/read.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_opensles.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_c.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_audiosource.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_bus.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_3d.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_basicops.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_faderops.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_filterops.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_getters.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_setters.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_voicegroup.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_core_voiceops.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_fader.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_fft.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_fft_lut.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_file.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_filter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_misc.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_queue.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_thread.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_wav_ogg.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_wavstream_ogg.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stb_vorbis.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_bassboostfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_biquadresonantfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_dcremovalfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_echofilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_fftfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_flangerfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_freeverbfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_lofifilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_robotizefilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/soloud_waveshaperfilter.cpp.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c.o",
+    "/home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c.o"
+  ],
+  "linkcmd": "clang   -o /home/anuke/Projects/absurd/src/main /home/anuke/Projects/absurd/android/src/c64/read.c.o /home/anuke/Projects/absurd/android/src/c64/soloud_opensles.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_c.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_audiosource.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_bus.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_3d.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_basicops.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_faderops.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_filterops.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_getters.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_setters.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_voicegroup.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_core_voiceops.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_fader.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_fft.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_fft_lut.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_file.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_filter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_misc.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_queue.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_thread.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_wav_ogg.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_wavstream_ogg.cpp.o /home/anuke/Projects/absurd/android/src/c64/stb_vorbis.c.o /home/anuke/Projects/absurd/android/src/c64/soloud_bassboostfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_biquadresonantfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_dcremovalfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_echofilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_fftfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_flangerfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_freeverbfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_lofifilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_robotizefilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/soloud_waveshaperfilter.cpp.o /home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c.o /home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c.o  -lm -lm -lm -lOpenSLES  -flto  -ldl",
+  "extraCmds": [],
+  "configFiles": [
+    "/home/anuke/.choosenim/toolchains/nim-1.6.4/config/nim.cfg",
+    "/home/anuke/.choosenim/toolchains/nim-1.6.4/config/config.nims",
+    "/home/anuke/Projects/absurd/config.nims"
+  ],
+  "stdinInput": false,
+  "projectIsCmd": false,
+  "cmdInput": "",
+  "currentDir": "/home/anuke/Projects/absurd",
+  "cmdline": "",
+  "depfiles": [],
+  "nimexe": ""
+}

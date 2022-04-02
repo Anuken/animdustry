@@ -15,9 +15,10 @@ else:
   #better compiler performance with local assets
   --d:localAssets
 
-#why isn't this the default??
 when defined(Android):
+  #why isn't this the default??
   --d:androidNDK
+  --d:androidFullscreen
 
 if defined(emscripten):
   --os:linux

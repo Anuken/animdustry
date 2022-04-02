@@ -1,0 +1,55 @@
+buildscript{
+    repositories{
+        google()
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies{
+        classpath 'com.android.tools.build:gradle:4.2.0'
+    }
+}
+
+repositories{
+    google()
+}
+
+apply plugin: 'com.android.application'
+
+android{
+    compileSdkVersion 30
+    ndkVersion "21.3.6528147"
+
+    sourceSets{
+        main{
+            manifest.srcFile 'AndroidManifest.xml'
+            assets.srcDirs = ['../assets/']
+            res.srcDirs = ['res']
+        }
+    }
+
+    defaultConfig{
+        applicationId 'io.anuke.animdustry'
+        versionName "testing"
+        versionCode 1
+
+        minSdkVersion 14
+        targetSdkVersion 30
+    }
+
+    externalNativeBuild{
+        cmake{
+            version '3.10.2'
+            path 'src/CMakeLists.txt'
+        }
+    }
+}
+
+task run(type: Exec){
+    commandLine "${android.getSdkDirectory().getAbsolutePath()}/platform-tools/adb", 'shell', 'am', 'start', '-n', 'io.anuke.animdustry/android.app.NativeActivity'
+}
+
+tasks.whenTaskAdded{ task ->
+    if(task.name == 'installDebug'){
+        run.dependsOn task
+    }
+}

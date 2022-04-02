@@ -1,0 +1,24 @@
+                    Executable : /home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/cmake
+arguments : 
+-H/home/anuke/Projects/absurd/android/src
+-DCMAKE_FIND_ROOT_PATH=/home/anuke/Projects/absurd/android/.cxx/cmake/debug/prefab/x86_64/prefab
+-DCMAKE_BUILD_TYPE=Debug
+-DCMAKE_TOOLCHAIN_FILE=/home/anuke/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake
+-DANDROID_ABI=x86_64
+-DANDROID_NDK=/home/anuke/Android/Sdk/ndk/21.3.6528147
+-DANDROID_PLATFORM=android-16
+-DCMAKE_ANDROID_ARCH_ABI=x86_64
+-DCMAKE_ANDROID_NDK=/home/anuke/Android/Sdk/ndk/21.3.6528147
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/x86_64
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/x86_64
+-DCMAKE_MAKE_PROGRAM=/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_SYSTEM_VERSION=16
+-B/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64
+-GNinja
+jvmArgs : 
+
+
+                    Build command args: []
+                    Version: 1

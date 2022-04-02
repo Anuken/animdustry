@@ -1,0 +1,205 @@
+[
+  {
+    "level": "INFO",
+    "message": "Start JSON generation. Platform version: 16 min SDK version: arm64-v8a",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "rebuilding JSON /home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a/android_gradle_build.json due to:",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "- a dependent build file changed",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "  - /home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "keeping json folder \u0027/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\u0027 but regenerating project",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "executing cmake Executable : /home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/cmake\narguments : \n-H/home/anuke/Projects/absurd/android/src\n-DCMAKE_FIND_ROOT_PATH\u003d/home/anuke/Projects/absurd/android/.cxx/cmake/debug/prefab/arm64-v8a/prefab\n-DCMAKE_BUILD_TYPE\u003dDebug\n-DCMAKE_TOOLCHAIN_FILE\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake\n-DANDROID_ABI\u003darm64-v8a\n-DANDROID_NDK\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147\n-DANDROID_PLATFORM\u003dandroid-16\n-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\n-DCMAKE_ANDROID_NDK\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147\n-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\n-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003d/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a\n-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003d/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a\n-DCMAKE_MAKE_PROGRAM\u003d/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja\n-DCMAKE_SYSTEM_NAME\u003dAndroid\n-DCMAKE_SYSTEM_VERSION\u003d16\n-B/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\n-GNinja\njvmArgs : \n\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "[\u003d\u003d \"CMake Server\" \u003d\u003d[\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"supportedProtocolVersions\":[{\"isExperimental\":true,\"major\":1,\"minor\":1}],\"type\":\"hello\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "]\u003d\u003d \"CMake Server\" \u003d\u003d]\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\n  \"type\": \"handshake\",\n  \"cookie\": \"gradle-cmake-cookie\",\n  \"protocolVersion\": {\n    \"isExperimental\": true,\n    \"major\": 1,\n    \"minor\": 1\n  },\n  \"sourceDirectory\": \"/home/anuke/Projects/absurd/android/src\",\n  \"buildDirectory\": \"/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\",\n  \"generator\": \"Ninja\"\n}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"gradle-cmake-cookie\",\"inReplyTo\":\"handshake\",\"type\":\"reply\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\n  \"type\": \"configure\",\n  \"cacheArguments\": [\n    \"\",\n    \"-DCMAKE_FIND_ROOT_PATH\\u003d/home/anuke/Projects/absurd/android/.cxx/cmake/debug/prefab/arm64-v8a/prefab\",\n    \"-DCMAKE_BUILD_TYPE\\u003dDebug\",\n    \"-DCMAKE_TOOLCHAIN_FILE\\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake\",\n    \"-DANDROID_ABI\\u003darm64-v8a\",\n    \"-DANDROID_NDK\\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147\",\n    \"-DANDROID_PLATFORM\\u003dandroid-16\",\n    \"-DCMAKE_ANDROID_ARCH_ABI\\u003darm64-v8a\",\n    \"-DCMAKE_ANDROID_NDK\\u003d/home/anuke/Android/Sdk/ndk/21.3.6528147\",\n    \"-DCMAKE_EXPORT_COMPILE_COMMANDS\\u003dON\",\n    \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\\u003d/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a\",\n    \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\\u003d/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a\",\n    \"-DCMAKE_MAKE_PROGRAM\\u003d/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja\",\n    \"-DCMAKE_SYSTEM_NAME\\u003dAndroid\",\n    \"-DCMAKE_SYSTEM_VERSION\\u003d16\"\n  ]\n}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"configure\",\"progressCurrent\":1000,\"progressMaximum\":1000,\"progressMessage\":\"Configuring\",\"progressMinimum\":0,\"type\":\"progress\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"configure\",\"message\":\"Configuring done\",\"type\":\"message\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "Configuring done",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"configure\",\"type\":\"reply\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"type\":\"compute\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"compute\",\"progressCurrent\":1000,\"progressMaximum\":1000,\"progressMessage\":\"Generating\",\"progressMinimum\":0,\"type\":\"progress\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"compute\",\"message\":\"Generating done\",\"type\":\"message\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "Generating done",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"cookie\":\"\",\"inReplyTo\":\"compute\",\"type\":\"reply\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"type\":\"cmakeInputs\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"buildFiles\":[{\"isCMake\":true,\"isTemporary\":false,\"sources\":[\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInitialize.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Initialize.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeSystemSpecificInformation.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeGenericSystem.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Linux.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/UnixPaths.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCInformation.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-C.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/GNU.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/CMakeCommonCompilerMacros.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-C.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCXXInformation.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeLanguageInformation.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang-CXX.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Compiler/Clang.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang-CXX.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/Platform/Android-Clang.cmake\",\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10/Modules/CMakeCommonLanguageInclude.cmake\"]},{\"isCMake\":false,\"isTemporary\":false,\"sources\":[\"CMakeLists.txt\",\"/home/anuke/Android/Sdk/ndk/21.3.6528147/build/cmake/android.toolchain.cmake\",\"/home/anuke/Android/Sdk/ndk/21.3.6528147/build/cmake/platforms.cmake\"]},{\"isCMake\":false,\"isTemporary\":true,\"sources\":[\"../.cxx/cmake/debug/arm64-v8a/CMakeFiles/3.10.2/CMakeSystem.cmake\",\"../.cxx/cmake/debug/arm64-v8a/CMakeFiles/3.10.2/CMakeCCompiler.cmake\",\"../.cxx/cmake/debug/arm64-v8a/CMakeFiles/3.10.2/CMakeCXXCompiler.cmake\"]}],\"cmakeRootDirectory\":\"/home/anuke/Android/Sdk/cmake/3.10.2.4988404/share/cmake-3.10\",\"cookie\":\"\",\"inReplyTo\":\"cmakeInputs\",\"sourceDirectory\":\"/home/anuke/Projects/absurd/android/src\",\"type\":\"reply\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"type\":\"codemodel\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "{\"configurations\":[{\"name\":\"Debug\",\"projects\":[{\"buildDirectory\":\"/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\",\"name\":\"Project\",\"sourceDirectory\":\"/home/anuke/Projects/absurd/android/src\",\"targets\":[{\"artifacts\":[\"/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a/libanimdustry.so\"],\"buildDirectory\":\"/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\",\"fileGroups\":[{\"isGenerated\":false,\"sources\":[\"../../../glfm/glfm/src/glfm_platform.h\"]},{\"compileFlags\":\"-O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC  \",\"defines\":[\"animdustry_EXPORTS\"],\"includePath\":[{\"path\":\"/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue\"},{\"path\":\"/home/anuke/.choosenim/toolchains/nim-1.6.4/lib\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/include\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/src\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/example/src\"},{\"path\":\"/home/anuke/Projects/soloud/include\"}],\"isGenerated\":false,\"language\":\"CXX\",\"sources\":[\"../../../soloud/src/backend/opensles/soloud_opensles.cpp\",\"../../../soloud/src/c_api/soloud_c.cpp\",\"../../../soloud/src/core/soloud.cpp\",\"../../../soloud/src/core/soloud_audiosource.cpp\",\"../../../soloud/src/core/soloud_bus.cpp\",\"../../../soloud/src/core/soloud_core_3d.cpp\",\"../../../soloud/src/core/soloud_core_basicops.cpp\",\"../../../soloud/src/core/soloud_core_faderops.cpp\",\"../../../soloud/src/core/soloud_core_filterops.cpp\",\"../../../soloud/src/core/soloud_core_getters.cpp\",\"../../../soloud/src/core/soloud_core_setters.cpp\",\"../../../soloud/src/core/soloud_core_voicegroup.cpp\",\"../../../soloud/src/core/soloud_core_voiceops.cpp\",\"../../../soloud/src/core/soloud_fader.cpp\",\"../../../soloud/src/core/soloud_fft.cpp\",\"../../../soloud/src/core/soloud_fft_lut.cpp\",\"../../../soloud/src/core/soloud_file.cpp\",\"../../../soloud/src/core/soloud_filter.cpp\",\"../../../soloud/src/core/soloud_misc.cpp\",\"../../../soloud/src/core/soloud_queue.cpp\",\"../../../soloud/src/core/soloud_thread.cpp\",\"../../../soloud/src/audiosource/wav/soloud_wav_ogg.cpp\",\"../../../soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp\",\"../../../soloud/src/filter/soloud_bassboostfilter.cpp\",\"../../../soloud/src/filter/soloud_biquadresonantfilter.cpp\",\"../../../soloud/src/filter/soloud_dcremovalfilter.cpp\",\"../../../soloud/src/filter/soloud_echofilter.cpp\",\"../../../soloud/src/filter/soloud_fftfilter.cpp\",\"../../../soloud/src/filter/soloud_flangerfilter.cpp\",\"../../../soloud/src/filter/soloud_freeverbfilter.cpp\",\"../../../soloud/src/filter/soloud_lofifilter.cpp\",\"../../../soloud/src/filter/soloud_robotizefilter.cpp\",\"../../../soloud/src/filter/soloud_waveshaperfilter.cpp\"]},{\"compileFlags\":\"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE\u003d2 -Wformat -Werror\u003dformat-security  -O0 -fno-limit-debug-info  -fPIC  \",\"defines\":[\"animdustry_EXPORTS\"],\"includePath\":[{\"path\":\"/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue\"},{\"path\":\"/home/anuke/.choosenim/toolchains/nim-1.6.4/lib\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/include\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/src\"},{\"path\":\"/home/anuke/Projects/glfm/glfm/example/src\"},{\"path\":\"/home/anuke/Projects/soloud/include\"}],\"isGenerated\":false,\"language\":\"C\",\"sources\":[\"/home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c\",\"../../../soloud/src/audiosource/wav/stb_vorbis.c\",\"c64/stdlib_digitsutils.nim.c\",\"c64/stdlib_assertions.nim.c\",\"c64/stdlib_formatfloat.nim.c\",\"c64/stdlib_dollars.nim.c\",\"c64/stdlib_io.nim.c\",\"c64/stdlib_system.nim.c\",\"c64/stdlib_bitops.nim.c\",\"c64/stdlib_math.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c\",\"c64/stdlib_parseutils.nim.c\",\"c64/stdlib_unicode.nim.c\",\"c64/stdlib_algorithm.nim.c\",\"c64/stdlib_strutils.nim.c\",\"c64/stdlib_strformat.nim.c\",\"c64/stdlib_hashes.nim.c\",\"c64/stdlib_tables.nim.c\",\"c64/stdlib_sequtils.nim.c\",\"c64/stdlib_sets.nim.c\",\"c64/stdlib_pathnorm.nim.c\",\"c64/stdlib_options.nim.c\",\"c64/stdlib_times.nim.c\",\"c64/stdlib_os.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c\",\"c64/stdlib_sysrand.nim.c\",\"c64/stdlib_random.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sfmath.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c\",\"c64/stdlib_streams.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sassets.nim.c\",\"c64/@m..@sfau@ssrc@sfau@stexture.nim.c\",\"c64/@m..@sfau@ssrc@sfau@scolor.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sshader.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c\",\"c64/@m..@sfau@ssrc@sfau@smesh.nim.c\",\"c64/@m..@sfau@ssrc@sfau@spatch.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sbatch.nim.c\",\"c64/@m..@sfau@ssrc@sfau@satlas.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sglobals.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sdraw.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sinput.nim.c\",\"c64/@m..@sfau@ssrc@sfau@saudio.nim.c\",\"c64/@m..@sfau@ssrc@score.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c\",\"c64/stdlib_heapqueue.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c\",\"c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c\",\"c64/@mtypes.nim.c\",\"c64/@mvars.nim.c\",\"c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c\",\"c64/@msaveio.nim.c\",\"c64/@mpatterns.nim.c\",\"c64/@mmaps.nim.c\",\"c64/@mmain.nim.c\",\"../../../glfm/glfm/src/glfm_platform_android.c\"]}],\"fullName\":\"libanimdustry.so\",\"linkFlags\":\"-Wl,--exclude-libs,libgcc.a -Wl,--exclude-libs,libgcc_real.a -Wl,--exclude-libs,libatomic.a -static-libstdc++ -Wl,--build-id -Wl,--fatal-warnings -Wl,--no-undefined -Qunused-arguments  -v -u ANativeActivity_onCreate\",\"linkLibraries\":\"-landroid libnative_app_glue.a -lEGL -lGLESv2 -llog -lOpenSLES -latomic -lm\",\"linkerLanguage\":\"CXX\",\"name\":\"animdustry\",\"sourceDirectory\":\"/home/anuke/Projects/absurd/android/src\",\"sysroot\":\"/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot\",\"type\":\"SHARED_LIBRARY\"},{\"artifacts\":[\"/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a/libnative_app_glue.a\"],\"buildDirectory\":\"/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a\",\"fileGroups\":[{\"compileFlags\":\"-g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE\u003d2 -Wformat -Werror\u003dformat-security  -O0 -fno-limit-debug-info  -fPIC  \",\"isGenerated\":false,\"language\":\"C\",\"sources\":[\"/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue/android_native_app_glue.c\"]}],\"fullName\":\"libnative_app_glue.a\",\"linkerLanguage\":\"C\",\"name\":\"native_app_glue\",\"sourceDirectory\":\"/home/anuke/Projects/absurd/android/src\",\"sysroot\":\"/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot\",\"type\":\"STATIC_LIBRARY\"}]}]}],\"cookie\":\"\",\"inReplyTo\":\"codemodel\",\"type\":\"reply\"}\n",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "done executing cmake",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "write command file /home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a/build_command.txt",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  },
+  {
+    "level": "INFO",
+    "message": "JSON generation completed without problems",
+    "file": "/home/anuke/Projects/absurd/android/src/CMakeLists.txt",
+    "tag": "debug|arm64-v8a",
+    "diagnosticCode": "UNKNOWN"
+  }
+]

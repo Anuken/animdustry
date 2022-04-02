@@ -1,0 +1,4 @@
+/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86/CMakeFiles/rebuild_cache.dir
+/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86/CMakeFiles/edit_cache.dir
+/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86/CMakeFiles/animdustry.dir
+/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86/CMakeFiles/native_app_glue.dir

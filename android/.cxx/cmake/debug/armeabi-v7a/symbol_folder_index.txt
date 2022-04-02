@@ -1,0 +1,1 @@
+/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/armeabi-v7a

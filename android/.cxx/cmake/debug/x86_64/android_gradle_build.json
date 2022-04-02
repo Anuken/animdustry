@@ -1,0 +1,54 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "/home/anuke/Projects/absurd/android/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+      "-C",
+      "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+    "-C",
+    "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "native_app_glue-Debug-x86_64": {
+      "buildCommandComponents": [
+        "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64",
+        "native_app_glue"
+      ],
+      "buildType": "debug",
+      "abi": "x86_64",
+      "artifactName": "native_app_glue",
+      "output": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64/libnative_app_glue.a"
+    },
+    "animdustry-Debug-x86_64": {
+      "buildCommandComponents": [
+        "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/x86_64",
+        "animdustry"
+      ],
+      "buildType": "debug",
+      "abi": "x86_64",
+      "artifactName": "animdustry",
+      "output": "/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/x86_64/libanimdustry.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

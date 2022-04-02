@@ -357,7 +357,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
     if item.input.lastSwitchTime == 0f or musicTime() >= item.input.lastSwitchTime + switchDelay:
       for i, unit in save.units:
-        if unit != item.unitDraw.unit and i < switchKeys.len and switchKeys[i].tapped:
+        if unit != item.unitDraw.unit and i < switchKeys.len and (switchKeys[i].tapped or mobileUnitSwitch == i):
           item.unitDraw.unit = unit
           item.unitDraw.switchTime = 1f
           item.input.lastSwitchTime = musicTime()
@@ -379,7 +379,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     var 
       moved = false
       failed = false
-      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, KeyCode.keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) else: vec2()
+      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, KeyCode.keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) + mobilePad else: vec2()
     
     #prevent going out of bounds as counting as a move
     let newPos = item.gridPos.vec + vec.vec2i

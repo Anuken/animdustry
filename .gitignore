@@ -2,8 +2,5 @@ build/
 assets/atlas.dat
 assets/atlas.png
 repl.nim
-nimdustry
 .idea/
 gifs/
-#for now
-assets/unused_music

@@ -1,0 +1,54 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "/home/anuke/Projects/absurd/android/src/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+      "-C",
+      "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+    "-C",
+    "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "animdustry-Debug-arm64-v8a": {
+      "buildCommandComponents": [
+        "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+        "animdustry"
+      ],
+      "buildType": "debug",
+      "abi": "arm64-v8a",
+      "artifactName": "animdustry",
+      "output": "/home/anuke/Projects/absurd/android/build/intermediates/cmake/debug/obj/arm64-v8a/libanimdustry.so",
+      "runtimeFiles": []
+    },
+    "native_app_glue-Debug-arm64-v8a": {
+      "buildCommandComponents": [
+        "/home/anuke/Android/Sdk/cmake/3.10.2.4988404/bin/ninja",
+        "-C",
+        "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+        "native_app_glue"
+      ],
+      "buildType": "debug",
+      "abi": "arm64-v8a",
+      "artifactName": "native_app_glue",
+      "output": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a/libnative_app_glue.a"
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

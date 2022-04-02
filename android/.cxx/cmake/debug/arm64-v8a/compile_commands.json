@@ -1,0 +1,703 @@
+[
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c.o   -c /home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c",
+  "file": "/home/anuke/.nimble/pkgs/stb_image-2.5/stb_image/read.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/backend/opensles/soloud_opensles.cpp.o -c /home/anuke/Projects/soloud/src/backend/opensles/soloud_opensles.cpp",
+  "file": "/home/anuke/Projects/soloud/src/backend/opensles/soloud_opensles.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/c_api/soloud_c.cpp.o -c /home/anuke/Projects/soloud/src/c_api/soloud_c.cpp",
+  "file": "/home/anuke/Projects/soloud/src/c_api/soloud_c.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_audiosource.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_audiosource.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_audiosource.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_bus.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_bus.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_bus.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_3d.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_3d.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_3d.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_basicops.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_basicops.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_basicops.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_faderops.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_faderops.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_faderops.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_filterops.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_filterops.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_filterops.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_getters.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_getters.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_getters.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_setters.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_setters.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_setters.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_voicegroup.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_voicegroup.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_voicegroup.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_core_voiceops.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_core_voiceops.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_core_voiceops.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_fader.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_fader.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_fader.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_fft.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_fft.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_fft.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_fft_lut.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_fft_lut.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_fft_lut.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_file.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_file.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_file.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_filter.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_filter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_filter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_misc.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_misc.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_misc.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_queue.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_queue.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_queue.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/core/soloud_thread.cpp.o -c /home/anuke/Projects/soloud/src/core/soloud_thread.cpp",
+  "file": "/home/anuke/Projects/soloud/src/core/soloud_thread.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wav_ogg.cpp.o -c /home/anuke/Projects/soloud/src/audiosource/wav/soloud_wav_ogg.cpp",
+  "file": "/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wav_ogg.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp.o -c /home/anuke/Projects/soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp",
+  "file": "/home/anuke/Projects/soloud/src/audiosource/wav/soloud_wavstream_ogg.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/audiosource/wav/stb_vorbis.c.o   -c /home/anuke/Projects/soloud/src/audiosource/wav/stb_vorbis.c",
+  "file": "/home/anuke/Projects/soloud/src/audiosource/wav/stb_vorbis.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_bassboostfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_bassboostfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_bassboostfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_biquadresonantfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_biquadresonantfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_biquadresonantfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_dcremovalfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_dcremovalfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_dcremovalfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_echofilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_echofilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_echofilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_fftfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_fftfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_fftfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_flangerfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_flangerfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_flangerfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_freeverbfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_freeverbfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_freeverbfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_lofifilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_lofifilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_lofifilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_robotizefilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_robotizefilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_robotizefilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__ -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/soloud/src/filter/soloud_waveshaperfilter.cpp.o -c /home/anuke/Projects/soloud/src/filter/soloud_waveshaperfilter.cpp",
+  "file": "/home/anuke/Projects/soloud/src/filter/soloud_waveshaperfilter.cpp"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_digitsutils.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_digitsutils.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_assertions.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_assertions.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_formatfloat.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_formatfloat.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_dollars.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_dollars.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_io.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_io.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_system.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_system.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_bitops.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_bitops.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_math.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_math.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@ssharedtypes.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_parseutils.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_parseutils.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_unicode.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_unicode.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_algorithm.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_algorithm.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_strutils.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_strutils.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_strformat.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_strformat.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_hashes.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_hashes.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_tables.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_tables.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_sequtils.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_sequtils.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_sets.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_sets.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_pathnorm.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_pathnorm.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_options.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_options.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_times.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_times.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_os.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_os.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@sprivate@sutils.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spolymorph-0.3.0@spolymorph@scomponents.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_sysrand.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_sysrand.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_random.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_random.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sfmath.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglad.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sgl@sglproc.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sstb_image-2.5@sstb_image@sread.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_streams.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_streams.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sassets.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sassets.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@stexture.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@stexture.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@scolor.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@scolor.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sframebuffer.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sshader.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sshader.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sscreenbuffer.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@smesh.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@smesh.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@spatch.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@spatch.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sbatch.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@satlas.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@satlas.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sglobals.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sdraw.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sinput.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sinput.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@saudio.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@saudio.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@score.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@score.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@spacker.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sbumpy-1.0.3@sbumpy.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@schroma-0.2.5@schroma.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@scommon.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sblends.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sinternal.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@smasks.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@simages.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaints.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@spaths.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@sopentype.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfontformats@ssvgfont.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@spixie-4.0.1@spixie@sfonts.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scommon.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinternal.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sbitstreams.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@scrc.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@slz77.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@ssnappy.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/stdlib_heapqueue.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/stdlib_heapqueue.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sdeflate.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sinflate.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy@sgzip.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@szippy-0.9.7@szippy.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sfont.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sui.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@sfau@ssrc@sfau@sg2@sbloom.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@mtypes.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@mtypes.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@mvars.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@mvars.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@m..@s..@s..@s.nimble@spkgs@sjsony-1.0.1@sjsony.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@msaveio.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@msaveio.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@mpatterns.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@mpatterns.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@mmaps.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@mmaps.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/c64/@mmain.nim.c.o   -c /home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c",
+  "file": "/home/anuke/Projects/absurd/android/src/c64/@mmain.nim.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Danimdustry_EXPORTS -I/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue -I/home/anuke/.choosenim/toolchains/nim-1.6.4/lib -I/home/anuke/Projects/glfm/glfm/include -I/home/anuke/Projects/glfm/glfm/src -I/home/anuke/Projects/glfm/glfm/example/src -I/home/anuke/Projects/soloud/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/animdustry.dir/home/anuke/Projects/glfm/glfm/src/glfm_platform_android.c.o   -c /home/anuke/Projects/glfm/glfm/src/glfm_platform_android.c",
+  "file": "/home/anuke/Projects/glfm/glfm/src/glfm_platform_android.c"
+},
+
+{
+  "directory": "/home/anuke/Projects/absurd/android/.cxx/cmake/debug/arm64-v8a",
+  "command": "/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=aarch64-none-linux-android21 --gcc-toolchain=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/anuke/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native_app_glue.dir/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue/android_native_app_glue.c.o   -c /home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue/android_native_app_glue.c",
+  "file": "/home/anuke/Android/Sdk/ndk/21.3.6528147/sources/android/native_app_glue/android_native_app_glue.c"
+}
+]
