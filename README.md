@@ -2,7 +2,7 @@
 
 # animdustry
 
-the anime gacha rhythm game mindustry event
+the anime gacha bullet hell rhythm game mindustry event
 
 # compiling
 
