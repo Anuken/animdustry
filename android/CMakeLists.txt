@@ -30,8 +30,8 @@ ${ANDROID_NDK}/sources/android/native_app_glue
 ${NIM_INCLUDE_DIR}
 )
 
-set(CMAKE_CXX_FLAGS "-O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DSOLOUD_OGG_ONLY -DWITH_OPENSLES -D__ANDROID__")
+set(CMAKE_CXX_FLAGS "-O3 -DSOLOUD_OGG_ONLY -DWITH_MINIAUDIO -D__ANDROID__")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DSOLOUD_OGG_ONLY -DWITH_MINIAUDIO -D__ANDROID__")
 
 # add lib dependencies
 target_link_libraries(animdustry
@@ -40,7 +40,6 @@ target_link_libraries(animdustry
     EGL
     GLESv2
     log
-    OpenSLES
     )
 
 
