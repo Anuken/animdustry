@@ -1,6 +1,6 @@
 version       = "0.0.1"
 author        = "Anuken"
-description   = "Animedustry"
+description   = "Animdustry"
 license       = "GPL-3.0"
 srcDir        = "src"
 bin           = @["main"]
