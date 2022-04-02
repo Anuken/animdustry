@@ -1,6 +1,5 @@
 import ecs, types, options, fau/g2/font
 
-#TODO better viewport
 const
   #pixels
   tileSize* = 20f
