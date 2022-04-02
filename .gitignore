@@ -4,4 +4,7 @@ assets/atlas.png
 repl.nim
 .idea/
 gifs/
-
+android/build
+android/src
+android/.gradle
+android/.cxx
