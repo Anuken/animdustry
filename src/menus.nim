@@ -357,8 +357,11 @@ makeSystem("drawUI", []):
 
       var
         offset = sys.levelFade[i]
-        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced - 0.01f, bounds.h)
-        over = r.contains(mouse)
+        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
+      
+      let
+        hitRect = r
+        over = hitRect.grow(-0.001f).contains(mouse)
 
       sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
 

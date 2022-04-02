@@ -19,9 +19,13 @@ the anime gacha rhythm game mindustry event
 
 # future plans
 
+- code cleanup; main.nim is too big
 - android support as a standalone APK
-- more drawings/characters, if I have time
 - more levels, if I have time
+- better movement sync if possible, hit detection can be very janky sometimes
+- delay slider for audio, maybe settings
+
+*(as I am trying to focus on Mindustry now, don't expect any significant updates!)*
 
 # credits
 
