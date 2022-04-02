@@ -75,7 +75,8 @@ task androidBuild, "Android build":
   shell "cp android/CMakeLists.txt android/src"
 
   for arch in ["32", "64"]:
-    rmDir &"android/src/c{arch}"
+    if dirExists(&"android/src/c{arch}"):
+      rmDir &"android/src/c{arch}"
     let cpu = if arch == "32": "" else: "64"
 
     shell &"nim c -f --compileOnly --cpu:arm{cpu} --os:android -d:danger -c --noMain:on --nimcache:android/src/c{arch} src/{app}.nim"
