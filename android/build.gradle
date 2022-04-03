@@ -38,6 +38,15 @@ android{
         targetSdkVersion 30
     }
     
+    signingConfigs{
+        release{
+            storeFile new File((String)System.getenv("ANIMDUSTRY_KEYSTORE_PATH"))
+            storePassword System.getenv("ANIMDUSTRY_KEYSTORE_PASS")
+            keyAlias "anuke"
+            keyPassword System.getenv("ANIMDUSTRY_KEYSTORE_PASS")
+        }
+    }
+    
     buildTypes{
 	    release{
 	        signingConfig signingConfigs.release

@@ -43,6 +43,9 @@ var
   mobilePad*: Vec2
   mobileUnitSwitch*: int
 
+  #factor between world pixels and screen pixels
+  rawScaling*: float32
+
   #frames for effects (bad)
   smokeFrames*: array[6, Patch]
   explodeFrames*: array[5, Patch]

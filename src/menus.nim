@@ -12,8 +12,6 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
-  let rawScaling = -(fau.cam.size.y / fau.size.y)
-
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
     state.hitTime = state.hitTime.max(0f)
@@ -130,7 +128,7 @@ makeSystem("drawUI", []):
 
       for i, unit in save.units:
         let 
-          pos = screen.xy + vec2(i.float32 * 0.8f, fau.insets[2] * rawScaling)
+          pos = screen.xy + vec2(i.float32 * 0.8f, fau.insets[2].abs * rawScaling)
           current = player.unitDraw.unit == unit
           bounds = rect(pos, vec2(23f.px, 32f.px))
         draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear, scl = vec2(0.75f))
@@ -143,7 +141,7 @@ makeSystem("drawUI", []):
       mobilePad = vec2()
       let 
         padSize = 2.5f
-        padPos = fau.cam.view.botRight + vec2(-4f, 4f + fau.insets[2] * rawScaling)
+        padPos = fau.cam.view.botRight + vec2(-4f, 4f + fau.insets[2].abs * rawScaling)
       
       for i, pos in d4f:
         let dp = padPos + pos * 2.5f

@@ -17,7 +17,7 @@ else:
 
 when defined(Android):
   #why isn't this the default??
-  --d:androidNDK
+  #--d:androidNDK
   --d:androidFullscreen
 
 if defined(emscripten):
