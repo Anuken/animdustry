@@ -16,7 +16,7 @@ the anime gacha bullet hell rhythm game mindustry event
 1. install the latest stable version of Nim. `~/.nimble/bin` must be on your PATH.
 2. make sure this repository was cloned with `--recursive`, as it uses git submodules!
 3. if on linux, `sudo apt install -y xorg-dev libgl1-mesa-dev` or equivalent packages
-4. `nimble install` - if this fails with an atlas-related error, run `nimble pack` beforehand
+4. `nimble install`
 5. `nimble debug`
 
 # future plans
