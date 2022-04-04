@@ -1,11 +1,8 @@
 import jsony, zippy, os, vars, types, strformat, core, fau/assets
 
-#TODO: use system provided directory
 let 
   dataDir = getSaveDir("absurd")
   dataFile = dataDir / "data.bin"
-
-echo "DATA DIR: ", dataDir
 
 proc parseHook*(s: string, i: var int, u: var Unit) =
   var str: string
@@ -38,6 +35,7 @@ proc saveGame* =
     echo &"Error: Failed to write save data: {getCurrentExceptionMsg()}"
 
 proc loadGame* =
+  echo "Loading game from ", dataFile
   ## Loads game data from the save file. Does nothing if there is no data.
   if fileExists(dataFile):
     try:
