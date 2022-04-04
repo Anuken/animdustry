@@ -716,7 +716,7 @@ makeSystem("draw", []):
     for i in 0..<hitFrames.len:
       hitFrames[i] = patch("hit" & $i)
 
-  let margin = when defined(Android): 3 else: 4
+  let margin = when isMobile: 3 else: 4
 
   #margin is currently 4, adjust as needed
   let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2 + 1 + margin)))

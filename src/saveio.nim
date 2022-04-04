@@ -1,8 +1,8 @@
-import jsony, zippy, os, vars, types, strformat
+import jsony, zippy, os, vars, types, strformat, core
 
 #TODO: android support???
 let 
-  dataDir = when defined(Android): "/data/data/io.anuke.animdustry" else: getConfigDir() / "absurd"
+  dataDir = when isAndroid: "/data/data/io.anuke.animdustry" else: getConfigDir() / "absurd"
   dataFile = dataDir / "data.bin"
 
 proc parseHook*(s: string, i: var int, u: var Unit) =

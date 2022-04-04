@@ -85,9 +85,9 @@ makeSystem("drawUI", []):
     titleFont.draw("SOUND REQUIRED", vec2(0f, 2.5f))
     defaultFont.draw("(yes, you really need it)", vec2(0f, -2f))
 
-    defaultFont.draw(when defined(Android): "[ tap to continue ]" else: "[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
+    defaultFont.draw(when isMobile: "[ tap to continue ]" else: "[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
 
-    if (keySpace.tapped or keyEscape.tapped) or (defined(Android) and keyMouseLeft.tapped):
+    if (keySpace.tapped or keyEscape.tapped) or (isMobile and keyMouseLeft.tapped):
       mode = gmMenu
       inIntro = true
       soundIntro.play()
@@ -137,7 +137,7 @@ makeSystem("drawUI", []):
         if keyMouseLeft.tapped and bounds.contains(mouseWorld):
           mobileUnitSwitch = i
   
-    when defined(Android):
+    when isMobile:
       mobilePad = vec2()
       let 
         padSize = 2.5f
@@ -228,7 +228,7 @@ makeSystem("drawUI", []):
     if unit.ability.len > 0:
       defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.75f.px)
 
-    if not inIntro and ((not defined(Android) and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped):
+    if not inIntro and ((isDesktop and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped):
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
@@ -453,7 +453,7 @@ makeSystem("drawUI", []):
 
     defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
 
-    if (not defined(Android) and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped:
+    if (isDesktop and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped:
       safeTransition:
         soundBack.play()
         mode = gmMenu
