@@ -1,3 +1,6 @@
+#pack every compile
+static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
+
 import ecs, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
 import std/[tables, sequtils, algorithm, macros, options, random, math, strformat]
 import types, vars, saveio, patterns, maps, sugar, units
@@ -826,10 +829,7 @@ makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
 
 include menus
 
-#pack every compile
-static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
-
 #unit textures dynamically loaded
 preloadFolder("textures")
 
-launchFau(initParams(title = "it's finally here"))
+launchFau(initParams(title = "Animdustry"))

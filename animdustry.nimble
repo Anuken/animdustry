@@ -84,7 +84,6 @@ task androidBuild, "Android build":
       "/home/anuke/.choosenim/toolchains/nim-1.6.4/lib",
       "/home/anuke/Projects/glfm/glfm/include",
       "/home/anuke/Projects/glfm/glfm/src",
-      "/home/anuke/Projects/glfm/glfm/example/src",
       "/home/anuke/Projects/soloud/include"
     ]
     var sources: seq[string]
