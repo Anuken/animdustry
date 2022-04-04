@@ -1,9 +1,11 @@
-import jsony, zippy, os, vars, types, strformat, core
+import jsony, zippy, os, vars, types, strformat, core, fau/assets
 
-#TODO: android support???
+#TODO: use system provided directory
 let 
-  dataDir = when isAndroid: "/data/data/io.anuke.animdustry" else: getConfigDir() / "absurd"
+  dataDir = getSaveDir("absurd")
   dataFile = dataDir / "data.bin"
+
+echo "DATA DIR: ", dataDir
 
 proc parseHook*(s: string, i: var int, u: var Unit) =
   var str: string
@@ -44,3 +46,4 @@ proc loadGame* =
     except JsonError: echo &"Invalid save state JSON: {getCurrentExceptionMsg()}"
     except ZippyError: echo &"Corrupt save state data: {getCurrentExceptionMsg()}"
     except IOError: echo &"Error: Save data cannot be read: {getCurrentExceptionMsg()}"
+    except OSError: echo &"OS error: {getCurrentExceptionMsg()}"
