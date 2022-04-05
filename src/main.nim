@@ -732,8 +732,7 @@ makeSystem("draw", []):
 
   rawScaling = 1f / camScl
 
-  fau.cam.update(fau.size / camScl, vec2())
-  fau.cam.use()
+  fau.cam.use(fau.size / camScl, vec2())
 
   updateMapPreviews()
 

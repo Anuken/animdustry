@@ -80,21 +80,20 @@ task androidBuild, "Android build":
     let cpu = if arch == "32": "" else: "64"
 
     shell &"nim c -f --compileOnly --cpu:arm{cpu} --os:android -d:danger -c --noMain:on --nimcache:android/src/c{arch} src/{app}.nim"
-    let includes = @[
-      "/home/anuke/.choosenim/toolchains/nim-1.6.4/lib",
-      "/home/anuke/Projects/glfm/glfm/include",
-      "/home/anuke/Projects/glfm/glfm/src",
-      "/home/anuke/Projects/soloud/include"
-    ]
-    var sources: seq[string]
+    var 
+      includes: seq[string]
+      sources: seq[string]
 
     let compData = parseJson(readFile(&"android/src/c{arch}/{app}.json"))
     let compList = compData["compile"]
     for arr in compList.items:
       sources.add($arr[0])
-
-    sources.add("\"/home/anuke/Projects/glfm/glfm/src/glfm_platform_android.c\"")
-    sources.add("\"/home/anuke/Projects/glfm/glfm/src/glfm_platform.h\"")
+    
+    #scrape includes from C arguments
+    if compList.len > 0:
+      let firstCommand = compList[0][1]
+      let split = ($firstCommand).split(" ").filterIt(it.startsWith("-I")).mapIt(it[2..^1]).mapIt(if it.startsWith("'"): it[1..^2] else: it)
+      includes.add split
 
     cmakeText = cmakeText
     .replace("${NIM_SOURCES_" & arch & "}", sources.join("\n"))
@@ -106,3 +105,13 @@ task android, "Android Run":
   androidBuildTask()
   cd "android"
   shell "./gradlew run"
+
+task androidPackage, "Create Android APK (Debug)":
+  androidBuildTask()
+  cd "android"
+  shell "./gradlew assembleDebug"
+
+task androidRelease, "Create Android APK (Release)":
+  androidBuildTask()
+  cd "android"
+  shell "./gradlew assembleRelease"

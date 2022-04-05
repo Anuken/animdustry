@@ -19,6 +19,14 @@ the anime gacha bullet hell rhythm game mindustry event
 4. `nimble install`
 5. `nimble debug`
 
+## android
+
+1. make sure you have the Android SDK and NDK installed
+2. `nimble install` (only if you haven't run this in the previous step!)
+
+- `nimble androidPackage` will create an unsigned APK at `android/build/outputs/apk/debug/`
+- `nimble android` will attempt to compile and run the game on a connected Android device - USB debugging must be enabled
+
 # future plans
 
 - code cleanup; main.nim is too big

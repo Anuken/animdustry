@@ -38,6 +38,11 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
+  #TODO variable UI scaling support!
+  #let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2)))
+  #rawScaling = 1f / camScl
+  #fau.cam.use(fau.size / camScl)
+
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
     state.hitTime = state.hitTime.max(0f)
@@ -293,7 +298,7 @@ makeSystem("drawUI", []):
       panMove = 1f
       unitSpace = 25f.px
     
-    let buttonY = statsBounds.y + 35f.px + 0.75f + 2.px
+    let buttonY = screen.top - 0.5f - 4f.px
 
     #gambling interface
     text(rectCenter(statsBounds.centerX + 4f, buttonY, 3f, 1f), &"{save.copper} / {copperForRoll}", align = daLeft, color = if save.copper >= copperForRoll: colorWhite else: %"ff4843")
