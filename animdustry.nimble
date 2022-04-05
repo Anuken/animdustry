@@ -37,7 +37,7 @@ task debugBin, "Create debug build file":
   shell &"nim -d:debug -o:build/{app} --debugger:native src/{app}"
 
 task release, "Release build":
-  shell &"nim r -d:release -d:danger -o:build/{app} src/{app}"
+  shell &"nim r -d:danger -o:build/{app} src/{app}"
 
 task web, "Deploy web build":
   mkDir "build/web"

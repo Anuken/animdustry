@@ -1,4 +1,3 @@
-
 makeSystem("drawUI", []):
   fields:
     #epic hardcoded array size (it really doesn't get any better than this)
@@ -38,10 +37,13 @@ makeSystem("drawUI", []):
 
   drawFlush()
 
-  #TODO variable UI scaling support!
-  #let camScl = (min(fau.size.x, fau.size.y) / ((mapSize * 2)))
-  #rawScaling = 1f / camScl
-  #fau.cam.use(fau.size / camScl)
+  let 
+    #bigger UI on mobile (smaller screen)
+    uiScaling = when isMobile: 11f else: 17f
+    camScl = min(fau.size.x, fau.size.y) / uiScaling
+    rawScaling = 1f / camScl
+  
+  fau.cam.use(fau.size / camScl)
 
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
@@ -287,7 +289,7 @@ makeSystem("drawUI", []):
     let
       screen = fau.cam.viewport
       #height of stats box
-      statsh = screen.h * 0.2f
+      statsh = screen.h * 0.31f
       statsBounds = rect(screen.xy + vec2(0f, screen.h - statsh), screen.w, statsh)
       #bounds of level select buttons
       bounds = rect(screen.x, screen.y, screen.w, screen.h - statsh)
@@ -296,7 +298,7 @@ makeSystem("drawUI", []):
       vertLen = 0.8f
       fadeCol = colorBlack.withA(0.7f)
       panMove = 1f
-      unitSpace = 25f.px
+      unitSpace = 24f.px
     
     let buttonY = screen.top - 0.5f - 4f.px
 
@@ -309,8 +311,8 @@ makeSystem("drawUI", []):
 
     for i, unit in allUnits:
       let
-        unlock = unit.unlocked #TODO uncomment once testing is over
-        x = statsBounds.centerX - allUnits.len * unitSpace/2f + i.float32 * unitSpace
+        unlock = unit.unlocked
+        x = statsBounds.centerX - (allUnits.len - 1) * unitSpace/2f + i.float32 * unitSpace
         y = statsBounds.y + 6f.px
         hit = rect(x - unitSpace/2f, y, unitSpace, 32f.px)
         over = hit.contains(mouse) and unlock

@@ -6,7 +6,7 @@ template createUnits*() =
     shadowOffset = vec2(0.3f)
     shadowColor = rgba(0f, 0f, 0f, 0.4f)
 
-  template getScl(base = 0.175f): Vec2 = vec2(base) + vec2(0.12f) * (1f - splashTime).pow(10f)
+  template getScl(base = 0.175f): Vec2 = (vec2(base) + vec2(0.12f) * (1f - splashTime).pow(10f)) * fau.cam.size.y / 17f
   template hoverOffset(scl = 0.65f, offset = 0f): Vec2 = vec2(0f, (fau.time + offset).sin(scl, 0.14f) - 0.14f)
 
   proc drawShadowed(patch: Patch, pos: Vec2, scl: Vec2) =
