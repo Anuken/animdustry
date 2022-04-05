@@ -384,6 +384,9 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       failed = false
       vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, KeyCode.keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) + mobilePad else: vec2()
     
+    #reset pad state after polling
+    mobilePad = vec2()
+
     #prevent going out of bounds as counting as a move
     let newPos = item.gridPos.vec + vec.vec2i
     if newPos.x.abs > mapSize or newPos.y.abs > mapSize:

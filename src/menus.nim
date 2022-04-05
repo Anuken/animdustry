@@ -10,6 +10,32 @@ makeSystem("drawUI", []):
     sys.glowPatch = "glow".patch9
     sys.hoverLevel = -1
 
+    #swipe controls
+    when isMobile:
+      var touchStart: array[32, Vec2]
+      addFauListener proc(e: FauEvent) =
+        case e.kind:
+        of feTouch:
+          if e.touchDown:
+            touchStart[e.touchId] = e.touchPos
+          else:
+            let delta = e.touchPos - touchStart[e.touchId]
+            #TODO sensitivity should depend on screen DPI or something
+            if delta.len > 10f:
+              let angle = delta.angle.deg
+              
+              let dir = 
+                if angle >= 315f or angle <= 45f: 0
+                elif angle in 45f..135f: 1
+                elif angle in 135f..225f: 2
+                else: 3
+
+              mobilePad = d4f[dir]
+
+        of feDrag:
+          discard
+        else: discard
+
   drawFlush()
 
   if state.hitTime > 0:
@@ -136,9 +162,9 @@ makeSystem("drawUI", []):
 
         if keyMouseLeft.tapped and bounds.contains(mouseWorld):
           mobileUnitSwitch = i
-  
-    when isMobile:
-      mobilePad = vec2()
+
+    #TODO pad controls bad
+    when isMobile and false:
       let 
         padSize = 2.5f
         padPos = fau.cam.view.botRight + vec2(-4f, 4f + fau.insets[2].abs * rawScaling)
