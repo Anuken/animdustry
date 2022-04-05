@@ -66,6 +66,7 @@ makeSystem("drawUI", []):
 
     if mode == gmPaused:
       defaultFont.draw("[ paused ]", vec2(0f, 0.5f), scale = fontSize)
+      buttonPos.y -= 1.3f
     elif mode == gmFinished:
       let hitText = if state.totalHits == 0: "\nno hits! (200% reward)" else: ""
       defaultFont.draw(&"[ level complete! ]\nfinal score: {state.points}{hitText}", vec2(0f, if state.totalHits == 0: 1.25f else: 0.75f), scale = fontSize, color = colorUi)
@@ -78,12 +79,12 @@ makeSystem("drawUI", []):
       defaultFont.draw(&"[ level failed! ]", vec2(0f, 0.5f), scale = fontSize, color = colorHit)
       buttonPos.y -= 1.3f
 
-      if button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
-        let map = state.map
-        capture map:
-          safeTransition:
-            playMap(map)
-            mode = gmPlaying
+    if button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
+      let map = state.map
+      capture map:
+        safeTransition:
+          playMap(map)
+          mode = gmPlaying
 
     if button(rectCenter(buttonPos, 3f, 1f), "Menu"):
       safeTransition:
