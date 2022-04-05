@@ -562,8 +562,6 @@ template patSpace*(col: Color) =
         }else{
           gl_FragColor = vec4(0.0);
         }
-        
-        //gl_FragColor = vec4(ToGamma(col), 1.0);// + vec4(coords, 1.0, 1.0);
       }
       """
     )
@@ -611,7 +609,6 @@ soundcloud.com/adrianwave/peach-beach
 
 
 This game was written entirely in the Nim programming language!
-(I will be releasing the source after I clean it up a bit)
 
 Thank you @treeform and @rlipsc on Github for their excellent Nim libraries!
 
@@ -619,8 +616,6 @@ Thank you @treeform and @rlipsc on Github for their excellent Nim libraries!
 ------
 
 THANK YOU FOR PLAYING!
-
-More v7 previews and development coming soon.
 
 
 
