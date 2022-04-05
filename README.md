@@ -6,23 +6,26 @@ the anime gacha bullet hell rhythm game mindustry event
 
 # compiling
 
-## windows
-
-1. use linux instead
-2. no, really - compilation doesn't work on windows, I don't develop on Windows and I don't have much interest in adding support for it
-
-## mac/linux
+## initial mac/linux/android setup
 
 1. install the latest stable version of Nim. `~/.nimble/bin` must be on your PATH.
 2. make sure this repository was cloned with `--recursive`, as it uses git submodules!
 3. if on linux, `sudo apt install -y xorg-dev libgl1-mesa-dev` or equivalent packages
 4. `nimble install`
-5. `nimble debug`
 
-## android
+## running on windows
+
+1. use linux instead
+2. no, really - compilation doesn't work on windows, I don't develop on Windows and I don't have much interest in adding support for it
+
+## running on desktop
+
+- `nimble debug` to launch the game directly in debug mode
+- `nimble deploy <win/lin/mac>` to create an executable in the `build/` directory for a specific platform; cross-compiling for Windows requires mingw installed
+
+## running/compiling on android
 
 1. make sure you have the Android SDK and NDK installed
-2. `nimble install` (only if you haven't run this in the previous step!)
 
 - `nimble androidPackage` will create an unsigned APK at `android/build/outputs/apk/debug/`
 - `nimble android` will attempt to compile and run the game on a connected Android device - USB debugging must be enabled
