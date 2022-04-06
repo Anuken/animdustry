@@ -3,6 +3,7 @@
 #--hints:off
 --gc:arc
 --d:nimPreviewHashRef
+--d:msgpack_obj_to_map
 
 # reason: https://github.com/nim-lang/Nim/issues/18146
 --tlsEmulation:off
