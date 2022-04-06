@@ -1,36 +1,31 @@
-import jsony, zippy, os, vars, types, strformat, core, fau/assets
+import os, vars, types, strformat, core, fau/assets, msgpack4nim
 
 let 
   dataDir = getSaveDir("absurd")
   dataFile = dataDir / "data.bin"
 
-proc parseHook*(s: string, i: var int, u: var Unit) =
+proc packType*[ByteStream](s: ByteStream, unit: Unit) =
+  s.pack(if unit == nil: "nil" else: unit.name)
+
+proc unpackType*[ByteStream](s: ByteStream, unit: var Unit) =
   var str: string
-  parseHook(s, i, str)
+  s.unpack(str)
+
   if str == "nil":
-    u = nil
+    unit = nil
     return
   for other in allUnits:
     if other.name == str:
-      u = other
+      unit = other
       return
   
-  u = unitMono
-
-proc dumpHook*(s: var string, u: Unit) =
-  s.add '"'
-  s.add if u == nil: "nil" else: u.name
-  s.add '"'
+  unit = unitMono
 
 proc saveGame* =
-  ## Saves game data to deflated JSON.
-  let data = save.toJson()
-  let comp = compress(data, dataFormat = dfDeflate)
-
   dataDir.createDir()
 
   try:
-    dataFile.writeFile(comp)
+    dataFile.writeFile(pack(save))
   except IOError:
     echo &"Error: Failed to write save data: {getCurrentExceptionMsg()}"
 
@@ -39,9 +34,6 @@ proc loadGame* =
   ## Loads game data from the save file. Does nothing if there is no data.
   if fileExists(dataFile):
     try:
-      save = uncompress(dataFile.readFile, dataFormat = dfDeflate).fromJson(SaveState)
+      unpack(dataFile.readFile, save)
       echo "Loaded game state."
-    except JsonError: echo &"Invalid save state JSON: {getCurrentExceptionMsg()}"
-    except ZippyError: echo &"Corrupt save state data: {getCurrentExceptionMsg()}"
-    except IOError: echo &"Error: Save data cannot be read: {getCurrentExceptionMsg()}"
-    except OSError: echo &"OS error: {getCurrentExceptionMsg()}"
+    except: echo &"Failed to load save state: {getCurrentExceptionMsg()}"
