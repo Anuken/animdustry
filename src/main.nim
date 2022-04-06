@@ -500,12 +500,10 @@ makeSystem("lifetime", [Lifetime]):
 
       #fade out, no damage
       if item.lifetime.turns < 0:
-        if not item.entity.has(Deleting):
-          item.entity.add(Deleting(time: 1f))
-        if item.entity.has(Damage):
-          item.entity.remove(Damage)
-        if item.entity.has(Lifetime):
-          item.entity.remove(Lifetime)
+        item.entity.addIfMissing(Deleting(time: 1f))
+        
+        item.entity.remove(Damage)
+        item.entity.remove(Lifetime)
 
 makeSystem("snek", [Snek, GridPos, Velocity]):
   if state.newTurn:
@@ -597,8 +595,8 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
         deleteCurrent()
         
         other.wall.health.dec
-        if other.wall.health <= 0 and not other.entity.has(Deleting):
-          other.entity.add Deleting(time: 1f)
+        if other.wall.health <= 0:
+          other.entity.addIfMissing Deleting(time: 1f)
         
         #cannot damage player anymore
         hit = true
@@ -625,8 +623,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
             other.input.shielded = false
     
   for i in sys.toDelete:
-    if i.has(Damage):
-      i.remove Damage
+    i.remove Damage
 
 makeSystem("updateBounce", [GridPos, Velocity, Bounce]):
   if state.newTurn:
