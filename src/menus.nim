@@ -86,7 +86,7 @@ makeSystem("drawUI", []):
       defaultFont.draw(&"[ level failed! ]", vec2(0f, 0.5f), scale = fontSize, color = colorHit)
       buttonPos.y -= 1.3f
 
-    if button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
+    if mode != gmFinished and button(rectCenter(buttonPos + vec2(0f, 1.2f), 3f, 1f), "Retry"):
       let map = state.map
       capture map:
         safeTransition:
