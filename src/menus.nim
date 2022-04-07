@@ -309,6 +309,16 @@ makeSystem("drawUI", []):
     var bstyle = defaultButtonStyle
     bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.23f, 1f))
 
+    var sstyle = defaultSliderStyle
+    sstyle.up = patch9("button")
+    sstyle.down = patch9("button")
+    sstyle.back = patch9("glow") 
+    sstyle.backColor = (%"000000")
+    sstyle.upColor = (%"00FF00")
+    sstyle.downColor = (%"0000FF")
+    sstyle.sliderWidth = 10f
+    
+
     for i, unit in allUnits:
       let
         unlock = unit.unlocked
@@ -392,6 +402,9 @@ makeSystem("drawUI", []):
       splashRevealTime = 1f
       musicReveal.play(volume = audioVolume)
       showSplashUnit(unit)
+
+    slider(rectCenter(statsBounds.centerX,statsBounds.centerY,10f,1f),0f,1f,audioVolume,sstyle)
+      
     
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
