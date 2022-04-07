@@ -97,7 +97,7 @@ makeSystem("drawUI", []):
       safeTransition:
         reset()
         mode = gmMenu
-        soundBack.play()
+        soundBack.play(volume = audioVolume)
     
     #flash screen animation after winning
     if mode == gmFinished:
@@ -124,7 +124,7 @@ makeSystem("drawUI", []):
     if (keySpace.tapped or keyEscape.tapped) or (isMobile and keyMouseLeft.tapped):
       mode = gmMenu
       inIntro = true
-      soundIntro.play()
+      soundIntro.play(volume = audioVolume)
       showSplashUnit(unitAlpha)
 
     draw(fau.white, vec2(), size = fau.cam.size, color = colorBlack.withA(1f - introTime))
@@ -193,11 +193,11 @@ makeSystem("drawUI", []):
     
     if splashRevealTime < 0f:
       if unit == unitBoulder:
-        soundVineBoom.play()
+        soundVineBoom.play(volume = audioVolume)
       elif unit == unitNothing:
-        soundWind3.play()
+        soundWind3.play(volume = audioVolume)
       else:
-        soundGet.play()
+        soundGet.play(volume = audioVolume)
     
     draw(fau.white, vec2(), size = fau.cam.size, color = colorUiDark)
     patZoom(colorUi, inv.pow(2f), 10, sides = 4)
@@ -266,7 +266,7 @@ makeSystem("drawUI", []):
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
-        soundBack.play()
+        soundBack.play(volume = audioVolume)
         splashTime = 0f
     
     #flash
@@ -321,7 +321,7 @@ makeSystem("drawUI", []):
 
       if over and not unit.wasOver:
         unit.jumping = true
-        soundJump.play(pitch = calcPitch(i))
+        soundJump.play(pitch = calcPitch(i),volume = audioVolume)
       
       unit.wasOver = over
 
@@ -331,17 +331,17 @@ makeSystem("drawUI", []):
       if over and keyMouseRight.tapped:
         unit.clickTime = 1f
         if unit == unitBoulder:
-          soundVineboom.play()
+          soundVineboom.play(volume = audioVolume)
         else:
-          soundPat.play(pitch = calcPitch((i mod 2)))
+          soundPat.play(pitch = calcPitch((i mod 2)),volume = audioVolume)
       
       if over and keyMouseLeft.tapped:
         showSplashUnit(unit)
 
         if unit == unitBoulder:
-          soundVineBoom.play()
+          soundVineBoom.play(volume = audioVolume)
         else:
-          soundView.play()
+          soundView.play(volume = audioVolume)
 
       if unit.jumping:
         unit.jump += fau.delta / 0.21f
@@ -390,7 +390,7 @@ makeSystem("drawUI", []):
       saveGame()
 
       splashRevealTime = 1f
-      musicReveal.play()
+      musicReveal.play(volume = audioVolume)
       showSplashUnit(unit)
     
     #outline around everything
@@ -423,7 +423,7 @@ makeSystem("drawUI", []):
       if over:
         anyHover = true
         if sys.hoverLevel != i:
-          soundSelect.play(pitch = calcPitch(i))
+          soundSelect.play(pitch = calcPitch(i),volume = audioVolume)
         sys.hoverLevel = i
       
       #only expands after bounds check to prevent weird input
@@ -489,7 +489,7 @@ makeSystem("drawUI", []):
 
     if (isDesktop and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped:
       safeTransition:
-        soundBack.play()
+        soundBack.play(volume = audioVolume)
         mode = gmMenu
   
   drawFlush()

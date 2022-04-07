@@ -72,7 +72,7 @@ onEcsBuilt:
     makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
     state.map = next
-    state.voice = state.map.sound.play()
+    state.voice = state.map.sound.play(volume = audioVolume)
     if offset > 0.0:
       state.voice.seek(offset)
     
@@ -270,14 +270,14 @@ makeSystem("core", []):
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
     mode = if mode != gmPlaying: gmPlaying else: gmPaused
     if mode == gmPlaying:
-      soundUnpause.play()
+      soundUnpause.play(volume = audioVolume)
     else:
-      soundPause.play()
+      soundPause.play(volume = audioVolume)
   
   #trigger game over
   if mode == gmPlaying and health() <= 0:
     mode = gmDead
-    soundDie.play()
+    soundDie.play(volume = audioVolume)
 
   when defined(debug):
     if keyEscape.tapped:
@@ -333,7 +333,7 @@ makeSystem("updateMusic", []):
       state.moveBeat = 1f
   elif state.voice.valid.not:
     mode = gmFinished
-    soundWin.play()
+    soundWin.play(volume = audioVolume)
 
     #calculate copper received and add it to inventory
     let 
@@ -606,7 +606,7 @@ makeSystem("damagePlayer", [GridPos, Pos, Damage, not Deleting]):
         let pos = other.gridPos
         if pos.vec == item.gridPos.vec and (other.input.justMoved or other.pos.vec.within(item.pos.vec, 0.23f)):
           other.unitDraw.hitTime = 1f
-          soundHit.play()
+          soundHit.play(volume = audioVolume)
           deleteCurrent()
 
           #damage shields instead

@@ -37,6 +37,8 @@ var
   fftValues*: array[fftSize, float32]
   titleFont*: Font
 
+  audioVolume* = 1.0f
+
   #UI state section
 
   #D-pad for mobile state
