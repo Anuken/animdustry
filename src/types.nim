@@ -57,6 +57,8 @@ type Gamemode* = enum
   gmCredits,
   #is in the main menu
   gmMenu,
+  #TODO: is in settings menu (can still be playing a game in the background!)
+  gmSettings,
   #currently in track
   gmPlaying,
   #temporarily paused with space/esc

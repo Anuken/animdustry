@@ -1,7 +1,7 @@
 import os, vars, types, strformat, core, fau/assets, tables, msgpack4nim, msgpack4nim/msgpack4collection
 
 let 
-  dataDir = getSaveDir("absurd")
+  dataDir = getSaveDir("animdustry")
   dataFile = dataDir / "data.bin"
   #TODO
   settingsFile = dataDir / "settings.bin"
