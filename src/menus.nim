@@ -491,7 +491,7 @@ makeSystem("drawUI", []):
       safeTransition:
         soundBack.play()
         mode = gmMenu
-  
+
   drawFlush()
 
   #handle fading

@@ -115,3 +115,10 @@ type SaveState* = object
   lastUnit*: Unit
   #duplicate count by unit name
   duplicates*: Table[string, int]
+
+#Persistent user settings.
+type Settings* = object
+  #audio latency in ms
+  audioLatency*: float
+  #whether to use gamepads on mobile
+  gamepad*: bool
