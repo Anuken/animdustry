@@ -15,8 +15,8 @@ the anime gacha bullet hell rhythm game mindustry event
 
 ## running on windows
 
-1. use linux instead
-2. no, really - compilation doesn't work on windows, I don't develop on Windows and I don't have much interest in adding support for it
+- I don't develop on Windows and I don't have much interest in adding support for it myself
+- you can try running the commands below, but I doubt they will work - if you know how to make compilation work on Windows, submit a PR
 
 ## running on desktop
 
