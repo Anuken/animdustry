@@ -29,11 +29,14 @@ const
 var
   audioLatency* = 0.0
   allMaps*: seq[Beatmap]
+  #Settings state.
+  settings*: Settings
   #Per-map state. Resets between games.
   state* = GameState()
   #Persistent save state.
   save* = SaveState()
   mode* = gmMenu
+  
   fftValues*: array[fftSize, float32]
   titleFont*: Font
 

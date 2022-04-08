@@ -232,6 +232,7 @@ makeSystem("core", []):
     createUnits()
 
     loadGame()
+    loadSettings()
 
     #must have at least one unit as a default
     if save.units.len == 0:

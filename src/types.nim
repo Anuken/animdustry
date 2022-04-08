@@ -57,6 +57,8 @@ type Gamemode* = enum
   gmCredits,
   #is in the main menu
   gmMenu,
+  #TODO: is in settings menu (can still be playing a game in the background!)
+  gmSettings,
   #currently in track
   gmPlaying,
   #temporarily paused with space/esc
@@ -115,3 +117,10 @@ type SaveState* = object
   lastUnit*: Unit
   #duplicate count by unit name
   duplicates*: Table[string, int]
+
+#Persistent user settings.
+type Settings* = object
+  #audio latency in ms
+  audioLatency*: float
+  #whether to use gamepads on mobile
+  gamepad*: bool
