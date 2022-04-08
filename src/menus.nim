@@ -311,11 +311,13 @@ makeSystem("drawUI", []):
 
     var sstyle = defaultSliderStyle
     sstyle.up = patch9("button")
-    sstyle.down = patch9("button")
-    sstyle.back = patch9("glow") 
+    sstyle.down = patch9("buttom")
+    sstyle.back = patch9("slider") 
+    sstyle.over = patch9("button")
     sstyle.backColor = (%"000000")
-    sstyle.upColor = (%"00FF00")
-    sstyle.downColor = (%"0000FF")
+    sstyle.overColor = (%"C0C0C0")
+    sstyle.upColor = (%"696969")
+    sstyle.downColor = (%"ffda8c")
     sstyle.sliderWidth = 10f
     
 
@@ -404,6 +406,16 @@ makeSystem("drawUI", []):
       showSplashUnit(unit)
 
     slider(rectCenter(statsBounds.centerX,statsBounds.centerY,10f,1f),0f,1f,audioVolume,sstyle)
+
+    if audioVolume <= 0.01f:
+      draw("speaker0".patchConst, vec2(statsBounds.centerX + 6f, statsBounds.centerY))
+    if audioVolume > 0.01f and audioVolume < 0.33f:
+      draw("speaker1".patchConst, vec2(statsBounds.centerX + 6f, statsBounds.centerY))
+    if audioVolume > 0.32f and audioVolume < 0.67f:
+      draw("speaker2".patchConst, vec2(statsBounds.centerX + 6f, statsBounds.centerY))
+    if audioVolume > 0.66f:
+      draw("speaker3".patchConst, vec2(statsBounds.centerX + 6f, statsBounds.centerY))
+      
       
     
     #outline around everything
