@@ -42,6 +42,7 @@ makeSystem("drawUI", []):
     uiScaling = when isMobile: 11f else: 17f
     camScl = min(fau.size.x, fau.size.y) / uiScaling
     rawScaling = 1f / camScl
+    bottomMargin = fau.insets[2].abs * rawScaling
   
   fau.cam.use(fau.size / camScl)
 
@@ -162,7 +163,7 @@ makeSystem("drawUI", []):
 
       for i, unit in save.units:
         let 
-          pos = screen.xy + vec2(i.float32 * 0.8f, fau.insets[2].abs * rawScaling)
+          pos = screen.xy + vec2(i.float32 * 0.8f, bottomMargin)
           current = player.unitDraw.unit == unit
           bounds = rect(pos, vec2(23f.px, 32f.px))
         draw(patch(&"unit-{unit.name}"), pos, align = daBotLeft, mixColor = if current: rgb(0.1f).withA(0.8f) else: colorClear, scl = vec2(0.75f))
@@ -175,7 +176,7 @@ makeSystem("drawUI", []):
     when isMobile and false:
       let 
         padSize = 2.5f
-        padPos = fau.cam.view.botRight + vec2(-4f, 4f + fau.insets[2].abs * rawScaling)
+        padPos = fau.cam.view.botRight + vec2(-4f, 4f + bottomMargin)
       
       for i, pos in d4f:
         let dp = padPos + pos * 2.5f
@@ -262,7 +263,7 @@ makeSystem("drawUI", []):
     if unit.ability.len > 0:
       defaultFont.draw(unit.ability, abilityBounds, color = rgb(0.7f), align = daBotRight, scale = 0.75f.px)
 
-    if not inIntro and ((isDesktop and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped):
+    if not inIntro and (button(rectCenter(screen.x + 2f, screen.y + 1f + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped):
       safeTransition:
         unit.clearTextures()
         splashUnit = none[Unit]()
@@ -487,7 +488,7 @@ makeSystem("drawUI", []):
 
     defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
 
-    if (isDesktop and button(rectCenter(screen.x + 2f, screen.y + 1f, 3f, 1f), "Back")) or keyEscape.tapped:
+    if  button(rectCenter(screen.x + 2f, screen.y + 1f  + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
         soundBack.play()
         mode = gmMenu
