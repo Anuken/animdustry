@@ -7,7 +7,7 @@ bin           = @["main"]
 binDir        = "jni"
 
 requires("nim >= 1.6.2")
-requires("https://github.com/Anuken/fau#" & staticExec("git -C fau rev-parse HEAD"))
+requires("https://github.com/Anuken/fau#" & staticExec("git -C fau rev-parse HEAD").replace("\n", "").replace("\r", ""))
 requires("msgpack4nim >= 0.3.1")
 
 import strformat, os, json, sequtils
