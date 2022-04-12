@@ -2,7 +2,7 @@
 static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
 
 import ecs, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
-import std/[tables, sequtils, algorithm, macros, options, random, math, strformat]
+import std/[tables, sequtils, algorithm, macros, options, random, math, strformat, deques]
 import types, vars, saveio, patterns, maps, sugar, units
 
 include components
@@ -38,7 +38,16 @@ onEcsBuilt:
     discard newEntityWith(DrawSpin(sprite: sprite), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Damage(), SpawnConveyors(len: length, diagonal: diag, alldir: alldir), Lifetime(turns: life))
 
   proc makeSorter(pos: Vec2i, mdir: Vec2i, moveSpace = 2, spawnSpace = 2, length = 1) =
-    discard newEntityWith(DrawSpin(sprite: "sorter"), Scaled(scl: 1f), Destructible(), Velocity(vec: mdir, space: moveSpace), Pos(), GridPos(vec: pos), Damage(), SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir)))
+    discard newEntityWith(
+      DrawSpin(sprite: "sorter"), 
+      Scaled(scl: 1f), 
+      Destructible(), 
+      Velocity(vec: mdir, space: moveSpace), 
+      Pos(), 
+      GridPos(vec: pos), 
+      Damage(), 
+      SpawnEvery(offset: 1, space: spawnSpace, spawn: SpawnConveyors(len: length, dir: -mdir))
+    )
 
   proc makeTurret(pos: Vec2i, face: Vec2i, reload = 4, life = 8, tex = "duo") =
     discard newEntityWith(DrawBounce(sprite: tex, rotation: face.vec2.angle - 90f.rad), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Turret(reload: reload, dir: face), Lifetime(turns: life))
@@ -143,7 +152,7 @@ proc getTexture*(unit: Unit, name: string = ""): Texture =
 
 proc rollUnit*(): Unit =
   #very low chance, as it is annoying
-  if chance(2f / 100f):
+  if chance(1f / 100f):
     return unitNothing
 
   #boulder has a much higher chance to be selected, because it's useless
@@ -194,6 +203,13 @@ proc sortUnits =
   
   save.units = save.units.deduplicate(true)
 
+proc togglePause =
+  mode = if mode != gmPlaying: gmPlaying else: gmPaused
+  if mode == gmPlaying:
+    soundUnpause.play()
+  else:
+    soundPause.play()
+
 makeSystem("core", []):
   init:
     fau.maxDelta = 100f
@@ -214,9 +230,17 @@ makeSystem("core", []):
       up: "button".patch9,
       overColor: colorWhite.withA(0.3f),
       downColor: colorWhite.withA(0.5f),
+      disabledColor: colorGray.withA(0.5f),
       #disabledColor: rgb(0.6f).withA(0.4f),
       textUpColor: colorWhite,
       textDisabledColor: rgb(0.6f)
+    )
+
+    defaultSliderStyle = SliderStyle(
+      sliderWidth: 10f,
+      back: "slider-back".patch9,
+      up: "slider".patch9,
+      over: "slider-over".patch9
     )
 
     #not fps based
@@ -233,6 +257,8 @@ makeSystem("core", []):
 
     loadGame()
     loadSettings()
+
+    setGlobalVolume(settings.globalVolume)
 
     #must have at least one unit as a default
     if save.units.len == 0:
@@ -252,9 +278,12 @@ makeSystem("core", []):
       mode = gmIntro
       save.introDone = true
       saveGame()
+    
+    when defined(debug):
+      mode = gmSettings
   
   #All passed systems will be paused when game state is not playing
-  macro makePaused(systems: varargs[untyped]): untyped =
+  macro makePaused(systems: varargs[typed]): untyped =
     result = newStmtList()
     for sys in systems:
       result.add quote do:
@@ -269,11 +298,7 @@ makeSystem("core", []):
   )
 
   if mode in {gmPlaying, gmPaused} and (keySpace.tapped or keyEscape.tapped):
-    mode = if mode != gmPlaying: gmPlaying else: gmPaused
-    if mode == gmPlaying:
-      soundUnpause.play()
-    else:
-      soundPause.play()
+    togglePause()
   
   #trigger game over
   if mode == gmPlaying and health() <= 0:
@@ -310,7 +335,7 @@ makeSystem("updateMusic", []):
     state.moveBeat -= fau.rawDelta / beatSpace
     state.moveBeat = max(state.moveBeat, 0f)
     
-    let nextSecs = state.voice.streamPos - audioLatency + state.map.beatOffset
+    let nextSecs = state.voice.streamPos - settings.audioLatency / 1000.0 + state.map.beatOffset
 
     if nextSecs == state.lastSecs:
       #beat did not change, move it forward manually to compensate for low "frame rate"

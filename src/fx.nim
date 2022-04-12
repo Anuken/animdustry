@@ -18,7 +18,7 @@ defineEffects:
   
   songShow(lifetime = 4f):
     if state.map != nil:
-      defaultFont.draw("Music: " & state.map.songName, fau.cam.view - rect(vec2(0f, 0.8f + e.fin.pow(7f)), vec2(0, 0f)), color = colorUi.withA(e.fout.powout(6f)), align = daTopLeft)
+      defaultFont.draw("Music: " & state.map.songName, fau.cam.view - rect(vec2(0f, 0.8f + e.fin.pow(7f) + (when isMobile: 1.5f else: 0f)), vec2(0, 0f)), color = colorUi.withA(e.fout.powout(6f)), align = daTopLeft)
   
   tutorial(lifetime = 9f):
     let 

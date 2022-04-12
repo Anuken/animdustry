@@ -15,8 +15,8 @@ the anime gacha bullet hell rhythm game mindustry event
 
 ## running on windows
 
-- I don't develop on Windows and I don't have much interest in adding support for it myself; **use linux instead**
-- there are countless problems with the build on Windows - if you manage to get it working, submit a PR
+- building on windows **does not work**
+- I don't develop on Windows and I don't have much interest in adding support for it myself; **use linux or WSL instead**
 
 ## running on desktop
 

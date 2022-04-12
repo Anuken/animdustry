@@ -121,6 +121,12 @@ type SaveState* = object
 #Persistent user settings.
 type Settings* = object
   #audio latency in ms
-  audioLatency*: float
+  audioLatency*: float32
+  #needs to be update on the audio end after loading
+  globalVolume*: float32
   #whether to use gamepads on mobile
   gamepad*: bool
+  #whether the mobile gamepad is on the left
+  gamepadLeft*: bool
+  #whether to show FPS on-screen (debugging only)
+  showFps*: bool

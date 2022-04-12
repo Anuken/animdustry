@@ -29,7 +29,8 @@ makeSystem("drawUI", []):
                 elif angle in 135f..225f: 2
                 else: 3
 
-              mobilePad = d4f[dir]
+              if not settings.gamepad:
+                mobilePad = d4f[dir]
 
         of feDrag:
           discard
@@ -45,6 +46,8 @@ makeSystem("drawUI", []):
     bottomMargin = fau.insets[2].abs * rawScaling
   
   fau.cam.use(fau.size / camScl)
+
+  let screen = fau.cam.view
 
   if state.hitTime > 0:
     state.hitTime -= fau.delta / 0.4f
@@ -133,13 +136,22 @@ makeSystem("drawUI", []):
     #draw debug text
     when defined(debug):
       defaultFont.draw(&"{state.turn} | {state.beatStats} | {musicTime().int div 60}:{(musicTime().int mod 60):02} | {fau.fps} fps", fau.cam.view, align = daBot)
+    
+    #TODO
+    if not defined(debug) and settings.showFps:
+      defaultFont.draw(&"{fau.fps} fps", fau.cam.view, align = daBot)
 
     if scoreTime > 0:
       scoreTime -= fau.delta / 0.5f
     
     scoreTime = scoreTime.max(0f)
 
-    defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
+    when isDesktop:
+      defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
+    else:
+      let buttonSize = 1.5f
+      if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = "pause".patchConst):
+        togglePause()
 
     let
       progSize = vec2(22f.px, 0f)
@@ -154,8 +166,7 @@ makeSystem("drawUI", []):
 
     mobileUnitSwitch = -1
 
-    let 
-      screen = fau.cam.viewport
+    let
       mouseWorld = fau.mouseWorld
 
     if sysInput.groups.len > 0:
@@ -173,13 +184,14 @@ makeSystem("drawUI", []):
           mobileUnitSwitch = i
 
     #TODO pad controls bad
-    when isMobile and false:
+    if isMobile and settings.gamepad:
       let 
-        padSize = 2.5f
-        padPos = fau.cam.view.botRight + vec2(-4f, 4f + bottomMargin)
+        padSize = 1.75f
+        padMargin = padSize * 1.75f
+        padPos = if settings.gamepadLeft: screen.botLeft + vec2(padMargin, padMargin + bottomMargin) else: screen.botRight + vec2(-padMargin, padMargin + bottomMargin)
       
       for i, pos in d4f:
-        let dp = padPos + pos * 2.5f
+        let dp = padPos + pos * padSize
         if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patchConst, rotation = i.float32 * 90f.rad) and keyMouseLeft.tapped:
           mobilePad = pos
 
@@ -225,7 +237,6 @@ makeSystem("drawUI", []):
     let
       unit = splashUnit.get
       pos = vec2(0f, -5f.px)
-      screen = fau.cam.viewport
       titleBounds = screen.grow(-0.4f)
       subtitleBounds = screen.grow(-2.2f)
       abilityW = screen.w / 4f
@@ -244,12 +255,10 @@ makeSystem("drawUI", []):
       titleBounds.xy, 
       bounds = titleBounds.wh, 
       scale = 1.5f.px,
-      color = colorWhite,#.mix(%"ffcc74", fau.time.sin(0.5f, 0.5f).abs), 
-      align = daTop, 
+      color = colorWhite,
+      align = daTop,
       modifier = (proc(index: int, offset: var fmath.Vec2, color: var Color, draw: var bool) =
         offset.x += ((index + 0.5f) - unit.title.len/2f) * 15f.px * splashTime.powout(3f)
-        #offset.y -= si.max(0f) * 5f.px
-        #color = colorWhite.mix(%"84f490", si * 0.8f)
       )
     )
 
@@ -288,7 +297,6 @@ makeSystem("drawUI", []):
       patStripes(%"accce3", %"57639a")
 
     let
-      screen = fau.cam.viewport
       #height of stats box
       statsh = screen.h * 0.31f
       statsBounds = rect(screen.xy + vec2(0f, screen.h - statsh), screen.w, statsh)
@@ -397,10 +405,16 @@ makeSystem("drawUI", []):
     #outline around everything
     lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
 
-    if button(rectCenter(screen.topRight - vec2(0.5f), 1f, 1f), icon = "info".patchConst):
+    let buttonSize = 1.5f
+
+    if button(rectCenter(screen.topRight - vec2(buttonSize/2f), vec2(buttonSize)), icon = "info".patchConst):
       safeTransition:
         creditsPan = 0f
         mode = gmCredits
+    
+    if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = "settings".patchConst):
+      safeTransition:
+        mode = gmSettings
 
     var anyHover = false
 
@@ -477,8 +491,6 @@ makeSystem("drawUI", []):
     
     patSkats()
 
-    let screen = fau.cam.view
-
     creditsPan -= fau.delta * 1.3f
 
     if keyMouseLeft.down or keySpace.down:
@@ -488,10 +500,115 @@ makeSystem("drawUI", []):
 
     defaultFont.draw(creditsText, fau.cam.view - rect(vec2(0f, offset), vec2()), scale = 0.75f.px, align = daTop)
 
-    if  button(rectCenter(screen.x + 2f, screen.y + 1f  + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped:
+    if button(rectCenter(screen.x + 2f, screen.y + 1f  + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
         soundBack.play()
         mode = gmMenu
+  elif mode == gmSettings:
+    drawPixel:
+      patStripes(%"accce3", %"57639a")
+      patVertGradient(%"57639a")
+    
+    let 
+      peekPos = vec2(fau.cam.view.right - 3f, fau.cam.view.y - 1.5f)
+      peekScl = 0.185f
+      peekCenter = vec2(11f, 365f) * peekScl * fau.pixelScl + peekPos
+      peekDeltaRaw = ((fau.mouseWorld - peekCenter) / 2f).lim(1f) * 1f.px
+      peekDelta = dizzyVec
+      dizzy = dizzyTime > 0
+      sampleRate = 60
+    
+    #eyes smoothly move to position
+    dizzyVec.lerp(peekDeltaRaw, fau.delta * 25f)
+    
+    dizzyTime -= fau.delta
+    dizzyCheckTime -= fau.delta * sampleRate.float32
+
+    #sample angles for dizzy animation
+    if dizzyCheckTime <= 0f:
+      dizzySamples.addLast((fau.mouseWorld - peekCenter).angle)
+      #ensure sample array size
+      if dizzySamples.len > sampleRate * 2:
+        discard dizzySamples.popFirst()
+      dizzyCheckTime = 1f
+
+      var 
+        lastSign = 0
+        totalRads = 0f
+      
+      for i in 0..<(dizzySamples.len - 1):
+        let 
+          curr = dizzySamples[i]
+          next = dizzySamples[i + 1]
+        
+        let si = asign(curr, next)
+
+        if lastSign == 0 or lastSign == si:
+          #distance betwen two samples can't be too high, that usually implies a window switch or something
+          totalRads += min(adist(curr, next), pi2 / 4f)
+        else:
+          #reset rotation, direction changes
+          totalRads = 0f
+        lastSign = si
+      
+      #check for a certain amount of revolutions and a minimum number of samples
+      if totalRads >= pi2 * 2f and dizzyTime <= -0.5f and dizzySamples.len > 60:
+        dizzyTime = 1f
+        dizzySamples.clear()
+
+    #TODO proper background w/ drop shadow
+    if not dizzy:
+      draw(unitAlpha.getTexture("-whites").toPatch, peekPos, align = daBot, scl = vec2(peekScl))
+
+      for (sign, x, tex) in [(-1, -62f, "left"), (1, 44f, "right")]:
+        let 
+          pat = unitAlpha.getTexture("-eye-" & $tex).toPatch
+          pos = peekPos + vec2(x, 372f) * peekScl * fau.pixelScl + vec2(peekDelta.x, (peekDelta.y * 0.6f).min(0.65f.px))
+        
+        draw(pat, pos, scl = vec2(peekScl))
+
+    draw(unitAlpha.getTexture("peek").toPatch, peekPos, align = daBot, scl = vec2(peekScl))
+
+    if dizzy:
+      draw(unitAlpha.getTexture("-dizzy").toPatch, peekPos, align = daBot, scl = vec2(peekScl))
+    
+    titleFont.draw("S E T T I N G S", screen - rect(vec2(), vec2(0f, 4f.px)), align = daTop)
+
+    let oldSettings = settings
+
+    when isMobile:
+      let padText = if settings.gamepad: "On" else: "Off"
+      if button(rectCenter(vec2(0f, 0f), vec2(4f, 1f)), &"Gamepad: {padText}", toggled = settings.gamepad):
+        settings.gamepad = settings.gamepad.not
+      
+      #TODO conflicts with character switching UI
+      when false:
+        let alignText = if settings.gamepadLeft: "Left" else: "Right"
+        if button(rectCenter(vec2(0f, -2f), vec2(5f, 1f)), &"Pad Side: {alignText}", disabled = not settings.gamepad):
+          settings.gamepadLeft = settings.gamepadLeft.not
+
+    #TODO save settings on edit.
+
+    slider(rectCenter(vec2(0f, 4f), vec2(9f, 1f)), 0f, 400f, settings.audioLatency, text = &"Audio Latency: {settings.audioLatency.int}ms")
+
+    slider(rectCenter(vec2(0f, 2f), vec2(9f, 1f)), 0f, 1f, settings.globalVolume, text = &"Volume: {(settings.globalVolume * 100).int}%")
+    
+    #update every frame in case it changes (should have little to no overhead...)
+    setGlobalVolume(settings.globalVolume)
+
+    #only save setting when mutated
+    if settings != oldSettings:
+      saveSettings()
+    
+    #TODO
+    if button(rectCenter(screen.x + 2f, screen.y + 1f  + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped:
+      safeTransition:
+        soundBack.play()
+        mode = gmMenu
+    
+    #only draw copper in debug mode to visualize the cursor for videos
+    when defined(debug):
+      draw("big-copper".patch, fau.mouseWorld, scl = vec2(peekScl * 1.5f))
 
   drawFlush()
 

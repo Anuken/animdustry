@@ -1,4 +1,4 @@
-import ecs, types, options, fau/g2/font
+import ecs, types, fau/g2/font, std/[options, deques]
 
 const
   #pixels
@@ -27,10 +27,9 @@ const
   ingameModes* = {gmPaused, gmPlaying, gmDead, gmFinished}
 
 var
-  audioLatency* = 0.0
   allMaps*: seq[Beatmap]
   #Settings state.
-  settings*: Settings
+  settings*: Settings = Settings(globalVolume: 1f)
   #Per-map state. Resets between games.
   state* = GameState()
   #Persistent save state.
@@ -68,6 +67,14 @@ var
   creditsPan*: float32
   #if true, score change was positive
   scorePositive*: bool
+
+  #><
+  dizzyTime*: float32
+  #for smoothing
+  dizzyVec*: Vec2
+  #angles
+  dizzySamples* = initDeque[float32]()
+  dizzyCheckTime*: float32
   
   #transition time for fading between scenes
   #when fading out, this will reach 1, call fadeTarget, and the fade back from 1 to 0
