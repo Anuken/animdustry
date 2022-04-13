@@ -155,8 +155,8 @@ proc rollUnit*(): Unit =
   if chance(1f / 100f):
     return unitNothing
 
-  #boulder has a much higher chance to be selected, because it's useless
-  if chance(0.4f):
+  #boulder is very rare now
+  if chance(1f / 1000f):
     return unitBoulder
 
   #not all units; alpha and boulder are excluded
