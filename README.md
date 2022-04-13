@@ -2,7 +2,7 @@
 
 # animdustry
 
-the anime gacha bullet hell rhythm game mindustry event
+the anime gacha bullet hell rhythm game; *originally created as a mindustry april 1st event*
 
 # compiling
 
@@ -34,6 +34,8 @@ the anime gacha bullet hell rhythm game mindustry event
 
 - code cleanup; main.nim is too big
 - more levels, if I have time
+- a level editor
+- a new menu with a quit button + better character/level selection
 - better movement sync if possible, hit detection can be very janky sometimes
 
 *(as I am trying to focus on Mindustry now, don't expect any significant updates!)*
