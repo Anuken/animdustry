@@ -150,7 +150,7 @@ makeSystem("drawUI", []):
       defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
     else:
       let buttonSize = 1.5f
-      if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = "pause".patchConst):
+      if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = patch(if mode == gmPlaying: "pause" else: "play")):
         togglePause()
 
     let
@@ -509,15 +509,39 @@ makeSystem("drawUI", []):
       patStripes(%"accce3", %"57639a")
       patVertGradient(%"57639a")
     
-    let 
-      peekPos = vec2(fau.cam.view.right - 3f, fau.cam.view.y - 1.5f)
+    let
+      peekPos = vec2(fau.cam.view.right - 3f, fau.cam.view.y - 0.6f)
       peekScl = 0.185f
+      wallHeight = 313f * peekScl * fau.pixelScl
+      outlineHeight = 11f * peekScl * fau.pixelScl
       peekCenter = vec2(11f, 365f) * peekScl * fau.pixelScl + peekPos
       peekDeltaRaw = ((fau.mouseWorld - peekCenter) / 2f).lim(1f) * 1f.px
       peekDelta = dizzyVec
       dizzy = dizzyTime > 0
       sampleRate = 60
+
+      shadowRect = rect(vec2(screen.x, peekPos.y + wallHeight), vec2(screen.w, outlineHeight + 0.2f))
+      shadowPatch = fau.white
+      shadowCol = rgba(0f, 0f, 0f, 0.5f)
+      uv = shadowPatch.uv
+      mixcol = colorClear
+      wallRect = rect(vec2(screen.x, peekPos.y), vec2(screen.w, wallHeight))
     
+    drawVert(shadowPatch.texture, [
+      vert2(shadowRect.xy, uv, shadowCol, mixcol),
+      vert2(shadowRect.botRight, uv, shadowCol, mixcol),
+      vert2(shadowRect.topRight, uv, mixcol, mixcol),
+      vert2(shadowRect.topLeft, uv, mixcol, mixcol)
+    ])
+
+    fillRect(wallRect, color = %"b28768")
+    fillRect(rect(vec2(screen.x, peekPos.y + wallHeight), vec2(screen.w, outlineHeight)), color = colorBlack)
+
+    drawClip(wallRect)
+    patStripes(%"accce3", %"57639a")
+    #fillRect(rect(vec2(screen.x, peekPos.y + wallHeight - outlineHeight*4f), vec2(screen.w, outlineHeight*4f)), color = %"accce3")
+    drawClip()
+
     #eyes smoothly move to position
     dizzyVec.lerp(peekDeltaRaw, fau.delta * 25f)
     
