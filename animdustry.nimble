@@ -4,7 +4,7 @@ description   = "Animdustry"
 license       = "GPL-3.0"
 srcDir        = "src"
 bin           = @["main"]
-binDir        = "jni"
+binDir        = "build"
 
 requires("nim >= 1.6.2")
 requires("https://github.com/Anuken/fau#" & staticExec("git -C fau rev-parse HEAD").replace("\n", "").replace("\r", ""))
