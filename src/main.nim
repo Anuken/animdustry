@@ -305,7 +305,7 @@ makeSystem("core", []):
     mode = gmDead
     soundDie.play()
 
-  when defined(debug):
+  if (isMobile and mode == gmMenu and keyEscape.tapped and splashUnit.isNone) or defined(debug):
     if keyEscape.tapped:
       quitApp()
 
