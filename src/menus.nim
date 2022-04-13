@@ -505,12 +505,11 @@ makeSystem("drawUI", []):
         soundBack.play()
         mode = gmMenu
   elif mode == gmSettings:
-    drawPixel:
-      patStripes(%"accce3", %"57639a")
-      patVertGradient(%"57639a")
+    patStripes(%"accce3", %"57639a")
+    patVertGradient(%"57639a")
     
     let
-      peekPos = vec2(fau.cam.view.right - 3f, fau.cam.view.y - 0.6f)
+      peekPos = vec2(screen.right - 3f, screen.y - 0.6f + bottomMargin)
       peekScl = 0.185f
       wallHeight = 313f * peekScl * fau.pixelScl
       outlineHeight = 11f * peekScl * fau.pixelScl
@@ -525,8 +524,9 @@ makeSystem("drawUI", []):
       shadowCol = rgba(0f, 0f, 0f, 0.5f)
       uv = shadowPatch.uv
       mixcol = colorClear
-      wallRect = rect(vec2(screen.x, peekPos.y), vec2(screen.w, wallHeight))
+      wallRect = rect(vec2(screen.x, screen.y), vec2(screen.w, wallHeight + peekPos.y - screen.y))
     
+    #wall stuff
     drawVert(shadowPatch.texture, [
       vert2(shadowRect.xy, uv, shadowCol, mixcol),
       vert2(shadowRect.botRight, uv, shadowCol, mixcol),
@@ -539,7 +539,6 @@ makeSystem("drawUI", []):
 
     drawClip(wallRect)
     patStripes(%"accce3", %"57639a")
-    #fillRect(rect(vec2(screen.x, peekPos.y + wallHeight - outlineHeight*4f), vec2(screen.w, outlineHeight*4f)), color = %"accce3")
     drawClip()
 
     #eyes smoothly move to position

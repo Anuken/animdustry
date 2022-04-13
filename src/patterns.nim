@@ -44,12 +44,13 @@ proc patStripes*(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle
   let 
     amount = 20
     swidth = 70f.px
+    sheight = fau.cam.size.dst(vec2(0f)) + 1f.px
   for i in 0..<amount:
     if i mod 2 == 1:
       let
         frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
         pos = vec2l(angle, swidth) * (frac * amount)
-      draw(fau.white, pos, size = vec2(swidth, 1200f.px), rotation = angle, color = col2)
+      draw(fau.white, pos, size = vec2(swidth, sheight), rotation = angle, color = col2)
 
 proc patBeatSquare*(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))
