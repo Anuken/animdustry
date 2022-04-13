@@ -4,6 +4,8 @@
 
 the anime gacha bullet hell rhythm game; *originally created as a mindustry april 1st event*
 
+[downloads for windows/linux/android are available on the releases page.](https://github.com/Anuken/animdustry/releases)
+
 # compiling
 
 ## initial mac/linux/android setup
