@@ -128,7 +128,7 @@ makeSystem("drawUI", []):
     if (keySpace.tapped or keyEscape.tapped) or (isMobile and keyMouseLeft.tapped):
       mode = gmMenu
       inIntro = true
-      soundIntro.play()
+      musicIntro.play()
       showSplashUnit(unitAlpha)
 
     draw(fau.white, vec2(), size = fau.cam.size, color = colorBlack.withA(1f - introTime))
@@ -210,7 +210,7 @@ makeSystem("drawUI", []):
       elif unit == unitNothing:
         soundWind3.play()
       else:
-        soundGet.play()
+        musicGet.play()
     
     draw(fau.white, vec2(), size = fau.cam.size, color = colorUiDark)
     patZoom(colorUi, inv.pow(2f), 10, sides = 4)
@@ -350,7 +350,7 @@ makeSystem("drawUI", []):
         if unit == unitBoulder:
           soundVineBoom.play()
         else:
-          soundView.play()
+          musicView.play()
 
       if unit.jumping:
         unit.jump += fau.delta / 0.21f
