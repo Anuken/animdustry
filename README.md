@@ -43,6 +43,7 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 - make it imposible to jump over conveyors
 - fix/reproduce beat skip bug
 - release on Google Play (when polished enough)
+- make audio latency use a special level or show the beat
 - release on iOS App Store (will almost certainly be paid there, if you're wondering)
 
 *(as I am trying to focus on Mindustry now, don't expect any significant updates!)*
