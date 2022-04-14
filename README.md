@@ -13,6 +13,7 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 1. install the latest stable version of Nim. `~/.nimble/bin` must be on your PATH.
 2. make sure this repository was cloned with `--recursive`, as it uses git submodules!
 3. if on linux, `sudo apt install -y xorg-dev libgl1-mesa-dev` or equivalent packages
+4. `nimble install -y -d` (the flags are important!)
 
 ## running on windows
 
