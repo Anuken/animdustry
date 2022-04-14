@@ -25,7 +25,7 @@ defineEffects:
       offset = rect(vec2(0f, 0.8f + e.fin.pow(7f) + 1f), vec2(0, 0f))
       col = colorUi.withA(e.fout.powout(6f))
     
-    defaultFont.draw(when isMobile: "[ SWIPE in a direction to move]" else: "[ WASD or arrow keys to move]\nyes this is a rhythm game\n\nI refuse to explain further", fau.cam.view - offset, color = col)
+    defaultFont.draw(when isMobile: "[ SWIPE in a direction to move]\nyou can only move to the beat" else: "[ WASD or arrow keys to move]\nyou can only move to the beat", fau.cam.view - offset, color = col)
 
   strikeWave:
     #TODO looks bad

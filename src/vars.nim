@@ -88,7 +88,8 @@ let
     title: "-BOULDER-",
     subtitle: "it's just a rock",
     unmoving: true,
-    ability: "utterly useless"
+    ability: "utterly useless",
+    hidden: true
   )
   unitAlpha* = Unit(
     name: "alpha",

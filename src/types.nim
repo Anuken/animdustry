@@ -42,6 +42,8 @@ type Unit* = ref object
   unmoving*: bool
   #true for "nothing"
   unobtainable*: bool
+  #if true, this unit does not show up in the list of units unless unlocked
+  hidden*: bool
 
   #UI state (ugh)
   wasOver*: bool
