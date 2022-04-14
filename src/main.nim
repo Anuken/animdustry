@@ -341,7 +341,10 @@ makeSystem("updateMusic", []):
       state.secs = nextSecs
     state.lastSecs = nextSecs
 
-    let nextBeat = int(state.secs / beatSpace)
+    #if mode == gmPlaying:
+    #  echo "raw: ", state.lastSecs, " scaled: ", state.secs
+
+    let nextBeat = max(int(state.secs / beatSpace), state.turn)
 
     state.newTurn = nextBeat != state.turn
     state.turn = nextBeat
