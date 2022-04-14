@@ -22,7 +22,7 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 
 ## running on desktop
 
-- `nimble debug` to launch the game directly in debug mode
+- `nimble run` to launch the game directly
 - `nimble deploy <win/lin/mac>` to create an executable in the `build/` directory for a specific platform; cross-compiling for Windows requires mingw installed
 
 ## running/compiling on android
