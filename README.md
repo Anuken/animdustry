@@ -34,11 +34,16 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 
 # future plans
 
+- new name; "animdustry" is too long and gets cut off in the app drawer
 - code cleanup; main.nim is too big
 - more levels, if I have time
-- a level editor
+- a level editor (in the distant future)
 - a new menu with a quit button + better character/level selection
 - better movement sync if possible, hit detection can be very janky sometimes
+- make it imposible to jump over conveyors
+- fix/reproduce beat skip bug
+- release on Google Play (when polished enough)
+- release on iOS App Store (will almost certainly be paid there, if you're wondering)
 
 *(as I am trying to focus on Mindustry now, don't expect any significant updates!)*
 

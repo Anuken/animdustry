@@ -278,9 +278,6 @@ makeSystem("core", []):
       mode = gmIntro
       save.introDone = true
       saveGame()
-    
-    when defined(debug):
-      mode = gmSettings
   
   #All passed systems will be paused when game state is not playing
   macro makePaused(systems: varargs[typed]): untyped =
