@@ -46,7 +46,7 @@ task web, "Deploy web build":
   writeFile("build/web/index.html", readFile("build/web/index.html").replace("$title$", capitalizeAscii(app)))
 
 task deploy, "Build for all platforms":
-  #packTask()
+  packTask()
 
   for name, os, cpu, args in builds.items:
     if commandLineParams()[^1] != "deploy" and not name.startsWith(commandLineParams()[^1]):
