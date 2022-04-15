@@ -269,11 +269,6 @@ template createMaps* =
             for i in -mapSize..mapSize:
               if (i + (x == 1).int).emod(2) == 0:
                 makeConveyor(vec2i(x * mapSize, i), vec2i(-x, 0), 1)
-
-        template sideSorters =
-          let space = 4
-          if turn mod space == 0:
-            makeSorter(vec2i(mapSize, 0), vec2i(-1, 0))
         
         template rightConveyors =
           let space = 2

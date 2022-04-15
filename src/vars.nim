@@ -1,4 +1,4 @@
-import ecs, types, fau/g2/font, std/[options, deques]
+import ecs, types, fau/g2/[font, ui], std/[options, deques]
 
 const
   #pixels
@@ -38,6 +38,8 @@ var
   
   fftValues*: array[fftSize, float32]
   titleFont*: Font
+
+  gamepadButtonStyle*: ButtonStyle
 
   #UI state section
 

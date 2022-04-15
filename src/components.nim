@@ -1,4 +1,4 @@
-register(defaultComponentOptions):
+register(defaultCompOpts):
   type 
     Input = object
       hitTurn: int

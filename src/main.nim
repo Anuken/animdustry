@@ -236,6 +236,9 @@ makeSystem("core", []):
       textDisabledColor: rgb(0.6f)
     )
 
+    gamepadButtonStyle = defaultButtonStyle
+    gamepadButtonStyle.up = "pad-button".patch9
+
     defaultSliderStyle = SliderStyle(
       sliderWidth: 10f,
       back: "slider-back".patch9,

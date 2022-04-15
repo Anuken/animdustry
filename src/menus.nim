@@ -183,7 +183,6 @@ makeSystem("drawUI", []):
         if keyMouseLeft.tapped and bounds.contains(mouseWorld):
           mobileUnitSwitch = i
 
-    #TODO pad controls bad
     if isMobile and settings.gamepad:
       let 
         padSize = 1.75f
@@ -192,7 +191,7 @@ makeSystem("drawUI", []):
       
       for i, pos in d4f:
         let dp = padPos + pos * padSize
-        if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patchConst, rotation = i.float32 * 90f.rad) and keyMouseLeft.tapped:
+        if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patchConst, rotation = i.float32 * 90f.rad, style = gamepadButtonStyle) and keyMouseLeft.tapped:
           mobilePad = pos
 
   elif splashUnit.isSome and splashRevealTime > 0f: #draw splash unit reveal animation
