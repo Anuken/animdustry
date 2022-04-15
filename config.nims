@@ -13,7 +13,7 @@ when defined(release) or defined(danger):
   --passL:"-flto"
   --d:strip
 else:
-  #better compiler performance with local assets
+  #better compiler/linker performance with local assets
   --d:localAssets
 
 when defined(Android):

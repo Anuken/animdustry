@@ -73,7 +73,8 @@ task deploy, "Build for all platforms":
 task androidBuild, "Android build":
   var cmakeText = "android/CMakeLists.txt".readFile()
 
-  shell "cp android/CMakeLists.txt android/src"
+  mkDir "android/src"
+  cpFile("android/CMakeLists.txt", "android/src/CMakeLists.txt")
 
   for arch in ["32", "64"]:
     if dirExists(&"android/src/c{arch}"):
