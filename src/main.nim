@@ -28,8 +28,8 @@ onEcsBuilt:
   proc makeTimedBullet(pos: Vec2i, dir: Vec2i, tex = "bullet", life = 3) =
     discard newEntityWith(DrawBullet(sprite: tex), Scaled(scl: 1f), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Lifetime(turns: life))
 
-  proc makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor") =
-    discard newEntityWith(DrawSquish(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length))
+  proc makeConveyor(pos: Vec2i, dir: Vec2i, length = 2, tex = "conveyor", gen = 0) =
+    discard newEntityWith(DrawSquish(sprite: tex), Scaled(scl: 1f), Destructible(), Pos(), GridPos(vec: pos), Velocity(vec: dir), Damage(), Snek(len: length, gen: gen))
 
   proc makeLaser(pos: Vec2i, dir: Vec2i) =
     discard newEntityWith(Scaled(scl: 1f), DrawLaser(dir: dir), Pos(), GridPos(vec: pos), Damage(), Lifetime(turns: 1))
@@ -535,12 +535,7 @@ makeSystem("snek", [Snek, GridPos, Velocity]):
   if state.newTurn:
     all:
       if item.snek.produced.not and item.snek.gen < item.snek.len - 1:
-        let copy = item.entity.clone()
-        #behind this one
-        copy.fetch(GridPos).vec -= item.velocity.vec
-        copy.fetch(Pos).vec = copy.fetch(GridPos).vec.vec2
-        copy.fetch(Snek).gen = item.snek.gen + 1
-        copy.fetch(Snek).fade = 0f
+        makeConveyor(item.gridPos.vec - item.velocity.vec, item.velocity.vec, gen = item.snek.gen + 1)
 
         item.snek.produced = true
 
