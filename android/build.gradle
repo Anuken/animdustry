@@ -40,7 +40,7 @@ android{
     
     signingConfigs{
         release{
-            storeFile new File((String)System.getenv("ANIMDUSTRY_KEYSTORE_PATH"))
+            storeFile System.getenv("ANIMDUSTRY_KEYSTORE_PATH") == null ? new File("no") : new File((String)System.getenv("ANIMDUSTRY_KEYSTORE_PATH"))
             storePassword System.getenv("ANIMDUSTRY_KEYSTORE_PASS")
             keyAlias "anuke"
             keyPassword System.getenv("ANIMDUSTRY_KEYSTORE_PASS")
