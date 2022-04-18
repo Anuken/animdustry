@@ -155,7 +155,7 @@ makeSystem("drawUI", []):
 
     let
       progSize = vec2(22f.px, 0f)
-      progress = state.secs / state.map.sound.length
+      progress = state.secs / state.map.soundLength
       healthPos = fau.cam.viewport.topRight - vec2(0.75f)
 
     draw("progress".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f))

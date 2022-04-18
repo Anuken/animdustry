@@ -1,4 +1,4 @@
-import ecs, tables
+import ecs, tables, options
 
 type Beatmap* = ref object
   name*: string
@@ -11,8 +11,12 @@ type Beatmap* = ref object
   update*: proc()
   #used for conveyors and other objects fading in
   fadeColor*: Color
-  #music track to use
-  sound*: Sound
+  #path to music track
+  music*: string
+  #the loaded sound file of map, or nil
+  loadedSound*: Option[Sound]
+  #length of map in seconds; only valid after map is loaded for first time.
+  soundLength*: float
   #bpm for the music track
   bpm*: float
   #in seconds

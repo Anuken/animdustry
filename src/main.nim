@@ -74,6 +74,14 @@ onEcsBuilt:
       map: map1
     )
   
+  proc getSound(map: Beatmap): Sound =
+    if map.loadedSound.isSome:
+      return map.loadedSound.get
+    else:
+      result = loadMusicAsset("maps/" & map.music & ".ogg")
+      map.soundLength = result.length
+      map.loadedSound = result.some
+  
   proc playMap(next: Beatmap, offset = 0.0) =
     reset()
 
@@ -81,7 +89,7 @@ onEcsBuilt:
     makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
 
     state.map = next
-    state.voice = state.map.sound.play()
+    state.voice = state.map.getSound.play()
     if offset > 0.0:
       state.voice.seek(offset)
     
@@ -365,7 +373,7 @@ makeSystem("updateMusic", []):
     let 
       maxCopper = if state.map.copperAmount == 0: defaultMapReward else: state.map.copperAmount
       #perfect amount of copper received if the player always moved and never missed / got hit
-      perfectPoints = state.map.sound.length * 60f / state.map.bpm
+      perfectPoints = state.map.soundLength * 60f / state.map.bpm
       #multiplier based on hits taken
       healthMultiplier = if state.totalHits == 0: 2.0 else: 1.0
       #fraction that was actually obtained
@@ -849,5 +857,7 @@ include menus
 
 #unit textures dynamically loaded
 preloadFolder("textures")
+#as are map music files
+preloadFolder("maps")
 
 launchFau(initParams(title = "Animdustry"))
