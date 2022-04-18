@@ -240,7 +240,6 @@ makeSystem("drawUI", []):
       subtitleBounds = screen.grow(-2.2f)
       abilityW = screen.w / 4f
       abilityBounds = rect(screen.x + (screen.w - abilityW), screen.y, abilityW, screen.h).grow(-0.4f)
-      fullPatch = patch(&"{unit.name}-real")
 
     if not unit.draw.isNil:
       unit.draw(unit, pos)
@@ -260,11 +259,6 @@ makeSystem("drawUI", []):
         offset.x += ((index + 0.5f) - unit.title.len/2f) * 15f.px * splashTime.powout(3f)
       )
     )
-
-    #draw non-waifu sprite
-    if fullPatch.exists:
-      for i in signs():
-        draw(fullPatch, vec2(screen.centerX + unit.title.len/2f * (0.9f + splashTime.powout(3f) * 0.9f) * i.float32, screen.top - 0.75f))
 
     defaultFont.draw(unit.subtitle, subtitleBounds, color = rgb(0.8f), align = daTop, scale = 0.75f.px)
 
