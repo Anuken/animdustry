@@ -148,7 +148,7 @@ makeSystem("drawUI", []):
 
     when isDesktop:
       defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
-    else:
+    elif mode != gmDead and mode != gmFinished:
       let buttonSize = 1.5f
       if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = patch(if mode == gmPlaying: "pause" else: "play")):
         togglePause()
