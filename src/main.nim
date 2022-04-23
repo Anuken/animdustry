@@ -801,7 +801,7 @@ makeSystem("drawSquish", [Pos, DrawSquish, Velocity, Snek, Scaled]):
 makeSystem("drawSpin", [Pos, DrawSpin, Scaled]):
   all:
     proc spinSprite(patch: Patch, pos: Vec2, scl: Vec2, rot: float32) =
-      let r = rot.mod 90f
+      let r = rot.mod 90f.rad
       draw(patch, pos, rotation = r, scl = scl)
       draw(patch, pos, rotation = r - 90f.rad, color = rgba(1f, 1f, 1f, r / 90f.rad), scl = scl)
 
