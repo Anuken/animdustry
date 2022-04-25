@@ -30,7 +30,7 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 1. make sure you have the Android SDK and NDK installed
 
 - `nimble androidPackage` will create an unsigned APK at `android/build/outputs/apk/debug/`
-- `nimble android` will attempt to compile and run the game on a connected Android device - USB debugging must be enabled
+- `nimble android` will attempt to compile and run the game on a connected Android device - USB debugging must be enabled or if you have Windows 11 use WSA
 
 # future plans
 
