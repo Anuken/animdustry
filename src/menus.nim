@@ -146,7 +146,7 @@ makeSystem("drawUI", []):
     
     scoreTime = scoreTime.max(0f)
 
-    when isDesktop:
+    if isDesktop:
       defaultFont.draw(&"[ {state.points:04} ]", fau.cam.view.grow(vec2(-4f.px, 0f)), align = daTopLeft, color = colorWhite.mix(if scorePositive: colorAccent else: colorHit, scoreTime.pow(3f)))
     elif mode != gmDead and mode != gmFinished:
       let buttonSize = 1.5f
