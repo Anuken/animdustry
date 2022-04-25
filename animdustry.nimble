@@ -35,7 +35,7 @@ task run, "Run the game":
   shell &"nim r -d:release src/{app}"
 
 task debugBin, "Create debug build file":
-  shell &"nim -d:debug -o:build/{app} --debugger:native src/{app}"
+  shell &"nim c -d:debug -o:{app} --debugger:native src/{app}"
 
 task release, "Release build":
   shell &"nim r -d:danger -o:build/{app} src/{app}"
