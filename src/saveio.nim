@@ -24,11 +24,10 @@ proc unpackType*[ByteStream](s: ByteStream, unit: var Unit) =
   unit = unitMono
 
 proc saveSettings* =
-  dataDir.createDir()
-
   try:
+    dataDir.createDir()
     settingsFile.writeFile(pack(settings))
-  except IOError:
+  except:
     echo &"Error: Failed to write settings: {getCurrentExceptionMsg()}"
 
 proc loadSettings* =
@@ -39,11 +38,10 @@ proc loadSettings* =
     except: echo &"Failed to load settings: {getCurrentExceptionMsg()}"
 
 proc saveGame* =
-  dataDir.createDir()
-
   try:
+    dataDir.createDir()
     dataFile.writeFile(pack(save))
-  except IOError:
+  except:
     echo &"Error: Failed to write save data: {getCurrentExceptionMsg()}"
 
 proc loadGame* =
