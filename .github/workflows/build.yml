@@ -43,6 +43,7 @@ jobs:
 
         
       - if: runner.os == 'Linux'
+        name: Windows and Linux Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
           name: Windows and Linux
@@ -50,10 +51,11 @@ jobs:
           if-no-files-found: warn
 
       - if: runner.os == 'macOS'
+        name: macOS Artifact
         uses: actions/upload-artifact@v3.0.0
         with:
             name: Mac
-            path: /home/runner/work/_temp/release/$exe_name_mac64
+            path: /home/runner/work/_temp/release/${exe_name}_mac64
             if-no-files-found: warn
 
         env:
