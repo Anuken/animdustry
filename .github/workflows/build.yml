@@ -42,21 +42,21 @@ jobs:
           fi
       
 
-      name: Windows and Linux Artifact
-      - uses: actions/upload-artifact@v3.0.0
-      - if: runner.os == 'Linux'
-        with:
+      - name: Windows and Linux Artifact
+          uses: actions/upload-artifact@v3.0.0
+          if: runner.os == 'Linux'
+          with:
             name: Windows and Linux
             path: /home/runner/work/_temp/release/*
             if-no-files-found: warn
 
-      name: Mac Artifact
-      - uses: actions/upload-artifact@v3.0.0
-      - if: runner.os == 'macOS'
-        with:
-          name: Mac
-          path: /home/runner/work/_temp/release/$exe_name_mac64
-          if-no-files-found: warn
+      - name: Mac Artifact
+          uses: actions/upload-artifact@v3.0.0
+          if: runner.os == 'macOS'
+          with:
+            name: Mac
+            path: /home/runner/work/_temp/release/$exe_name_mac64
+            if-no-files-found: warn
 
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
