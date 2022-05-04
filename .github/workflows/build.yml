@@ -40,12 +40,18 @@ jobs:
           elif [[ "${RUNNER_OS}" == "macOS" ]]; then
             cp "build/main-mac64" "${release_dir}/${exe_name}_mac64"
           fi
+      
+
+      name: Windows and Linux Artifact
       - uses: actions/upload-artifact@v3.0.0
       - if: runner.os == 'Linux'
         with:
             name: Windows and Linux
             path: /home/runner/work/_temp/release/*
             if-no-files-found: warn
+
+      name: Mac Artifact
+      - uses: actions/upload-artifact@v3.0.0
       - if: runner.os == 'macOS'
         with:
           name: Mac
