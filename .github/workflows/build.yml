@@ -40,7 +40,7 @@ jobs:
           elif [[ "${RUNNER_OS}" == "macOS" ]]; then
             cp "build/main-mac64" "${release_dir}/${exe_name}_mac64"
           fi
-      - uses: softprops/action-gh-release@v1
+      - uses: actions/upload-artifact@v3.0.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
