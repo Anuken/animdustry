@@ -2,7 +2,7 @@ import ecs, types, fau/g2/[font, ui], std/[options, deques]
 
 const
   #pixels
-  tileSize* = 60f
+  tileSize* = 1f
 
   hitDuration* = 0.6f
   noMusic* = false
