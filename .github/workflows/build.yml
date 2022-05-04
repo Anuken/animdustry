@@ -8,18 +8,42 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
+
       - uses: jiro4989/setup-nim-action@v1
         with:
           nim-version: 'stable'
-      - name: Install packages needed for GLFW
-        run: |
-          sudo apt install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libgl-dev libxxf86vm-dev
-      - name: Nimble build
-        run: |
-          nimble build -Y
+
+      - if: runner.os == 'Linux'
+        run: sudo apt install -y libx11-dev libxcursor-dev libxrandr-dev libxinerama-dev libxi-dev libgl-dev libxxf86vm-dev mingw-w64
+
+      - run: nimble build -Y
+      - run: nimble deploy
+
+      - run: |
+          exe_name="animdustry_${{github.ref_name}}"
+          release_dir="${RUNNER_TEMP}/release"
+          mkdir -p "${release_dir}"
+          if [[ "${RUNNER_OS}" == "Linux" ]]; then
+            cp "build/main-linux64" "${release_dir}/${exe_name}_linux64"
+            cp "build/main-win64.exe" "${release_dir}/${exe_name}_win64.exe"
+          elif [[ "${RUNNER_OS}" == "macOS" ]]; then
+            cp "build/main-mac64" "${release_dir}/${exe_name}_mac64"
+          fi
+      - uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          name: ${{github.ref_name}}
+          draft: true
+          files: ${{runner.temp}}/release/*
