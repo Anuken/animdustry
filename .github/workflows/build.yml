@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v3.0.0
         with:
             name: Mac
-            path: /home/runner/work/_temp/release/${exe_name}_mac64
+            path: /home/runner/work/_temp/release/*
             if-no-files-found: warn
 
         env:
