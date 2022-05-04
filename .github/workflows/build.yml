@@ -41,9 +41,9 @@ jobs:
             cp "build/main-mac64" "${release_dir}/${exe_name}_mac64"
           fi
       - uses: actions/upload-artifact@v3.0.0
+        with:
+             name: master
+             path: /home/runner/work/_temp/release/*
+             if-no-files-found: warn
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          name: ${{github.ref_name}}
-          draft: true
-          files: ${{runner.temp}}/release/*
