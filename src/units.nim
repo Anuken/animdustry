@@ -169,7 +169,7 @@ template createUnits*() =
 
     patVertGradient(col1.withA(0.7f), col1.withA(0f).mix(colorClear, 0.2f))
 
-    let scl = getScl(0.175f)
+    let scl = getScl(0.165f)
 
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
 
