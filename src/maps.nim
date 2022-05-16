@@ -39,20 +39,20 @@ proc modSize*(num: int): int =
 
 template createMaps* =
   map1 = BeatMap(
-    songName: "Aritus - For You",
+    songName: "Vegedream - Ramenez la coupe a la maison",
     music: "forYou",
-    bpm: 126f,
+    bpm: 108f,
     beatOffset: -80f / 1000f,
-    maxHits: 20,
+    maxHits: 100,
     copperAmount: 4,
-    fadeColor: colorPink.mix(colorWhite, 0.5f),
+    fadeColor: colorPSGBlue.mix(colorWhite, 0.5f),
     drawPixel: (proc() =
       patStripes()
       patBeatSquare()
       patPetals()
     ),
     draw: (proc() =
-      patTiles()
+      patTilesSquare(colorPSGBlue, colorWhite)
     ),
     update: (proc() =
       if state.newTurn:
@@ -198,6 +198,9 @@ template createMaps* =
         
         if turn in 420..437:
           midRouter()
+
+        if turn in 439..455:
+          midRouter()
     )
   )
 
@@ -206,7 +209,7 @@ template createMaps* =
     music: "stoplight",
     bpm: 85f,
     beatOffset: 0f / 1000f,
-    maxHits: 12,
+    maxHits: 100,
     copperAmount: 5,
     fadeColor: %"985eb9",
     drawPixel: (proc() =
@@ -350,7 +353,7 @@ template createMaps* =
     music: "bright79",
     bpm: 127f,
     beatOffset: -80f / 1000f,
-    maxHits: 15,
+    maxHits: 100,
     copperAmount: 7,
     fadeColor: %"b291f2",
     drawPixel: (proc() =
@@ -508,7 +511,7 @@ template createMaps* =
     music: "pinacolada",
     bpm: 125f,
     beatOffset: -240f / 1000f,
-    maxHits: 12,
+    maxHits: 100,
     copperAmount: 8,
     fadeColor: %"b4b2ff",
     drawPixel: (proc() =
@@ -674,7 +677,7 @@ template createMaps* =
     music: "peachBeach",
     bpm: 121f,
     beatOffset: 0f / 1000f,
-    maxHits: 10,
+    maxHits: 100,
     copperAmount: 8,
     fadeColor: %"fa874c",
     drawPixel: (proc() =

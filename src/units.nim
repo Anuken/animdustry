@@ -345,6 +345,13 @@ template createUnits*() =
       for dir in d4mid():
         effectExplode((pos + dir).vec2)
         damageBlocks(pos + dir)
+
+  unitRonaldo.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    if moves mod 1 == 0:
+      for dir in d8mid():
+        effectExplode((pos + dir).vec2)
+        damageBlocks(pos + dir)
   
   unitQuad.abilityProc = proc(entity: EntityRef, moves: int) =
     let pos = entity.fetch(GridPos).vec

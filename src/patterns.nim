@@ -38,7 +38,7 @@ proc patBackground*(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
 
 #moving stripes
-proc patStripes*(col1 = colorPink, col2 = colorPink.mix(colorWhite, 0.2f), angle = 135f.rad) =
+proc patStripes*(col1 = colorPSGBlue, col2 = colorPSGBlue.mix(colorWhite, 0.2f), angle = 135f.rad) =
   patBackground(col1)
   
   let 
@@ -149,7 +149,7 @@ proc patPetals*() =
     parts = 50
     partRange = 18f
     move = vec2(-0.5f, -0.5f)
-    col = colorPink.mix(colorWhite, 0.3f)
+    col = colorPSGBlue.mix(colorWhite, 0.3f)
   
   var r = initRand(1)
   

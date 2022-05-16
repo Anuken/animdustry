@@ -503,7 +503,6 @@ makeSystem("drawUI", []):
 
     if button(rectCenter(screen.x + 2f, screen.y + 1f  + bottomMargin, 3f, 1f), "Back") or keyEscape.tapped:
       safeTransition:
-        stop(musicReveal)
         soundBack.play()
         mode = gmMenu
   elif mode == gmSettings:

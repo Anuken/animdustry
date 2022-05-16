@@ -161,7 +161,7 @@ let
     title: "-RONALDO-",
     subtitle: "Manchester United",
     ability: "SIUUU",
-    abilityReload: 5
+    abilityReload: 1
   )
 
   allUnits* = [unitRonaldo, unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
