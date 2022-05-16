@@ -55,6 +55,33 @@ template createUnits*() =
     unit.getTexture.draw(pos, scl = scl)
   )
 
+  unitRonaldo.draw = (proc(unit: Unit, basePos: Vec2) =
+    let light = %"b25840"
+    patStripes(%"b25840", %"c07659")
+
+    patVertGradient(colorAccent)
+
+    fillPoly(basePos, 3, 3.5f, color = colorAccent, rotation = -90f.rad)
+    poly(basePos, 3, 5.5f, stroke = 1f, color = colorAccent, rotation = -90f.rad)
+
+    patVertGradient((%"c07659").withA(0.35f), (%"c07659").withA(0f))
+
+    patLines(colorAccent, seed = 4)
+
+    patVertGradient(light.withA(0.4f), light.withA(0f))
+
+    let 
+      scl = getScl(0.165f)
+      pos = basePos - vec2(0f, 0.5f) + hoverOffset() * 0.5f
+
+    unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
+
+    drawBloom:
+      patSquares(colorAccent, time = fau.time, amount = 80, seed = 2)
+
+    unit.getTexture.draw(pos, scl = scl)
+  )
+
   unitMono.draw = (proc(unit: Unit, basePos: Vec2) =
     let 
       heal = %"84f490"

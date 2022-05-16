@@ -160,7 +160,8 @@ proc getTexture*(unit: Unit, name: string = ""): Texture =
 
 proc rollUnit*(): Unit =
   #very low chance, as it is annoying
-  if chance(1f / 100f):
+  if chance(1f / 10f):
+    stop(musicReveal.handle)
     return unitNothing
 
   #boulder is very rare now
@@ -168,7 +169,8 @@ proc rollUnit*(): Unit =
     return unitBoulder
 
   #not all units; alpha and boulder are excluded
-  return sample([unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei])
+  return sample([unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitRonaldo])
+    
 
 proc fading(): bool = fadeTarget != nil
 

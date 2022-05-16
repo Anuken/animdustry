@@ -2,7 +2,7 @@ import ecs, types, fau/g2/[font, ui], std/[options, deques]
 
 const
   #pixels
-  tileSize* = 1f
+  tileSize* = 20f
 
   hitDuration* = 0.6f
   noMusic* = false
@@ -137,8 +137,8 @@ let
   )
   unitOxynoe* = Unit(
     name: "oxynoe",
-    title: "-OXYNOE-",
-    subtitle: "as was foretold",
+    title: "-OXYNICE-",
+    subtitle: "she nice-",
     ability: "destroys alternating adjacent blocks every other move",
     abilityReload: 2
   )
@@ -152,9 +152,16 @@ let
   unitNothing* = Unit(
     name: "nothing",
     title: "-NOTHING-",
-    subtitle: "you've been scammed",
+    subtitle: "you've been trolled",
     ability: "the gacha game experience",
     unobtainable: true
   )
+  unitRonaldo* = Unit(
+    name: "ronaldo",
+    title: "-RONALDO-",
+    subtitle: "Manchester United",
+    ability: "SIUUU",
+    abilityReload: 5
+  )
 
-  allUnits* = [unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
+  allUnits* = [unitRonaldo, unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
