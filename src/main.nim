@@ -86,7 +86,11 @@ onEcsBuilt:
     reset()
 
     #start with first unit
-    makeUnit(vec2i(), if save.lastUnit != nil: save.lastUnit else: save.units[0])
+    makeUnit(vec2i(0, 0), if save.lastUnit != nil: save.lastUnit else: save.units[0])
+
+    #for multichar testing
+    #makeUnit(vec2i(1, 0), unitZenith)
+    #makeUnit(vec2i(2, 0), unitOct)
 
     state.map = next
     state.voice = state.map.getSound.play()
@@ -391,6 +395,13 @@ makeSystem("updateMusic", []):
 makeTimedSystem()
 
 makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
+  var playerIndex = 0
+
+  #different axes for different characters
+  let 
+    axis1 = axisTap2(keyA, keyD, KeyCode.keyS, keyW)
+    axis2 = axisTap2(keyLeft, keyRight, keyDown, keyUp)
+
   all:
     const switchKeys = [key1, key2, key3, key4, key5, key6, key7, key8, key9, key0]
 
@@ -402,6 +413,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
           item.input.lastSwitchTime = musicTime()
           effectCharSwitch(item.pos.vec + vec2(0f, 6f.px))
           save.lastUnit = unit
+          mobileUnitSwitch = -1
           break
 
     let canMove = if state.rawBeat > 0.5:
@@ -418,7 +430,18 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
     var 
       moved = false
       failed = false
-      vec = if musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not: axisTap2(keyA, keyD, KeyCode.keyS, keyW) + axisTap2(keyLeft, keyRight, keyDown, keyUp) + mobilePad else: vec2()
+      validInput = musicTime() >= item.input.lastInputTime and item.unitDraw.unit.unmoving.not
+      vec = if validInput: mobilePad else: vec2()
+    
+    #2 player - separate controls
+    #1 (or many) players - shared controls
+    if sysInput.groups.len == 2:
+      if playerIndex == 0:
+        vec += axis1
+      else:
+        vec += axis2
+    else:
+      vec += axis1 + axis2
     
     #reset pad state after polling
     mobilePad = vec2()
@@ -511,6 +534,8 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
         state.beatStats = "early"
     
     item.input.justMoved = moved
+  
+    playerIndex.inc
 
 makeSystem("runDelay", [RunDelay]):
   if state.newTurn:
