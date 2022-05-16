@@ -2,9 +2,11 @@
 
 # animdustry
 
-the anime gacha bullet hell rhythm game; *originally created as a mindustry april 1st event*
+the anime gacha bullet hell rhythm game; *created as a mindustry april 1st event*
 
 [downloads for windows/linux/android are available on the releases page.](https://github.com/Anuken/animdustry/releases)
+
+please read [the last release notes](https://github.com/Anuken/animdustry/releases/tag/v1.2) for information about the future of this game.
 
 # compiling
 
@@ -31,22 +33,6 @@ the anime gacha bullet hell rhythm game; *originally created as a mindustry apri
 
 - `nimble androidPackage` will create an unsigned APK at `android/build/outputs/apk/debug/`
 - `nimble android` will attempt to compile and run the game on a connected Android device - USB debugging must be enabled
-
-# future plans
-
-- new name; "animdustry" is too long and gets cut off in the app drawer
-- code cleanup; main.nim is too big
-- more levels, if I have time
-- a level editor (in the distant future)
-- a new menu with a quit button + better character/level selection
-- better movement sync if possible, hit detection can be very janky sometimes
-- make it imposible to jump over conveyors
-- fix/reproduce beat skip bug
-- release on Google Play (when polished enough)
-- make audio latency use a special level or show the beat
-- release on iOS App Store (will almost certainly be paid there, if you're wondering)
-
-*(as I am trying to focus on Mindustry now, don't expect any significant updates!)*
 
 # credits
 
