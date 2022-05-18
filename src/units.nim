@@ -61,10 +61,35 @@ template createUnits*() =
 
     patVertGradient(colorAccent)
 
-    fillPoly(basePos, 3, 3.5f, color = colorAccent, rotation = -90f.rad)
-    poly(basePos, 3, 5.5f, stroke = 1f, color = colorAccent, rotation = -90f.rad)
+    unit.getTexture("-mu").draw(basePos, scl = getScl(2.5f), color = colorAccent)
 
     patVertGradient((%"c07659").withA(0.35f), (%"c07659").withA(0f))
+
+    patLines(colorAccent, seed = 4)
+
+    patVertGradient(light.withA(0.4f), light.withA(0f))
+
+    let 
+      scl = getScl(0.165f)
+      pos = basePos - vec2(0f, 0.5f) + hoverOffset() * 0.5f
+
+    unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
+
+    drawBloom:
+      patSquares(colorAccent, time = fau.time, amount = 80, seed = 2)
+
+    unit.getTexture.draw(pos, scl = scl)
+  )
+
+  unitMbappe.draw = (proc(unit: Unit, basePos: Vec2) =
+    let light = colorPSGBlue
+    patStripes(colorPSGBlue, colorPSGBlue.mix(colorWhite, 0.5f))
+
+    patVertGradient(colorAccent)
+
+    unit.getTexture("-psg").draw(basePos, scl = getScl(2.5f), color = colorAccent)
+
+    patVertGradient(colorPSGBlue.mix(colorWhite, 0.5f).withA(0.35f), colorPSGBlue.mix(colorWhite, 0.5f).withA(0f))
 
     patLines(colorAccent, seed = 4)
 
@@ -352,6 +377,20 @@ template createUnits*() =
       for dir in d8mid():
         effectExplode((pos + dir).vec2)
         damageBlocks(pos + dir)
+
+  unitMbappe.abilityProc = proc(entity: EntityRef, moves: int) =
+    let pos = entity.fetch(GridPos).vec
+    if moves mod 1 == 0:
+      for dir in d8mid():
+        effectExplode((pos + dir).vec2)
+        damageBlocks(pos + dir)
+    if moves mod 2 == 0:
+      effectExplode(pos.vec2)
+      damageBlocks(pos)
+      for dir in d4edge():
+        for i in 1..2:
+          effectExplode((pos + dir * i).vec2)
+          damageBlocks(pos + dir * i)
   
   unitQuad.abilityProc = proc(entity: EntityRef, moves: int) =
     let pos = entity.fetch(GridPos).vec

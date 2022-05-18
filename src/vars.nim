@@ -164,4 +164,12 @@ let
     abilityReload: 1
   )
 
-  allUnits* = [unitRonaldo, unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
+  unitMbappe* = Unit(
+    name: "mbappe",
+    title: "-MBAPPE-",
+    subtitle: "Paris Saint-Germain",
+    ability: "Kylian Mbappe",
+    abilityReload: 2
+  )
+
+  allUnits* = [unitRonaldo, unitMbappe, unitAlpha, unitMono, unitOct, unitCrawler, unitZenith, unitQuad, unitOxynoe, unitSei, unitBoulder]
