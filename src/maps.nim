@@ -673,9 +673,9 @@ template createMaps* =
   )
 
   map5 = Beatmap(
-    songName: "ADRIANWAVE - Peach Beach",
+    songName: "Tony Britten - Champions League",
     music: "peachBeach",
-    bpm: 121f,
+    bpm: 124f,
     beatOffset: 0f / 1000f,
     maxHits: 100,
     copperAmount: 8,
@@ -959,5 +959,8 @@ template createMaps* =
         
         if turn in 300..340:
           botRouters(300)
+
+        if turn in 342..350:
+          passageLasers()
     )
   )

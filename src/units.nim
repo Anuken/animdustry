@@ -85,13 +85,13 @@ template createUnits*() =
     let light = colorPSGBlue
     patStripes(colorPSGBlue, colorPSGBlue.mix(colorWhite, 0.5f))
 
-    patVertGradient(colorAccent)
+    patVertGradient(colorPSGBlue.mix(colorWhite, 0.9f))
 
-    unit.getTexture("-psg").draw(basePos, scl = getScl(2.5f), color = colorAccent)
+    unit.getTexture("-psg").draw(basePos, scl = getScl(2.5f), color = colorPSGBlue.mix(colorWhite, 0.9f))
 
     patVertGradient(colorPSGBlue.mix(colorWhite, 0.5f).withA(0.35f), colorPSGBlue.mix(colorWhite, 0.5f).withA(0f))
 
-    patLines(colorAccent, seed = 4)
+    patLines(colorPSGBlue.mix(colorWhite, 0.9f), seed = 4)
 
     patVertGradient(light.withA(0.4f), light.withA(0f))
 
@@ -102,7 +102,7 @@ template createUnits*() =
     unit.getTexture.draw(pos - shadowOffset, scl = scl, color = shadowColor)
 
     drawBloom:
-      patSquares(colorAccent, time = fau.time, amount = 80, seed = 2)
+      patSquares(colorPSGBlue.mix(colorWhite, 0.9f), time = fau.time, amount = 80, seed = 2)
 
     unit.getTexture.draw(pos, scl = scl)
   )
