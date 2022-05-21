@@ -1,5 +1,5 @@
 
-import vars, core, math, random
+import vars, core, math, random, fau/g2/[font, bloom]
 
 proc patFft*(pos: Vec2, radius = 90f.px, length = 8f, color = colorWhite) =
   let 
@@ -51,6 +51,13 @@ proc patStripes*(col1 = colorPSGBlue, col2 = colorPSGBlue.mix(colorWhite, 0.2f),
         frac = (i + state.turn + ((1f - state.moveBeat).powout(8f))).mod(amount) / amount - 0.5f
         pos = vec2l(angle, swidth) * (frac * amount)
       draw(fau.white, pos, size = vec2(swidth, sheight), rotation = angle, color = col2)
+
+proc patTextFade*(text: string, pos: Vec2, scale: float32, col: Color, fadeTime: float32) =
+  let 
+    defaultFont = loadFont("font.ttf", size = 16, outline = true)
+    fade = (state.moveBeat * 4f - 2f).powout(fadeTime)
+  defaultFont.draw(text, pos, color = col.mix(colorWhite, fade), scale = scale)
+  
 
 proc patBeatSquare*(col = colorPink.mix(colorWhite, 0.7f)) =
   poly(vec2(), 4, (45f + 15f * (state.turn mod 4).float32).px, 0f.rad, stroke = 10f.px, color = colorPink.mix(colorWhite, 0.7f).withA(state.moveBeat))

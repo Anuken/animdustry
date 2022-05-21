@@ -50,14 +50,21 @@ template createMaps* =
       patStripes()
       patBeatSquare()
       patPetals()
+      if state.newTurn:
+        let turn = state.turn
+        let next = turn + 1
+          #samuel umtiti
+        if next in [9, 13, 18, 22]:
+          patTextFade("Samuel", vec2(), 0.3f, colorPSGBlue, 1.1f)
+        if next in [12, 14, 19, 23]:
+          patTextFade("Samuel Umtiti", vec2(), 0.3f, colorPSGBlue, 1.1f)
     ),
     draw: (proc() =
-      patTilesSquare(colorPSGBlue, colorWhite)
+      patTilesSquare(colorPSGBlue.mix(colorWhite, 0.5f), colorWhite)
     ),
     update: (proc() =
       if state.newTurn:
         let turn = state.turn
-
         let space = 4
 
         template midRouter() =
@@ -142,7 +149,7 @@ template createMaps* =
         
         if turn in 60..80:
           vertConveyors()
-        
+
         #"you"
         let next = turn + 1
         if next in [68, 84, 148, 164, 228, 236, 260, 268, 292, 300, 324, 332, 356, 372, 388, 397, 420, 428]:
@@ -679,30 +686,28 @@ template createMaps* =
     beatOffset: 0f / 1000f,
     maxHits: 100,
     copperAmount: 8,
-    fadeColor: %"fa874c",
+    fadeColor: %"2a3439",
     drawPixel: (proc() =
       #TODO better background, with beats
       patBackground(%"b25aab")
 
       patVertGradient(
         %"33256f",
-        %"fa874c"
+        %"2a3439"
       )
 
       #patFft(vec2(0f, 1.5f), 62f.px, color = %"fea955")
 
       draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
 
-      patCircles((%"d47ddd").mix(%"ffaa55", state.moveBeat * 0.8f), size = 1.5f..8f, amount = 120, seed = 10, moveSpeed = 0.1f)
+      patCircles((%"d47ddd").mix(%"2a3439", state.moveBeat * 0.8f), size = 1.5f..8f, amount = 120, seed = 10, moveSpeed = 0.1f)
 
-      patLongClouds(%"5d59a6")
+      patLongClouds(%"465b70")
 
       patVertGradient(
         (%"33256f").withA(0.5f),
-        (%"fa874c").withA(0.5f)
+        (%"2a3439").withA(0.5f)
       )
-
-      draw("sun".patchConst, vec2(0f, 1.5f))
 
       patSpinGradient(vec2(0f, 4f), (%"ffb65f").withA(0.7f), (%"fea956").withA(0f), 20f, 14, spacing = 1)
 
@@ -712,7 +717,7 @@ template createMaps* =
       #patRain()
     ),
     draw: (proc() =
-      patTilesSquare(%"cbb2ff", %"fa874c")
+      patTilesSquare(%"cbb2ff", %"2a3439")
     ),
     update: (proc() =
       if state.newTurn or (state.turn == 0 and sysSnek.groups.len == 0):

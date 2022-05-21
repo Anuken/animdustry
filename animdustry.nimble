@@ -22,6 +22,7 @@ const
   builds = [
     (name: "linux64", os: "linux", cpu: "amd64", args: ""),
     (name: "win64", os: "windows", cpu: "amd64", args: "--gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-g++"),
+    (name: "winarm64", os: "windows", cpu: "arm64", args: "--gcc.exe:i686-w64-mingw32-gcc --gcc.linkerexe:i686-w64-mingw32-g++"),
     (name: "mac64", os: "macosx", cpu: "amd64", args: "")
   ]
 
