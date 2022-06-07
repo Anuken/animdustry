@@ -1,4 +1,4 @@
 [submodule "fau"]
 	path = fau
-	url = https://github.com/WilloIzCitrom/fau.git
+	url = https://github.com/WilloIzCitron/fau.git
 	branch = master
