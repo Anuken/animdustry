@@ -6,6 +6,7 @@ repl.nim
 gifs/
 android/build
 android/src
+android/tools
 android/.gradle
 android/.cxx
 src/giftest.nim
