@@ -50,14 +50,6 @@ template createMaps* =
       patStripes()
       patBeatSquare()
       patPetals()
-      if state.newTurn:
-        let turn = state.turn
-        let next = turn + 1
-          #samuel umtiti
-        if next in [9, 13, 18, 22]:
-          patTextFade("Samuel", vec2(), 0.3f, colorPSGBlue, 1.1f)
-        if next in [12, 14, 19, 23]:
-          patTextFade("Samuel Umtiti", vec2(), 0.3f, colorPSGBlue, 1.1f)
     ),
     draw: (proc() =
       patTilesSquare(colorPSGBlue.mix(colorWhite, 0.5f), colorWhite)

@@ -171,7 +171,7 @@ proc patPetals*() =
     pos += move * state.time * speed * 0.8f
     pos = fau.cam.viewport.wrap(pos, 2f)
 
-    draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
+    draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2 / 2f)
 
 proc patSkats*() =
   let 
