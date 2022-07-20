@@ -120,7 +120,7 @@ makeSystem("drawUI", []):
     introTime = introTime.clamp
     draw("headphones".patchConst, vec2())
 
-    titleFont.draw("SOUND REQUIRED", vec2(0f, 2.5f))
+    titleFont.draw("SOUND AND SKILL REQUIRED", vec2(0f, 2.5f))
     defaultFont.draw("(yes, you really need it)", vec2(0f, -2f))
 
     defaultFont.draw(when isMobile: "[ tap to continue ]" else: "[ SPACE or ESC to continue ]", vec2(0f, -4f), color = colorUi.withA(fau.time.absin(0.5f, 1f)))
@@ -208,6 +208,8 @@ makeSystem("drawUI", []):
         soundVineBoom.play()
       elif unit == unitNothing:
         soundWind3.play()
+      elif unit == unitMbappe:
+        soundMbappe.play()
       else:
         musicGet.play()
     
@@ -353,6 +355,8 @@ makeSystem("drawUI", []):
 
         if unit == unitBoulder:
           soundVineBoom.play()
+        if unit == unitMbappe:
+          soundMbappe.play()
         else:
           musicView.play()
 
@@ -402,7 +406,7 @@ makeSystem("drawUI", []):
 
       saveGame()
 
-      splashRevealTime = 0.5f
+      splashRevealTime = 0.7f
       musicReveal.play()
       showSplashUnit(unit)
     
