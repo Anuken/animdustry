@@ -332,6 +332,12 @@ makeSystem("drawUI", []):
       if over and not unit.wasOver:
         unit.jumping = true
         soundJump.play(pitch = calcPitch(i))
+        if unit == unitMbappe:
+          continue
+      
+      if unit == unitMbappe:
+        unit.jumping = true
+        soundMbappe.play()
       
       unit.wasOver = over
 
