@@ -406,7 +406,7 @@ makeSystem("drawUI", []):
 
       saveGame()
 
-      splashRevealTime = 0.7f
+      splashRevealTime = 0.65f
       musicReveal.play()
       showSplashUnit(unit)
     
