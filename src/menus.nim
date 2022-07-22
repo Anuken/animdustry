@@ -623,6 +623,10 @@ makeSystem("drawUI", []):
     slider(rectCenter(vec2(0f, 4f), vec2(9f, 1f)), 0f, 400f, settings.audioLatency, text = &"Audio Latency: {settings.audioLatency.int}ms")
 
     slider(rectCenter(vec2(0f, 2f), vec2(9f, 1f)), 0f, 1f, settings.globalVolume, text = &"Volume: {(settings.globalVolume * 100).int}%")
+
+    let fpsText = if settings.showFps: "On" else: "Off"
+    if button(rectCenter(vec2(0f, 0f), vec2(4f, 1f)), &"Show FPS: {fpsText}", toggled = settings.showFps):
+        settings.showFps = settings.showFps.not
     
     #update every frame in case it changes (should have little to no overhead...)
     setGlobalVolume(settings.globalVolume)

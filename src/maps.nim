@@ -204,24 +204,24 @@ template createMaps* =
   )
 
   map2 = Beatmap(
-    songName: "PYC - Stoplight",
+    songName: "UEFA Europa League Anthem (Full Version)",
     music: "stoplight",
     bpm: 85f,
     beatOffset: 0f / 1000f,
     maxHits: 100,
     copperAmount: 5,
-    fadeColor: %"985eb9",
+    fadeColor: %"ff6900",
     drawPixel: (proc() =
-      patBackground(%"2b174d")
-      patFadeShapes(%"4b2362")
+      patBackground(%"000000")
+      patFadeShapes(%"f66c0c")
 
-      patStars(%"b3739a", %"e8c8b2")
+      patBeatSecond(%"ff6900", 0f)
+      patBeatSecond(%"ff6900", 0f)
 
-      patClouds(%"653075")
-      patBeatAlt(%"bf96eb")
+      draw("europaleague".patchConst, vec2(0, -fau.cam.size.y / 35f), align = daCenter)
     ),
     draw: (proc() =
-      patTilesSquare(%"cbb2ff", %"ff2eca")
+      patTilesSquare(%"ffd0af", %"f5b283")
     ),
     update: (proc() =
       if state.newTurn:

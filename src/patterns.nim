@@ -65,6 +65,10 @@ proc patBeatSquare*(col = colorPink.mix(colorWhite, 0.7f)) =
 proc patBeatAlt*(col: Color) =
   poly(vec2(), 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
 
+proc patBeatSecond*(col: Color, offset: float) =
+  poly(vec2() + offset, 4, (45f + 15f * (1 + state.turn mod 2).float32).px, 0f.rad, stroke = 10f.px, color = col.withA(state.moveBeat))
+  
+
 proc patTriSquare*(pos: Vec2, col: Color, len = 4f, rad = 2f, offset = 45f.rad, amount = 4, sides = 3, shapeOffset = 0f.rad) =
   for i in 0..<amount:
     fillPoly(vec2l(i * (360f.rad / amount) + offset, len) + pos, sides, rad, color = col, rotation = i * (360f.rad / amount) + offset + shapeOffset)
