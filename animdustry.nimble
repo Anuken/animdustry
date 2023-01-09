@@ -6,7 +6,7 @@ srcDir        = "src"
 bin           = @["main"]
 binDir        = "build"
 
-requires("nim >= 1.6.10")
+requires("nim >= 1.6.4")
 requires("https://github.com/WilloIzCitron/fau#" & staticExec("git -C fau rev-parse HEAD").replace("\n", "").replace("\r", ""))
 requires("msgpack4nim >= 0.3.1")
 
