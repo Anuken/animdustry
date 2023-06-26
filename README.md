@@ -1,3 +1,5 @@
+## DEPRECATED: every library broke the compilation, also it doesnt being maintained by owner or original repo owner
+
 ![](assets-raw/icon.png)
 
 # animdustry
