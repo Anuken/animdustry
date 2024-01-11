@@ -33,12 +33,14 @@ task debug, "Run the game in debug mode - for development only!":
   shell &"nim r -d:debug src/{app}"
 
 task run, "Run the game":
+  packTask()
   shell &"nim r -d:release src/{app}"
 
 task debugBin, "Create debug build file":
   shell &"nim c -d:debug -o:{app} --debugger:native src/{app}"
 
 task release, "Release build":
+  packTask()
   shell &"nim r -d:danger -o:build/{app} src/{app}"
 
 task web, "Deploy web build":
