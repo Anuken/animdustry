@@ -327,7 +327,7 @@ makeSystem("drawUI", []):
       if unit.hidden and not unlock:
         continue
       
-      unit.fade = unit.fade.lerp(over.float32, fau.delta * 20f)
+      unit.fade.lerp(over.float32, fau.delta * 20f)
 
       if over and not unit.wasOver:
         unit.jumping = true
@@ -426,15 +426,15 @@ makeSystem("drawUI", []):
         unlocked = map.unlocked or defined(debug)
       assert map.preview != nil
 
-      var
-        offset = sys.levelFade[i]
-        r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
+      var r = rect(bounds.x + sliced * i.float32, bounds.y, sliced, bounds.h)
       
       let
         hitRect = r
         over = hitRect.grow(-0.001f).contains(mouse)
 
-      sys.levelFade[i] = offset.lerp(over.float32, fau.delta * 20f)
+      sys.levelFade[i].lerp(over.float32, fau.delta * 20f)
+
+      let offset = sys.levelFade[i]
 
       if over:
         anyHover = true

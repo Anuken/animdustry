@@ -1,4 +1,6 @@
-import ecs, tables, options
+import std/[tables, options]
+import core
+import pkg/polymorph
 
 type Beatmap* = ref object
   name*: string

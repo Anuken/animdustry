@@ -1,4 +1,4 @@
-import ecs, types, fau/g2/[font, ui], std/[options, deques]
+import types, fau/g2/[font, ui], core, std/[options, deques]
 
 const
   #pixels

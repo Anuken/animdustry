@@ -13,14 +13,14 @@ template delayBullet*(pos: Vec2i, dir: Vec2i, tex = "") =
 
 template delayBulletWarn*(pos: Vec2i, dir: Vec2i, tex = "") =
   delayBullet(pos, dir, tex)
-  effectWarnBullet(pos.vec2, rot = dir.vec2.angle, life = beatSpacing())
+  effectWarnBullet(pos.vec2, rotation = dir.vec2.angle, life = beatSpacing())
 
 template bulletCircle*(pos: Vec2i, tex = "") =
   for dir in d8():
     makeBullet(pos, dir, tex)
 
 template laser*(pos, dir: Vec2i) =
-  effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 3f, rot = dir.vec2.angle)
+  effectLancerAppear(pos.vec2 - dir.vec2/1.4f, life = beatSpacing() * 3f, rotation = dir.vec2.angle)
   
   let p = pos
   capture p:
@@ -29,7 +29,7 @@ template laser*(pos, dir: Vec2i) =
   
   for len in 0..(mapSize*2):
     let dest = pos + dir * len
-    effectLaserWarn(dest.vec2, rot = dir.vec2.angle, life = beatSpacing() * 2)
+    effectLaserWarn(dest.vec2, rotation = dir.vec2.angle, life = beatSpacing() * 2)
     capture dest:
       runDelayi 1:
         makeLaser(dest, dir)
@@ -251,7 +251,7 @@ template createMaps* =
             for i in 0..3:
               capture i, pos:
                 runDelayi(i):
-                  effectStrikeWave(pos.vec2, rot = i.float32, life = beatSpacing())
+                  effectStrikeWave(pos.vec2, rotation = i.float32, life = beatSpacing())
                   if i == 3:
                     bulletCircle(pos, "bullet-purple")
         
@@ -837,7 +837,7 @@ template createMaps* =
             for i in 0..3:
               capture i, pos:
                 runDelayi(i):
-                  effectStrikeWave(pos.vec2, rot = i.float32, life = beatSpacing())
+                  effectStrikeWave(pos.vec2, rotation = i.float32, life = beatSpacing())
                   if i == 3:
                     bulletCircle(pos, "bullet-pink")
 

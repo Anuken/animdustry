@@ -6,9 +6,9 @@ srcDir        = "src"
 bin           = @["main"]
 binDir        = "build"
 
-requires("nim >= 1.6.2")
+requires("nim >= 2.0.0")
 requires("https://github.com/Anuken/fau#" & staticExec("git -C fau rev-parse HEAD").replace("\n", "").replace("\r", ""))
-requires("msgpack4nim >= 0.3.1")
+requires("msgpack4nim == 0.3.1")
 
 import strformat, os, json, sequtils
 
@@ -26,9 +26,10 @@ const
   ]
 
 task pack, "Pack textures":
-  shell &"faupack -p:\"{getCurrentDir()}/assets-raw/sprites\" -o:\"{getCurrentDir()}/assets/atlas\" --outlineFolder=outlined"
+  shell &"faupack -p:\"{getCurrentDir()}/assets-raw/sprites\" -o:\"{getCurrentDir()}/assets/atlas\" --max:2048"
 
 task debug, "Run the game in debug mode - for development only!":
+  packTask()
   shell &"nim r -d:debug src/{app}"
 
 task run, "Run the game":

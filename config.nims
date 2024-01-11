@@ -4,9 +4,13 @@
 --gc:arc
 --d:nimPreviewHashRef
 --d:msgpack_obj_to_map
+#polymorph warnings
+--warning:"BareExcept:off"
+--hint:"ConvFromXtoItselfNotNeeded:off"
 
 # reason: https://github.com/nim-lang/Nim/issues/18146
 --tlsEmulation:off
+--threads:off
 
 when defined(release) or defined(danger):
   --passC:"-flto"

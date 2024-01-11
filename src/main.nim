@@ -1,8 +1,6 @@
-#pack every compile
-static: echo staticExec("faupack -p:../assets-raw/sprites -o:../assets/atlas --max:2048 --outlineFolder=outlined/")
-
-import ecs, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
+import core, fau/presets/[basic, effects], fau/g2/[font, ui, bloom], fau/assets
 import std/[tables, sequtils, algorithm, macros, options, random, math, strformat, deques]
+import pkg/polymorph
 import types, vars, saveio, patterns, maps, sugar, units
 
 include components
@@ -62,8 +60,7 @@ onEcsBuilt:
     discard newEntityWith(Input(nextBeat: -1), Pos(), GridPos(vec: pos), UnitDraw(unit: aunit))
 
   proc reset() =
-    sysAll.clear()
-    sysRunDelay.clear()
+    resetEntityStorage()
 
     #stop old music
     if state.voice.int != 0:
@@ -365,7 +362,7 @@ makeSystem("updateMusic", []):
     let fft = getFft()
 
     for i in 0..<fftSize:
-      fftValues[i] = lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
+      lerp(fftValues[i], fft[i].pow(0.6f), 25f * fau.delta)
     
     if state.newTurn:
       state.moveBeat = 1f
@@ -450,7 +447,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       vec = vec2()
 
     if vec.zero.not:
-      vec = vec.lim(1)
+      vec.lim(1)
       
       if canMove:
         item.input.fails = 0
@@ -468,7 +465,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
 
       vec = vec2()
 
-    item.unitDraw.scl = item.unitDraw.scl.lerp(1f, 12f * fau.delta)
+    item.unitDraw.scl.lerp(1f, 12f * fau.delta)
 
     if failed:
       effectFail(item.pos.vec, life = beatSpacing())
@@ -482,7 +479,7 @@ makeSystem("input", [GridPos, Input, UnitDraw, Pos]):
       if item.unitDraw.walkTime < 0f:
         item.unitDraw.walkTime = 0f
 
-    item.unitDraw.shieldTime = item.unitDraw.shieldTime.lerp(item.input.shielded.float32, 10f * fau.delta)
+    item.unitDraw.shieldTime.lerp(item.input.shielded.float32, 10f * fau.delta)
 
     item.unitDraw.beatScl -= fau.delta / beatSpacing()
     item.unitDraw.beatScl = max(0f, item.unitDraw.beatScl)
@@ -885,4 +882,5 @@ preloadFolder("textures")
 #as are map music files
 preloadFolder("maps")
 
-launchFau(initParams(title = "Animdustry"))
+makeEcsCommit("run")
+initFau(run, params = initParams(title = "Animdustry"))
