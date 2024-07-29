@@ -688,7 +688,7 @@ template createMaps* =
 
       #patFft(vec2(0f, 1.5f), 62f.px, color = %"fea955")
 
-      draw("beach".patchConst, vec2(0, -fau.cam.size.y / 2f), align = daBot)
+      draw("beach".patch, vec2(0, -fau.cam.size.y / 2f), align = daBot)
 
       patCircles((%"d47ddd").mix(%"ffaa55", state.moveBeat * 0.8f), size = 1.5f..8f, amount = 120, seed = 10, moveSpeed = 0.1f)
 
@@ -699,7 +699,7 @@ template createMaps* =
         (%"fa874c").withA(0.5f)
       )
 
-      draw("sun".patchConst, vec2(0f, 1.5f))
+      draw("sun".patch, vec2(0f, 1.5f))
 
       patSpinGradient(vec2(0f, 4f), (%"ffb65f").withA(0.7f), (%"fea956").withA(0f), 20f, 14, spacing = 1)
 

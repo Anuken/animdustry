@@ -1,6 +1,5 @@
 build/
-assets/atlas.dat
-assets/atlas.png
+assets/atlas*
 repl.nim
 .idea/
 gifs/

@@ -838,7 +838,7 @@ makeSystem("drawLaser", [Pos, DrawLaser, Scaled]):
     let 
       fin = (item.scaled.time / 0.3f).clamp
       fout = 1f - fin
-    draw("laser".patchConst, item.pos.vec, z = zlayer(item) + 1f.px, rotation = item.drawLaser.dir.vec2.angle, scl = vec2(1f, (fout.powout(4f) + fout.pow(3f) * 0.4f) * item.scaled.scl), mixcolor = colorWhite.withA(fout.pow(3f)))
+    draw("laser".patch, item.pos.vec, z = zlayer(item) + 1f.px, rotation = item.drawLaser.dir.vec2.angle, scl = vec2(1f, (fout.powout(4f) + fout.pow(3f) * 0.4f) * item.scaled.scl), mixcolor = colorWhite.withA(fout.pow(3f)))
 
 makeSystem("drawUnit", [Pos, UnitDraw, Input]):
   all:
@@ -850,7 +850,7 @@ makeSystem("drawUnit", [Pos, UnitDraw, Input]):
       else: ""
     
     if item.unitDraw.shieldTime > 0.001f:
-      draw("shield".patchConst, item.pos.vec, z = zlayer(item) - 1f, scl = vec2(item.unitDraw.shieldTime), mixColor = colorWhite.withA(item.unitDraw.hitTime.clamp))
+      draw("shield".patch, item.pos.vec, z = zlayer(item) - 1f, scl = vec2(item.unitDraw.shieldTime), mixColor = colorWhite.withA(item.unitDraw.hitTime.clamp))
 
     draw(
       (&"unit-{item.unitDraw.unit.name}{suffix}").patch,
@@ -865,7 +865,7 @@ makeSystem("drawUnit", [Pos, UnitDraw, Input]):
       draw(fau.white, item.pos.vec - vec2(0f, 3f.px), size = vec2(unit.abilityReload.float32.px + 2f.px, 3f.px), color = colorBlack, z = 6000f)
       for i in 0..<unit.abilityReload:
         let show = (item.input.moves mod unit.abilityReload) >= i
-        draw("reload".patchConst, item.pos.vec + vec2((i.float32 - ((unit.abilityReload - 1f) / 2f)) * 1f.px, -3f.px), color = if show: %"fe8e54" else: rgb(0.4f), z = 6000f)
+        draw("reload".patch, item.pos.vec + vec2((i.float32 - ((unit.abilityReload - 1f) / 2f)) * 1f.px, -3f.px), color = if show: %"fe8e54" else: rgb(0.4f), z = 6000f)
 
 makeSystem("drawBullet", [Pos, DrawBullet, Velocity, Scaled]):
   all:

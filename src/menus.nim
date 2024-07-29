@@ -82,7 +82,7 @@ makeSystem("drawUI", []):
       let hitText = if state.totalHits == 0: "\nno hits! (200% reward)" else: ""
       defaultFont.draw(&"[ level complete! ]\nfinal score: {state.points}{hitText}", vec2(0f, if state.totalHits == 0: 1.25f else: 0.75f), scale = fontSize, color = colorUi)
 
-      draw("copper".patchConst, vec2(-0.6f, -0.4f), scl = vec2(fontSize / fau.pixelScl), mixcolor = colorWhite.withA(1f - pauseTime))
+      draw("copper".patch, vec2(-0.6f, -0.4f), scl = vec2(fontSize / fau.pixelScl), mixcolor = colorWhite.withA(1f - pauseTime))
       defaultFont.draw(&" +{state.copperReceived}", vec2(0f, -0.35f), align = daLeft, scale = fontSize, color = %"d99d73")
 
       buttonPos.y -= 1.1f
@@ -118,7 +118,7 @@ makeSystem("drawUI", []):
 
     introTime += fau.delta * 0.5f
     introTime = introTime.clamp
-    draw("headphones".patchConst, vec2())
+    draw("headphones".patch, vec2())
 
     titleFont.draw("SOUND REQUIRED", vec2(0f, 2.5f))
     defaultFont.draw("(yes, you really need it)", vec2(0f, -2f))
@@ -158,10 +158,10 @@ makeSystem("drawUI", []):
       progress = state.secs / state.map.soundLength
       healthPos = fau.cam.viewport.topRight - vec2(0.75f)
 
-    draw("progress".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f))
-    draw("progress-tick".patchConst, vec2(0f, fau.cam.size.y / 2f - 0.4f) + progSize * (progress - 0.5f) * 2f, color = colorUiDark)
+    draw("progress".patch, vec2(0f, fau.cam.size.y / 2f - 0.4f))
+    draw("progress-tick".patch, vec2(0f, fau.cam.size.y / 2f - 0.4f) + progSize * (progress - 0.5f) * 2f, color = colorUiDark)
 
-    draw("health".patchConst, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
+    draw("health".patch, healthPos, scl = vec2(1f + state.hitTime * 0.2f), color = colorUi.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
     defaultFont.draw($health(), healthPos + vec2(0f, 1f.px), color = colorWhite.mix(colorHeal, state.healTime).mix(colorHit, state.hitTime))
 
     mobileUnitSwitch = -1
@@ -191,7 +191,7 @@ makeSystem("drawUI", []):
       
       for i, pos in d4f:
         let dp = padPos + pos * padSize
-        if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patchConst, rotation = i.float32 * 90f.rad, style = gamepadButtonStyle) and keyMouseLeft.tapped:
+        if button(rectCenter(dp, vec2(padSize)), icon = "arrow".patch, rotation = i.float32 * 90f.rad, style = gamepadButtonStyle) and keyMouseLeft.tapped:
           mobilePad = pos
 
   elif splashUnit.isSome and splashRevealTime > 0f: #draw splash unit reveal animation
@@ -306,7 +306,7 @@ makeSystem("drawUI", []):
 
     #gambling interface
     text(rectCenter(statsBounds.centerX + 4f, buttonY, 3f, 1f), &"{save.copper} / {copperForRoll}", align = daLeft, color = if save.copper >= copperForRoll: colorWhite else: %"ff4843")
-    draw("copper".patchConst, vec2(statsBounds.centerX + 2f, buttonY))
+    draw("copper".patch, vec2(statsBounds.centerX + 2f, buttonY))
 
     var bstyle = defaultButtonStyle
     bstyle.textUpColor = (%"ffda8c").mix(colorWhite, fau.time.sin(0.23f, 1f))
@@ -368,7 +368,7 @@ makeSystem("drawUI", []):
         jumpScl = sin(unit.jump * PI).float32
         click = unit.clickTime.clamp
       
-      draw("shadow".patchConst, vec2(x, y - jumpScl * 3f.px), color = rgba(0f, 0f, 0f, 0.3f))
+      draw("shadow".patch, vec2(x, y - jumpScl * 3f.px), color = rgba(0f, 0f, 0f, 0.3f))
 
       draw(patch, vec2(x, y + jumpScl * 6f.px), 
         align = daBot, 
@@ -404,16 +404,16 @@ makeSystem("drawUI", []):
       showSplashUnit(unit)
     
     #outline around everything
-    lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = 1f.px)
+    lineRect(statsBounds, stroke = 2f.px, color = colorUi, margin = -2f.px)
 
     let buttonSize = 1.5f
 
-    if button(rectCenter(screen.topRight - vec2(buttonSize/2f), vec2(buttonSize)), icon = "info".patchConst):
+    if button(rectCenter(screen.topRight - vec2(buttonSize/2f), vec2(buttonSize)), icon = "info".patch):
       safeTransition:
         creditsPan = 0f
         mode = gmCredits
     
-    if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = "settings".patchConst):
+    if button(rectCenter(screen.topLeft - vec2(-buttonSize/2f, buttonSize/2f), vec2(buttonSize)), icon = "settings".patch):
       safeTransition:
         mode = gmSettings
 
@@ -449,8 +449,8 @@ makeSystem("drawUI", []):
       var region = initPatch(map.preview.texture, (r.xy - screen.xy) / screen.wh, (r.topRight - screen.xy) / screen.wh)
       swap(region.v, region.v2)
 
-      drawRect(region, r.x, r.y, r.w, r.h, mixColor = (if over: colorWhite.withA(0.2f) else: colorClear).mix(rgb(0.3f), unlocked.not.float32 * 0.7f), blend = blendDisabled)
-      lineRect(r, stroke = 2f.px, color = map.fadeColor * (1.5f + offset * 0.5f), margin = 1f.px)
+      drawRect(region, r.x, r.y, r.w, r.h - 0.5f.px, mixColor = (if over: colorWhite.withA(0.2f) else: colorClear).mix(rgb(0.3f), unlocked.not.float32 * 0.7f), blend = blendDisabled)
+      lineRect(r, stroke = 2f.px, color = map.fadeColor * (1.5f + offset * 0.5f), margin = -3f.px)
 
       let patchBounds = r
 

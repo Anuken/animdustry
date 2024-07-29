@@ -15,7 +15,7 @@ proc patTiles*() =
       let 
         absed = ((x + mapSize) + (y + mapSize) + state.turn).mod 5
         strength = (absed == 0).float32 * state.moveBeat
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
+      draw("tile".patch, vec2(x, y), color = colorWhite.mix(colorBlue, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patTilesFft*() =
   for x in -mapSize..mapSize:
@@ -24,7 +24,7 @@ proc patTilesFft*() =
         scaled = (y + mapSize) / (mapSize * 2 + 1)
         val = x + mapSize
         strength = (scaled < fftValues[val] / 13f).float32
-      draw("tile".patchConst, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
+      draw("tile".patch, vec2(x, y), color = colorWhite.mix(colorPink, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patTilesSquare*(col = colorWhite, col2 = colorBlue) =
   for x in -mapSize..mapSize:
@@ -32,7 +32,7 @@ proc patTilesSquare*(col = colorWhite, col2 = colorBlue) =
       let 
         absed = (x.abs + y.abs - state.turn).emod(5)
         strength = (absed == 0).float32 * state.moveBeat
-      draw("tile".patchConst, vec2(x, y), color = col.mix(col2, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
+      draw("tile".patch, vec2(x, y), color = col.mix(col2, strength).withA(0.4f), scl = vec2(1f - 0.11f * state.moveBeat))
 
 proc patBackground*(col: Color) =
   draw(fau.white, fau.cam.pos, size = fau.cam.size, color = col)
@@ -164,7 +164,7 @@ proc patPetals*() =
     pos += move * state.time * speed * 0.8f
     pos = fau.cam.viewport.wrap(pos, 2f)
 
-    draw("petal".patchConst, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
+    draw("petal".patch, pos, color = col, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
 proc patSkats*() =
   let 
@@ -185,7 +185,7 @@ proc patSkats*() =
     pos += move * fau.time * speed * 0.8f
     pos = fau.cam.viewport.wrap(pos, 2f)
 
-    draw("skat".patchConst, pos, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
+    draw("skat".patch, pos, rotation = rot + state.time * rotSpeed, scl = scale.vec2)
 
 proc patClouds*(col = colorWhite) =
   var clouds {.global.}: array[4, Patch]

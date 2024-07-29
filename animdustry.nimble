@@ -26,7 +26,7 @@ const
   ]
 
 task pack, "Pack textures":
-  shell &"faupack -p:\"{getCurrentDir()}/assets-raw/sprites\" -o:\"{getCurrentDir()}/assets/atlas\" --max:2048"
+  shell &"faupack -p:\"{getCurrentDir()}/assets-raw/sprites\" -o:\"{getCurrentDir()}/assets/atlas\""
 
 task debug, "Run the game in debug mode - for development only!":
   packTask()
